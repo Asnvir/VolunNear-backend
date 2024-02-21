@@ -9,5 +9,4 @@ public class VolunNearApplication {
     public static void main(String[] args) {
         SpringApplication.run(VolunNearApplication.class, args);
     }
-
 }
