@@ -1,12 +1,13 @@
-package com.volunnear.dto;
+package com.volunnear.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class RegistrationRequest {
+@AllArgsConstructor
+public class Credentials {
     private String username;
     private String password;
-    private String realName;
 }
