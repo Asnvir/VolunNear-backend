@@ -1,4 +1,4 @@
-package com.volunnear.entitiy;
+package com.volunnear.entitiy.users;
 
 import jakarta.persistence.*;
 import lombok.Getter;

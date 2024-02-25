@@ -1,4 +1,4 @@
-package com.volunnear.entitiy;
+package com.volunnear.entitiy.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

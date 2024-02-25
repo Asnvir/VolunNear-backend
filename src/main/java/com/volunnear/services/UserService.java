@@ -1,8 +1,7 @@
 package com.volunnear.services;
 
 import com.volunnear.dtos.VolunteerDTO;
-import com.volunnear.entitiy.AppUserVolunteer;
-import com.volunnear.repositories.RoleRepository;
+import com.volunnear.entitiy.users.AppUserVolunteer;
 import com.volunnear.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +14,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
+    private final RoleService roleService;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
 
@@ -45,8 +44,12 @@ public class UserService implements UserDetailsService {
         AppUserVolunteer appUserVolunteer = new AppUserVolunteer();
         appUserVolunteer.setUsername(volunteerDTO.getCredentials().getUsername());
         appUserVolunteer.setPassword(passwordEncoder.encode(volunteerDTO.getCredentials().getPassword()));
-        appUserVolunteer.setRoles(List.of(roleRepository.findRoleByName("ROLE_VOLUNTEER")));
+        appUserVolunteer.setRoles(roleService.getRoleByName("ROLE_VOLUNTEER"));
         appUserVolunteer.setRealName(volunteerDTO.getNameOfUser());
         userRepository.save(appUserVolunteer);
+    }
+
+    public Optional<AppUserVolunteer> findByUsername(String username) {
+        return userRepository.findAppUserByUsername(username);
     }
 }
