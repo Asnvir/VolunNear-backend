@@ -1,6 +1,7 @@
 package com.volunnear.controllers;
 
-import com.volunnear.dtos.RegistrationRequestDTO;
+import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
+import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.jwt.JwtRequest;
 import com.volunnear.services.security.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,12 @@ public class AuthController {
     }
 
     @PostMapping(value = "/api/registration/volunteer", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> registrationOfVolunteer(@RequestBody RegistrationRequestDTO registrationRequestDto) {
-        return authService.registrationOfVolunteer(registrationRequestDto);
+    public ResponseEntity<?> registrationOfVolunteer(@RequestBody RegistrationVolunteerRequestDTO registrationVolunteerRequestDto) {
+        return authService.registrationOfVolunteer(registrationVolunteerRequestDto);
+    }
+
+    @PostMapping(value = "/api/registration/organisation", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> registrationOfOrganisation(@RequestBody RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO){
+        return authService.registrationOfOrganisation(registrationOrganisationRequestDTO);
     }
 }

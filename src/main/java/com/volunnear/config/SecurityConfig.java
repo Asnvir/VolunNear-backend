@@ -1,12 +1,12 @@
 package com.volunnear.config;
 
-import com.volunnear.security.jwt.JwtTokenFilter;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
+import com.volunnear.security.jwt.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.Customizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

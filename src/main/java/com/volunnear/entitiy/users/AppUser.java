@@ -9,8 +9,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "app_users_volunteers")
-public class AppUserVolunteer {
+@Table(name = "app_users")
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
@@ -22,11 +22,8 @@ public class AppUserVolunteer {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "real_name", nullable = false)
-    private String realName;
-
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name = "volunteers_roles",
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "appUser_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private List<Role> roles;
