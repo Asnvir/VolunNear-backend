@@ -10,8 +10,8 @@ import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.exceptions.AuthErrorException;
 import com.volunnear.exceptions.RegistrationOfUserException;
 import com.volunnear.security.jwt.JwtTokenProvider;
-import com.volunnear.services.OrganisationService;
-import com.volunnear.services.UserService;
+import com.volunnear.services.users.OrganisationService;
+import com.volunnear.services.users.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,10 +42,11 @@ public class AuthService {
 
     public ResponseEntity<?> registrationOfVolunteer(RegistrationVolunteerRequestDTO registrationVolunteerRequestDto) {
         String username = registrationVolunteerRequestDto.getUsername();
-        if (userService.findByUsername(username).isEmpty()) {
+        if (userService.findAppUserByUsername(username).isEmpty()) {
             String password = registrationVolunteerRequestDto.getPassword();
             String realName = registrationVolunteerRequestDto.getRealName();
-            userService.registerVolunteer(new VolunteerDTO(realName, new Credentials(username, password)));
+            String email = registrationVolunteerRequestDto.getEmail();
+            userService.registerVolunteer(new VolunteerDTO(realName, new Credentials(username, password, email)));
             return new ResponseEntity<>(HttpStatus.OK);
         } else return new ResponseEntity<>(
                 new RegistrationOfUserException(HttpStatus.BAD_REQUEST.value(), "User with username " + username + " already exist"),
@@ -56,14 +57,15 @@ public class AuthService {
         String username = registrationOrganisationRequestDTO.getUsername();
         if (organisationService.findOrganisationByUsername(username).isEmpty()) {
             String password = registrationOrganisationRequestDTO.getPassword();
+            String email = registrationOrganisationRequestDTO.getEmail();
             String nameOfOrganisation = registrationOrganisationRequestDTO.getNameOfOrganisation();
             String country = registrationOrganisationRequestDTO.getCountry();
             String city = registrationOrganisationRequestDTO.getCity();
             String address = registrationOrganisationRequestDTO.getAddress();
             String industry = registrationOrganisationRequestDTO.getIndustry();
-            organisationService.registerOrganisation(new OrganisationDTO(new Credentials(username, password), nameOfOrganisation, country, city, address, industry));
+            organisationService.registerOrganisation(new OrganisationDTO(new Credentials(username, password, email), nameOfOrganisation, country, city, address, industry));
             return new ResponseEntity<>(HttpStatus.OK);
-        } else return  new ResponseEntity<>(
+        } else return new ResponseEntity<>(
                 new RegistrationOfUserException(HttpStatus.BAD_REQUEST.value(), "Organisation with username " + username + " already exists"),
                 HttpStatus.BAD_REQUEST);
     }

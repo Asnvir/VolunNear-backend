@@ -1,12 +1,13 @@
 package com.volunnear.config;
 
-import lombok.SneakyThrows;
-import lombok.RequiredArgsConstructor;
+import com.volunnear.Routes;
 import com.volunnear.security.jwt.JwtTokenFilter;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.Customizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,8 +25,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenFilter jwtTokenFilter) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/registration/*", "/api/login").permitAll()
+                        .requestMatchers(Routes.REGISTER_ROUTE_SECURITY, Routes.LOGIN).permitAll()
                         .requestMatchers("/api/hello").hasAnyRole("VOLUNTEER", "ORGANISATION")
+                        .requestMatchers(Routes.ADD_ACTIVITY, Routes.MY_ACTIVITIES).hasRole("ORGANISATION")
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout(Customizer.withDefaults());

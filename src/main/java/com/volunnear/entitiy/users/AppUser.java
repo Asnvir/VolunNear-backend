@@ -22,6 +22,9 @@ public class AppUser {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "email")
+    private String email;
+
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "appUser_id"),

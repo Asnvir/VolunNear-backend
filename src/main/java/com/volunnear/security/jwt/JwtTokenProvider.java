@@ -1,6 +1,6 @@
 package com.volunnear.security.jwt;
 
-import com.volunnear.services.UserService;
+import com.volunnear.services.users.UserService;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
