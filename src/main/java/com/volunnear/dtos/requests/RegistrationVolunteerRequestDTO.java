@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 public class RegistrationVolunteerRequestDTO {
     private String username;
     private String password;
+    private String email;
     private String realName;
 }

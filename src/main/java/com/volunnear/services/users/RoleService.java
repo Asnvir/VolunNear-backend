@@ -1,7 +1,7 @@
-package com.volunnear.services;
+package com.volunnear.services.users;
 
 import com.volunnear.entitiy.users.Role;
-import com.volunnear.repositories.RoleRepository;
+import com.volunnear.repositories.users.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

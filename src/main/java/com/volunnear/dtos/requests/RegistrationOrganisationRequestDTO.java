@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class RegistrationOrganisationRequestDTO {
     private String username;
     private String password;
+    private String email;
     private String nameOfOrganisation;
     private String country;
     private String city;

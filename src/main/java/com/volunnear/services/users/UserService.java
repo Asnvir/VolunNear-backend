@@ -1,8 +1,8 @@
-package com.volunnear.services;
+package com.volunnear.services.users;
 
 import com.volunnear.dtos.VolunteerDTO;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.repositories.UserRepository;
+import com.volunnear.repositories.users.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,11 +40,12 @@ public class UserService implements UserDetailsService {
         AppUser appUser = new AppUser();
         appUser.setUsername(volunteerDTO.getCredentials().getUsername());
         appUser.setPassword(passwordEncoder.encode(volunteerDTO.getCredentials().getPassword()));
+        appUser.setEmail(volunteerDTO.getCredentials().getEmail());
         appUser.setRoles(roleService.getRoleByName("ROLE_VOLUNTEER"));
         userRepository.save(appUser);
     }
 
-    public Optional<AppUser> findByUsername(String username) {
+    public Optional<AppUser> findAppUserByUsername(String username) {
         return userRepository.findAppUserByUsername(username);
     }
 }
