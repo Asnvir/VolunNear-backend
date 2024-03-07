@@ -26,8 +26,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenFilter jwtTokenFilter) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(Routes.REGISTER_ROUTE_SECURITY, Routes.LOGIN).permitAll()
-                        .requestMatchers("/api/hello").hasAnyRole("VOLUNTEER", "ORGANISATION")
-                        .requestMatchers(Routes.ADD_ACTIVITY, Routes.MY_ACTIVITIES).hasRole("ORGANISATION")
+
+                        .requestMatchers(Routes.UPDATE_VOLUNTEER_PROFILE).hasRole("VOLUNTEER")
+                        .requestMatchers(Routes.UPDATE_ORGANISATION_PROFILE, Routes.ADD_ACTIVITY, Routes.MY_ACTIVITIES).hasRole("ORGANISATION")
+
+                        .requestMatchers("/api/hello", Routes.GET_ALL_ORGANISATIONS, Routes.ACTIVITY_CURRENT_ORGANISATION)
+                        .hasAnyRole("VOLUNTEER", "ORGANISATION")
+
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout(Customizer.withDefaults());
