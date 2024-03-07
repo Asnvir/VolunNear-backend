@@ -33,6 +33,9 @@ public class Activity {
     @Column(name = "city")
     private String city;
 
+    @Column(name = "kind_of_activity")
+    private String kindOfActivity;
+
     @Temporal(TemporalType.DATE)
     @Column(name = "date_of_place")
     private Date dateOfPlace;

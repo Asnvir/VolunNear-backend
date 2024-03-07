@@ -1,7 +1,7 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-import com.volunnear.dtos.requests.AddActivityRequest;
+import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.services.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -16,7 +16,7 @@ public class ActivityController {
     private final ActivityService activityService;
 
     @PostMapping(value = Routes.ADD_ACTIVITY, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addActivityFromOrganisation(Principal principal, @RequestBody AddActivityRequest activityRequest) {
+    public ResponseEntity<?> addActivityFromOrganisation(Principal principal, @RequestBody AddActivityRequestDTO activityRequest) {
         return activityService.addActivityOfOrganisation(activityRequest, principal);
     }
 

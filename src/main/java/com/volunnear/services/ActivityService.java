@@ -1,6 +1,6 @@
 package com.volunnear.services;
 
-import com.volunnear.dtos.requests.AddActivityRequest;
+import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
@@ -30,7 +30,7 @@ public class ActivityService {
     private final JwtTokenProvider jwtTokenProvider;
     private final ActivitiesRepository activitiesRepository;
 
-    public ResponseEntity<?> addActivityOfOrganisation(AddActivityRequest activityRequest, Principal principal) {
+    public ResponseEntity<?> addActivityOfOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
         String usernameFromToken = jwtTokenProvider.getUsernameFromToken(principal.getName());
         Optional<AppUser> organisation = userService.findAppUserByUsername(usernameFromToken);
         if (organisation.isEmpty()) {
@@ -42,6 +42,7 @@ public class ActivityService {
         activity.setCountry(activityRequest.getCountry());
         activity.setCity(activityRequest.getCity());
         activity.setDateOfPlace(new Date());
+        activity.setKindOfActivity(activityRequest.getKindOfActivity());
         activity.setAppUser(organisation.get());
         activitiesRepository.save(activity);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -70,7 +71,7 @@ public class ActivityService {
     public ResponseEntity<?> getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation) {
         Optional<OrganisationInfo> organisationByNameOfOrganisation = organisationService.findOrganisationByNameOfOrganisation(nameOfOrganisation);
         if (organisationByNameOfOrganisation.isEmpty()) {
-            return new ResponseEntity<>("Organisation with name" + nameOfOrganisation + " not found", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Organisation with name " + nameOfOrganisation + " not found", HttpStatus.BAD_REQUEST);
         }
         OrganisationInfo organisationInfo = organisationByNameOfOrganisation.get();
 
@@ -93,7 +94,8 @@ public class ActivityService {
                     activity.getCountry(),
                     activity.getDateOfPlace(),
                     activity.getDescription(),
-                    activity.getTitle()));
+                    activity.getTitle(),
+                    activity.getKindOfActivity()));
         }
 
         activitiesDTO.setOrganisationResponseDTO(responseDTO);

@@ -15,4 +15,5 @@ public class ActivityDTO {
     private Date dateOfPlace;
     private String description;
     private String title;
+    private String kindOfActivity;
 }
