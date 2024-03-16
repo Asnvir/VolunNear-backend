@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ActivitiesRepository extends JpaRepository<Activity, Long> {
     List<Activity> findActivitiesByAppUser(AppUser appUser);
+    List<Activity> findActivityByKindOfActivityIgnoreCaseIn(List<String> preferences);
 }

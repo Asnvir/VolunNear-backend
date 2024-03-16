@@ -72,8 +72,7 @@ public class AuthService {
             String country = registrationOrganisationRequestDTO.getCountry();
             String city = registrationOrganisationRequestDTO.getCity();
             String address = registrationOrganisationRequestDTO.getAddress();
-            String industry = registrationOrganisationRequestDTO.getIndustry();
-            organisationService.registerOrganisation(new OrganisationDTO(new Credentials(username, password, email), nameOfOrganisation, country, city, address, industry));
+            organisationService.registerOrganisation(new OrganisationDTO(new Credentials(username, password, email), nameOfOrganisation, country, city, address));
             return new ResponseEntity<>(HttpStatus.OK);
         } else return new ResponseEntity<>(
                 new RegistrationOfUserException(HttpStatus.BAD_REQUEST.value(), "Organisation with username " + username + " already exists"),

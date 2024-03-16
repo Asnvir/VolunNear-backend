@@ -13,5 +13,4 @@ public class OrganisationDTO {
     private String country;
     private String city;
     private String address;
-    private String industry;
 }

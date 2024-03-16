@@ -50,7 +50,6 @@ public class OrganisationService {
         organisationInfo.setCountry(organisationDTO.getCountry());
         organisationInfo.setCity(organisationDTO.getCity());
         organisationInfo.setAddress(organisationDTO.getAddress());
-        organisationInfo.setIndustry(organisationDTO.getIndustry());
         organisationInfoRepository.save(organisationInfo);
     }
 
@@ -77,7 +76,6 @@ public class OrganisationService {
                 additionalInfoAboutOrganisation.getNameOfOrganisation(),
                 additionalInfoAboutOrganisation.getCountry(),
                 additionalInfoAboutOrganisation.getCity(),
-                additionalInfoAboutOrganisation.getAddress(),
-                additionalInfoAboutOrganisation.getIndustry());
+                additionalInfoAboutOrganisation.getAddress());
     }
 }

@@ -1,13 +1,14 @@
-package com.volunnear.dtos;
+package com.volunnear.dtos.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VolunteerDTO {
-    private String nameOfUser;
-    private Credentials credentials;
+public class PreferencesRequestDTO {
+    private List<String> preferences;
 }

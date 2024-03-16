@@ -29,7 +29,4 @@ public class OrganisationInfo {
 
     @Column(name = "address")
     private String address;
-
-    @Column(name = "industry")
-    private String industry;
 }

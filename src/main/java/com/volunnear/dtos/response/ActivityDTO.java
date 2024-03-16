@@ -10,6 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActivityDTO {
+    private Long id;
     private String city;
     private String country;
     private Date dateOfPlace;

@@ -21,12 +21,15 @@ public class Routes {
     /**
      *  Volunteers routes
      */
-    public static  final String VOLUNTEER = API_URL + "/volunteer";
-    public static  final String GET_VOLUNTEER_PROFILE = VOLUNTEER + "/my_profile";
+    public static final String VOLUNTEER = API_URL + "/volunteer";
+    public static final String GET_VOLUNTEER_PROFILE = VOLUNTEER + "/my_profile";
+    public static final String SET_VOLUNTEERS_PREFERENCES = VOLUNTEER + "/set_preferences";
+    public static final String GET_RECOMMENDATION_BY_PREFERENCES = VOLUNTEER + "/get_recommendations";
     /**
      * Activity routes
      */
     public static final String ADD_ACTIVITY = ORGANISATION + "/add_activity";
-    public static final String MY_ACTIVITIES = ORGANISATION + "/my_activities";
+    public static final String GET_MY_ACTIVITIES = ORGANISATION + "/my_activities";
     public static final String ACTIVITY_CURRENT_ORGANISATION = ORGANISATION + "/get_activities";
+    public static final String DELETE_CURRENT_ACTIVITY_BY_ID = ORGANISATION + "/delete_activity";
 }

@@ -28,7 +28,7 @@ public class SecurityConfig {
                         .requestMatchers(Routes.REGISTER_ROUTE_SECURITY, Routes.LOGIN).permitAll()
 
                         .requestMatchers(Routes.UPDATE_VOLUNTEER_PROFILE).hasRole("VOLUNTEER")
-                        .requestMatchers(Routes.UPDATE_ORGANISATION_PROFILE, Routes.ADD_ACTIVITY, Routes.MY_ACTIVITIES).hasRole("ORGANISATION")
+                        .requestMatchers(Routes.UPDATE_ORGANISATION_PROFILE, Routes.ADD_ACTIVITY, Routes.GET_MY_ACTIVITIES).hasRole("ORGANISATION")
 
                         .requestMatchers("/api/hello", Routes.GET_ALL_ORGANISATIONS, Routes.ACTIVITY_CURRENT_ORGANISATION)
                         .hasAnyRole("VOLUNTEER", "ORGANISATION")

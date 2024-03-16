@@ -1,5 +1,6 @@
 package com.volunnear.services;
 
+import com.volunnear.Routes;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
@@ -9,30 +10,29 @@ import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.entitiy.users.OrganisationInfo;
 import com.volunnear.exceptions.AuthErrorException;
 import com.volunnear.repositories.ActivitiesRepository;
-import com.volunnear.security.jwt.JwtTokenProvider;
 import com.volunnear.services.users.OrganisationService;
 import com.volunnear.services.users.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.security.Principal;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ActivityService {
     private final UserService userService;
     private final OrganisationService organisationService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final ActivitiesRepository activitiesRepository;
 
     public ResponseEntity<?> addActivityOfOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
-        String usernameFromToken = jwtTokenProvider.getUsernameFromToken(principal.getName());
-        Optional<AppUser> organisation = userService.findAppUserByUsername(usernameFromToken);
+        Optional<AppUser> organisation = userService.findAppUserByUsername(principal.getName());
         if (organisation.isEmpty()) {
             return new ResponseEntity<>(new AuthErrorException(HttpStatus.UNAUTHORIZED.value(), "Incorrect token data about organisation"), HttpStatus.UNAUTHORIZED);
         }
@@ -81,6 +81,38 @@ public class ActivityService {
         return new ResponseEntity<>(activitiesDTO, HttpStatus.OK);
     }
 
+    public List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<String> preferences){
+        List<Activity> activityByKindOfActivity = activitiesRepository.findActivityByKindOfActivityIgnoreCaseIn(preferences);
+        Map<OrganisationInfo, List<Activity>> activitiesByOrganisationMap = activityByKindOfActivity.stream()
+                .collect(Collectors.groupingBy(activity -> (organisationService.findAdditionalInfoAboutOrganisation(activity.getAppUser()))));
+
+        List<ActivitiesDTO> responseActivities = new ArrayList<>();
+
+        for (Map.Entry<OrganisationInfo, List<Activity>> organisationInfoListEntry : activitiesByOrganisationMap.entrySet()) {
+            responseActivities.add(activitiesFromEntityToDto(organisationInfoListEntry.getKey(),organisationInfoListEntry.getValue()));
+        }
+        return responseActivities;
+    }
+
+    /**
+     * Delete activity by id and from org principal (organisation data)
+     */
+    @SneakyThrows
+    public ResponseEntity<?> deleteActivityById(Long id, Principal principal) {
+        AppUser appUser = organisationService.findOrganisationByUsername(principal.getName()).get();
+        Optional<Activity> activityById = activitiesRepository.findById(id);
+
+        if (activityById.isEmpty() || !appUser.equals(activityById.get().getAppUser())) {
+            return new ResponseEntity<>("Bad id",HttpStatus.BAD_REQUEST);
+        }
+
+        activitiesRepository.deleteById(id);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(new URI(Routes.GET_MY_ACTIVITIES));
+
+        return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
+    }
+
     /**
      * Methods to convert entities from DB to DTO for response
      */
@@ -90,7 +122,8 @@ public class ActivityService {
         OrganisationResponseDTO responseDTO = getOrganisationResponseDTO(additionalInfoAboutOrganisation);
 
         for (Activity activity : activitiesByAppUser) {
-            activitiesDTO.addActivity(new ActivityDTO(activity.getCity(),
+            activitiesDTO.addActivity(new ActivityDTO(activity.getId(),
+                    activity.getCity(),
                     activity.getCountry(),
                     activity.getDateOfPlace(),
                     activity.getDescription(),
@@ -107,7 +140,8 @@ public class ActivityService {
                 additionalInfoAboutOrganisation.getNameOfOrganisation(),
                 additionalInfoAboutOrganisation.getCountry(),
                 additionalInfoAboutOrganisation.getCity(),
-                additionalInfoAboutOrganisation.getAddress(),
-                additionalInfoAboutOrganisation.getIndustry());
+                additionalInfoAboutOrganisation.getAddress());
     }
+
+
 }
