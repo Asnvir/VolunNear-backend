@@ -24,6 +24,8 @@ public class Routes {
     public static final String VOLUNTEER = API_URL + "/volunteer";
     public static final String GET_VOLUNTEER_PROFILE = VOLUNTEER + "/my_profile";
     public static final String SET_VOLUNTEERS_PREFERENCES = VOLUNTEER + "/set_preferences";
+    public static final String ADD_VOLUNTEER_TO_ACTIVITY = VOLUNTEER + "/enter_to_activity";
+    public static final String DELETE_VOLUNTEER_FROM_ACTIVITY = VOLUNTEER + "/leave_activity";
     public static final String GET_RECOMMENDATION_BY_PREFERENCES = VOLUNTEER + "/get_recommendations";
     /**
      * Activity routes
@@ -32,4 +34,5 @@ public class Routes {
     public static final String GET_MY_ACTIVITIES = ORGANISATION + "/my_activities";
     public static final String ACTIVITY_CURRENT_ORGANISATION = ORGANISATION + "/get_activities";
     public static final String DELETE_CURRENT_ACTIVITY_BY_ID = ORGANISATION + "/delete_activity";
+    public static final String GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS = ORGANISATION + "/get_all_activities";
 }

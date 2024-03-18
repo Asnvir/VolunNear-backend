@@ -1,7 +1,7 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-import com.volunnear.services.ActivityService;
+import com.volunnear.services.activities.ActivityService;
 import com.volunnear.services.users.OrganisationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

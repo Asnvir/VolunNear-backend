@@ -1,4 +1,4 @@
-package com.volunnear.services;
+package com.volunnear.services.activities;
 
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.entitiy.users.VolunteerPreference;

@@ -9,6 +9,7 @@ import com.volunnear.entitiy.users.VolunteerPreference;
 import com.volunnear.repositories.VolunteerPreferenceRepository;
 import com.volunnear.repositories.users.UserRepository;
 import com.volunnear.repositories.users.VolunteerInfoRepository;
+import com.volunnear.services.activities.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,7 @@ import java.util.Optional;
 public class VolunteerService {
     private final RoleService roleService;
     private final UserRepository userRepository;
+    private final ActivityService activityService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final VolunteerInfoRepository volunteerInfoRepository;
     private final VolunteerPreferenceRepository volunteerPreferenceRepository;
@@ -30,9 +33,16 @@ public class VolunteerService {
     public ResponseEntity<?> getVolunteerProfile(Principal principal) {
         AppUser appUser = loadUserFromDbByUsername(principal);
         VolunteerInfo volunteerInfo = volunteerInfoRepository.getVolunteerInfoByAppUser(appUser);
+        Optional<VolunteerPreference> volunteerPreferenceByVolunteer = volunteerPreferenceRepository.findVolunteerPreferenceByVolunteer(appUser);
         VolunteerProfileResponseDTO profileResponse = new VolunteerProfileResponseDTO();
+
         profileResponse.setUsername(principal.getName());
         profileResponse.setRealName(volunteerInfo.getRealNameOfUser());
+        if (volunteerPreferenceByVolunteer.isEmpty()) {
+            profileResponse.setPreferences(List.of("Preferences is empty"));
+        } else profileResponse.setPreferences(volunteerPreferenceByVolunteer.get().getPreferences());
+        profileResponse.setActivitiesDTO(activityService.getActivitiesOfVolunteer(appUser));
+
         return new ResponseEntity<>(profileResponse, HttpStatus.OK);
     }
 

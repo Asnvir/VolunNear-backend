@@ -2,7 +2,7 @@ package com.volunnear.controllers;
 
 import com.volunnear.Routes;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
-import com.volunnear.services.ActivityService;
+import com.volunnear.services.activities.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,16 @@ public class ActivityController {
         return activityService.addActivityOfOrganisation(activityRequest, principal);
     }
 
+    @PostMapping(value = Routes.ADD_VOLUNTEER_TO_ACTIVITY)
+    public ResponseEntity<?> addVolunteerToActivity(@RequestParam Long id, Principal principal){
+        return activityService.addVolunteerToActivity(principal, id);
+    }
+
+    @GetMapping(value = Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS)
+    public ResponseEntity<?> getAllActivitiesOfAllOrganisations(){
+        return activityService.getAllActivitiesOfAllOrganisations();
+    }
+
     @GetMapping(value = Routes.GET_MY_ACTIVITIES)
     public ResponseEntity<?> getMyActivities(Principal principal) {
         return activityService.getMyActivities(principal);
@@ -33,5 +43,10 @@ public class ActivityController {
     @DeleteMapping(value = Routes.DELETE_CURRENT_ACTIVITY_BY_ID)
     public ResponseEntity<?> deleteActivityById(@RequestParam Long id, Principal principal){
         return activityService.deleteActivityById(id, principal);
+    }
+
+    @DeleteMapping(value = Routes.DELETE_VOLUNTEER_FROM_ACTIVITY)
+    public ResponseEntity<?> deleteVolunteerFromActivity(@RequestParam Long id, Principal principal){
+        return activityService.deleteVolunteerFromActivity(id, principal);
     }
 }

@@ -2,7 +2,7 @@ package com.volunnear.controllers;
 
 import com.volunnear.Routes;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
-import com.volunnear.services.RecommendationService;
+import com.volunnear.services.activities.RecommendationService;
 import com.volunnear.services.users.VolunteerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
