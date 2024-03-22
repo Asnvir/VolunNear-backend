@@ -2,9 +2,9 @@ package com.volunnear.services.users;
 
 import com.volunnear.dtos.OrganisationDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
+import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.entitiy.users.OrganisationInfo;
-import com.volunnear.repositories.users.OrganisationInfoRepository;
+import com.volunnear.repositories.infos.OrganisationInfoRepository;
 import com.volunnear.repositories.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -71,11 +71,18 @@ public class OrganisationService {
         return organisationInfoRepository.findOrganisationInfoByAppUser(user);
     }
 
-    private OrganisationResponseDTO getOrganisationResponseDTO(OrganisationInfo additionalInfoAboutOrganisation) {
+    public Optional<OrganisationInfo> findOrganisationAndAdditionalInfoById(Long idOfOrganisation) {
+        Optional<AppUser> byId = userRepository.findById(idOfOrganisation);
+        return byId.map(organisationInfoRepository::findOrganisationInfoByAppUser);
+    }
+
+    public OrganisationResponseDTO getOrganisationResponseDTO(OrganisationInfo additionalInfoAboutOrganisation) {
         return new OrganisationResponseDTO(
+                additionalInfoAboutOrganisation.getAppUser().getId(),
                 additionalInfoAboutOrganisation.getNameOfOrganisation(),
                 additionalInfoAboutOrganisation.getCountry(),
                 additionalInfoAboutOrganisation.getCity(),
                 additionalInfoAboutOrganisation.getAddress());
     }
+
 }

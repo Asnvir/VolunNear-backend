@@ -21,12 +21,12 @@ public class ActivityController {
     }
 
     @PostMapping(value = Routes.ADD_VOLUNTEER_TO_ACTIVITY)
-    public ResponseEntity<?> addVolunteerToActivity(@RequestParam Long id, Principal principal){
+    public ResponseEntity<?> addVolunteerToActivity(@RequestParam Long id, Principal principal) {
         return activityService.addVolunteerToActivity(principal, id);
     }
 
     @GetMapping(value = Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS)
-    public ResponseEntity<?> getAllActivitiesOfAllOrganisations(){
+    public ResponseEntity<?> getAllActivitiesOfAllOrganisations() {
         return activityService.getAllActivitiesOfAllOrganisations();
     }
 
@@ -41,12 +41,12 @@ public class ActivityController {
     }
 
     @DeleteMapping(value = Routes.DELETE_CURRENT_ACTIVITY_BY_ID)
-    public ResponseEntity<?> deleteActivityById(@RequestParam Long id, Principal principal){
+    public ResponseEntity<?> deleteActivityById(@RequestParam Long id, Principal principal) {
         return activityService.deleteActivityById(id, principal);
     }
 
     @DeleteMapping(value = Routes.DELETE_VOLUNTEER_FROM_ACTIVITY)
-    public ResponseEntity<?> deleteVolunteerFromActivity(@RequestParam Long id, Principal principal){
+    public ResponseEntity<?> deleteVolunteerFromActivity(@RequestParam Long id, Principal principal) {
         return activityService.deleteVolunteerFromActivity(id, principal);
     }
 }

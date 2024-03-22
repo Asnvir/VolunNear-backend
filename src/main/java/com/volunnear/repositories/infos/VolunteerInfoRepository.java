@@ -1,7 +1,7 @@
-package com.volunnear.repositories.users;
+package com.volunnear.repositories.infos;
 
+import com.volunnear.entitiy.infos.VolunteerInfo;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.entitiy.users.VolunteerInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VolunteerInfoRepository extends JpaRepository<VolunteerInfo, Long> {

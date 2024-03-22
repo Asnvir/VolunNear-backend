@@ -1,7 +1,7 @@
-package com.volunnear.repositories;
+package com.volunnear.repositories.infos;
 
+import com.volunnear.entitiy.infos.VolunteerPreference;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.entitiy.users.VolunteerPreference;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

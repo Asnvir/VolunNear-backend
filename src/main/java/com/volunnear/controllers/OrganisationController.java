@@ -22,7 +22,7 @@ public class OrganisationController {
     }
 
     @GetMapping(value = Routes.GET_ORGANISATION_PROFILE)
-    public ResponseEntity<?> getOrganisationProfile(Principal principal){
+    public ResponseEntity<?> getOrganisationProfile(Principal principal) {
         return activityService.getMyActivities(principal);
     }
 }

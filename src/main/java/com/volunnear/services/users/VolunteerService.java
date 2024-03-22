@@ -3,12 +3,12 @@ package com.volunnear.services.users;
 import com.volunnear.dtos.VolunteerDTO;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
 import com.volunnear.dtos.response.VolunteerProfileResponseDTO;
+import com.volunnear.entitiy.infos.VolunteerInfo;
+import com.volunnear.entitiy.infos.VolunteerPreference;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.entitiy.users.VolunteerInfo;
-import com.volunnear.entitiy.users.VolunteerPreference;
-import com.volunnear.repositories.VolunteerPreferenceRepository;
+import com.volunnear.repositories.infos.VolunteerInfoRepository;
+import com.volunnear.repositories.infos.VolunteerPreferenceRepository;
 import com.volunnear.repositories.users.UserRepository;
-import com.volunnear.repositories.users.VolunteerInfoRepository;
 import com.volunnear.services.activities.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -68,6 +68,7 @@ public class VolunteerService {
         userRepository.save(appUser);
         volunteerInfoRepository.save(volunteerInfo);
     }
+
     public void registerVolunteer(VolunteerDTO volunteerDTO) {
         AppUser appUser = new AppUser();
         appUser.setUsername(volunteerDTO.getCredentials().getUsername());
@@ -85,7 +86,7 @@ public class VolunteerService {
         volunteerInfoRepository.save(volunteerInfo);
     }
 
-    private AppUser loadUserFromDbByUsername(Principal principal){
+    private AppUser loadUserFromDbByUsername(Principal principal) {
         return userRepository.findAppUserByUsername(principal.getName()).get();
     }
 }

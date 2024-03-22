@@ -7,11 +7,11 @@ import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.activities.VolunteerInActivity;
+import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.entitiy.users.OrganisationInfo;
 import com.volunnear.exceptions.AuthErrorException;
-import com.volunnear.repositories.ActivitiesRepository;
-import com.volunnear.repositories.VolunteersInActivityRepository;
+import com.volunnear.repositories.infos.ActivitiesRepository;
+import com.volunnear.repositories.infos.VolunteersInActivityRepository;
 import com.volunnear.services.users.OrganisationService;
 import com.volunnear.services.users.UserService;
 import jakarta.transaction.Transactional;
@@ -140,7 +140,7 @@ public class ActivityService {
     @Transactional
     public ResponseEntity<?> deleteVolunteerFromActivity(Long id, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
-        if (!volunteersInActivityRepository.existsByUserAndActivity_Id(appUser,id)){
+        if (!volunteersInActivityRepository.existsByUserAndActivity_Id(appUser, id)) {
             return new ResponseEntity<>("Bad id of activity!", HttpStatus.BAD_REQUEST);
         }
         volunteersInActivityRepository.deleteByActivity_IdAndUser_Id(id, appUser.getId());
@@ -178,6 +178,7 @@ public class ActivityService {
 
     private static OrganisationResponseDTO getOrganisationResponseDTO(OrganisationInfo additionalInfoAboutOrganisation) {
         return new OrganisationResponseDTO(
+                additionalInfoAboutOrganisation.getAppUser().getId(),
                 additionalInfoAboutOrganisation.getNameOfOrganisation(),
                 additionalInfoAboutOrganisation.getCountry(),
                 additionalInfoAboutOrganisation.getCity(),

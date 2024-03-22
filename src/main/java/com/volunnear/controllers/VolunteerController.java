@@ -20,17 +20,17 @@ public class VolunteerController {
     private final RecommendationService recommendationService;
 
     @GetMapping(value = Routes.GET_VOLUNTEER_PROFILE)
-    public ResponseEntity<?> getVolunteerProfile(Principal principal){
+    public ResponseEntity<?> getVolunteerProfile(Principal principal) {
         return volunteerService.getVolunteerProfile(principal);
     }
 
     @PostMapping(value = Routes.SET_VOLUNTEERS_PREFERENCES)
-    public ResponseEntity<?> setVolunteersPreferences(@RequestBody PreferencesRequestDTO preferencesRequestDTO, Principal principal){
+    public ResponseEntity<?> setVolunteersPreferences(@RequestBody PreferencesRequestDTO preferencesRequestDTO, Principal principal) {
         return volunteerService.setPreferencesForVolunteer(preferencesRequestDTO, principal);
     }
 
     @GetMapping(value = Routes.GET_RECOMMENDATION_BY_PREFERENCES)
-    public ResponseEntity<?> getRecommendationsByPreferencesOfUser(Principal principal){
+    public ResponseEntity<?> getRecommendationsByPreferencesOfUser(Principal principal) {
         return recommendationService.generateRecommendations(principal);
     }
 }

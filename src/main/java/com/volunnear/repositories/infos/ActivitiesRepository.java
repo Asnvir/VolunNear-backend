@@ -1,4 +1,4 @@
-package com.volunnear.repositories;
+package com.volunnear.repositories.infos;
 
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.users.AppUser;
@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface ActivitiesRepository extends JpaRepository<Activity, Long> {
     List<Activity> findActivitiesByAppUser(AppUser appUser);
+
     List<Activity> findActivityByKindOfActivityIgnoreCaseIn(List<String> preferences);
 }

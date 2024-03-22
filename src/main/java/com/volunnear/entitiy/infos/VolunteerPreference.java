@@ -1,5 +1,6 @@
-package com.volunnear.entitiy.users;
+package com.volunnear.entitiy.infos;
 
+import com.volunnear.entitiy.users.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,7 @@ public class VolunteerPreference {
     @CollectionTable(name = "volunteer_preferences_list", joinColumns = @JoinColumn(name = "owner_id"))
     private List<String> preferences = new ArrayList<>();
 
-    public void addPreferences(List<String> preferences){
+    public void addPreferences(List<String> preferences) {
         this.preferences.addAll(preferences);
     }
 }

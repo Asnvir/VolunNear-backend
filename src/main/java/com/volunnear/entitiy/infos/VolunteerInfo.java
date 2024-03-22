@@ -1,11 +1,9 @@
-package com.volunnear.entitiy.users;
+package com.volunnear.entitiy.infos;
 
+import com.volunnear.entitiy.users.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
