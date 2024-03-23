@@ -25,6 +25,12 @@ public class ActivityController {
         return activityService.addVolunteerToActivity(principal, id);
     }
 
+    @PutMapping(value = Routes.UPDATE_ACTIVITY_INFORMATION, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateActivityInformation(@RequestParam Long idOfActivity,
+                                                       @RequestBody AddActivityRequestDTO activityRequestDTO, Principal principal) {
+        return activityService.updateActivityInformation(idOfActivity, activityRequestDTO, principal);
+    }
+
     @GetMapping(value = Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS)
     public ResponseEntity<?> getAllActivitiesOfAllOrganisations() {
         return activityService.getAllActivitiesOfAllOrganisations();

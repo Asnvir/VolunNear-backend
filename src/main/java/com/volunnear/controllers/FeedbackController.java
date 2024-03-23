@@ -1,7 +1,7 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-import com.volunnear.services.activities.FeedbackService;
+import com.volunnear.services.FeedbackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
 package com.volunnear;
 
 public class Routes {
-    public static final String API_URL = "/api/v1";
+    private static final String API_URL = "/api/v1";
 
     /**
      * Users management
@@ -15,14 +15,14 @@ public class Routes {
     /**
      * Organisation routes
      */
-    public static final String ORGANISATION = API_URL + "/organisation";
+    private static final String ORGANISATION = API_URL + "/organisation";
     public static final String GET_ALL_ORGANISATIONS = ORGANISATION + "/get_all";
     public static final String GET_ORGANISATION_PROFILE = ORGANISATION + "/my_profile";
 
     /**
      * Volunteers routes
      */
-    public static final String VOLUNTEER = API_URL + "/volunteer";
+    private static final String VOLUNTEER = API_URL + "/volunteer";
     public static final String GET_VOLUNTEER_PROFILE = VOLUNTEER + "/my_profile";
     public static final String SET_VOLUNTEERS_PREFERENCES = VOLUNTEER + "/set_preferences";
     public static final String ADD_VOLUNTEER_TO_ACTIVITY = VOLUNTEER + "/enter_to_activity";
@@ -41,10 +41,16 @@ public class Routes {
     /**
      * Feedback routes
      */
-    public static final String FEEDBACK = API_URL + "/feedback";
+    private static final String FEEDBACK = API_URL + "/feedback";
     public static final String POST_FEEDBACK_ABOUT_ORGANISATION = FEEDBACK + "/give_feedback";
     public static final String GET_FEEDBACKS_OF_ALL_ORGANISATIONS = FEEDBACK + "/get_all";
     public static final String UPDATE_FEEDBACK_FOR_CURRENT_ORGANISATION = FEEDBACK + "/update_feedback";
     public static final String GET_FEEDBACKS_FROM_CURRENT_ORGANISATION = FEEDBACK + "/feedbacks_of_organisation";
     public static final String DELETE_FEEDBACK_ABOUT_ORGANISATION = FEEDBACK + "/remove_feedback";
+    /**
+     * Location routes
+     */
+    private static final String LOCATION = API_URL + "/location";
+    public static final String FIND_NEARBY_ACTIVITIES = LOCATION + "/find_nearby";
+    public static final String UPDATE_ACTIVITY_INFORMATION = LOCATION + "/update_activity";
 }

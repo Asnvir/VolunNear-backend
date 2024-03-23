@@ -40,6 +40,9 @@ public class ActivityService {
         if (organisation.isEmpty()) {
             return new ResponseEntity<>(new AuthErrorException(HttpStatus.UNAUTHORIZED.value(), "Incorrect token data about organisation"), HttpStatus.UNAUTHORIZED);
         }
+        if (!"ROLE_ORGANISATION".equals(organisation.get().getRoles().get(0).toString())) {
+            return new ResponseEntity<>("Bad try, you are not organisation", HttpStatus.BAD_REQUEST);
+        }
         Activity activity = new Activity();
         activity.setTitle(activityRequest.getTitle());
         activity.setDescription(activityRequest.getDescription());
@@ -137,6 +140,26 @@ public class ActivityService {
         return new ResponseEntity<>("Successful! Welcome to activity: " + activityById.get().getTitle(), HttpStatus.OK);
     }
 
+    public ResponseEntity<?> updateActivityInformation(Long idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
+        AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
+        Optional<Activity> activityById = activitiesRepository.findById(idOfActivity);
+        if (activityById.isEmpty() || !appUser.equals(activityById.get().getAppUser())) {
+            return new ResponseEntity<>("Bad id of activity!", HttpStatus.BAD_REQUEST);
+        }
+
+        Activity activity = activityById.get();
+
+        activity.setTitle(activityRequestDTO.getTitle());
+        activity.setTitle(activityRequestDTO.getTitle());
+        activity.setDescription(activityRequestDTO.getDescription());
+        activity.setCountry(activityRequestDTO.getCountry());
+        activity.setCity(activityRequestDTO.getCity());
+        activity.setDateOfPlace(new Date());
+        activity.setKindOfActivity(activityRequestDTO.getKindOfActivity());
+
+        return new ResponseEntity<>("Successfully updated id", HttpStatus.OK);
+    }
+
     @Transactional
     public ResponseEntity<?> deleteVolunteerFromActivity(Long id, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
@@ -152,6 +175,10 @@ public class ActivityService {
         List<Activity> infoAboutActivities = allByUser.stream().map(volunteerInActivity ->
                 activitiesRepository.findById(volunteerInActivity.getActivity().getId()).get()).toList();
         return getListOfActivitiesDTOForResponse(infoAboutActivities);
+    }
+
+    public List<ActivitiesDTO> findActivitiesByPlace(String country, String city) {
+        return getListOfActivitiesDTOForResponse(activitiesRepository.findActivityByCountryAndCity(country, city));
     }
 
     /**

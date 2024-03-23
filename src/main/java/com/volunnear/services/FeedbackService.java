@@ -1,4 +1,4 @@
-package com.volunnear.services.activities;
+package com.volunnear.services;
 
 import com.volunnear.controllers.FeedbackRequest;
 import com.volunnear.dtos.response.FeedbackResponseDTO;
