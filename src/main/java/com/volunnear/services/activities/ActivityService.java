@@ -2,6 +2,7 @@ package com.volunnear.services.activities;
 
 import com.volunnear.Routes;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
+import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
@@ -177,8 +178,13 @@ public class ActivityService {
         return getListOfActivitiesDTOForResponse(infoAboutActivities);
     }
 
-    public List<ActivitiesDTO> findActivitiesByPlace(String country, String city) {
-        return getListOfActivitiesDTOForResponse(activitiesRepository.findActivityByCountryAndCity(country, city));
+    public ResponseEntity<?> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
+        List<ActivitiesDTO> activitiesByPlace = getListOfActivitiesDTOForResponse(
+                activitiesRepository.findActivityByCountryAndCity(nearbyActivitiesRequestDTO.getCountry(), nearbyActivitiesRequestDTO.getCity()));
+        if (activitiesByPlace.isEmpty()) {
+            return new ResponseEntity<>("No such activities in current place", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(activitiesByPlace, HttpStatus.OK);
     }
 
     /**

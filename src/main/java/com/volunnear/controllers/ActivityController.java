@@ -2,6 +2,7 @@ package com.volunnear.controllers;
 
 import com.volunnear.Routes;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
+import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.services.activities.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -44,6 +45,11 @@ public class ActivityController {
     @GetMapping(value = Routes.ACTIVITY_CURRENT_ORGANISATION)
     public ResponseEntity<?> getAllActivitiesOfCurrentOrganisation(@RequestParam String nameOfOrganisation) {
         return activityService.getAllActivitiesFromCurrentOrganisation(nameOfOrganisation);
+    }
+
+    @GetMapping(value = Routes.FIND_NEARBY_ACTIVITIES, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findNearbyActivities(@RequestBody NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
+        return activityService.findNearbyActivities(nearbyActivitiesRequestDTO);
     }
 
     @DeleteMapping(value = Routes.DELETE_CURRENT_ACTIVITY_BY_ID)

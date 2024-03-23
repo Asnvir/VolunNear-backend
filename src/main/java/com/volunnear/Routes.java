@@ -34,6 +34,7 @@ public class Routes {
      */
     public static final String ADD_ACTIVITY = ORGANISATION + "/add_activity";
     public static final String GET_MY_ACTIVITIES = ORGANISATION + "/my_activities";
+    public static final String UPDATE_ACTIVITY_INFORMATION = ORGANISATION + "/update_activity";
     public static final String ACTIVITY_CURRENT_ORGANISATION = ORGANISATION + "/get_activities";
     public static final String DELETE_CURRENT_ACTIVITY_BY_ID = ORGANISATION + "/delete_activity";
     public static final String GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS = ORGANISATION + "/get_all_activities";
@@ -52,5 +53,5 @@ public class Routes {
      */
     private static final String LOCATION = API_URL + "/location";
     public static final String FIND_NEARBY_ACTIVITIES = LOCATION + "/find_nearby";
-    public static final String UPDATE_ACTIVITY_INFORMATION = LOCATION + "/update_activity";
+
 }
