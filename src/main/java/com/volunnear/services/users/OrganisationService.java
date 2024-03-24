@@ -63,6 +63,10 @@ public class OrganisationService {
         return userRepository.findAppUserByUsername(username);
     }
 
+    public Optional<AppUser> findOrganisationById(Long id) {
+        return userRepository.findById(id);
+    }
+
     public Optional<OrganisationInfo> findOrganisationByNameOfOrganisation(String nameOfOrganisation) {
         return organisationInfoRepository.findOrganisationInfoByNameOfOrganisation(nameOfOrganisation);
     }
@@ -74,6 +78,14 @@ public class OrganisationService {
     public Optional<OrganisationInfo> findOrganisationAndAdditionalInfoById(Long idOfOrganisation) {
         Optional<AppUser> byId = userRepository.findById(idOfOrganisation);
         return byId.map(organisationInfoRepository::findOrganisationInfoByAppUser);
+    }
+
+    public boolean isUserAreOrganisation(AppUser appUser) {
+        return organisationInfoRepository.existsByAppUser(appUser);
+    }
+
+    public OrganisationResponseDTO getResponseDTOForSubscriptions(AppUser appUser) {
+        return getOrganisationResponseDTO(findAdditionalInfoAboutOrganisation(appUser));
     }
 
     public OrganisationResponseDTO getOrganisationResponseDTO(OrganisationInfo additionalInfoAboutOrganisation) {

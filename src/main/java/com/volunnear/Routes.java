@@ -53,5 +53,12 @@ public class Routes {
      */
     private static final String LOCATION = API_URL + "/location";
     public static final String FIND_NEARBY_ACTIVITIES = LOCATION + "/find_nearby";
+    /**
+     * Notifications routes
+     */
+    private static final String NOTIFICATIONS = API_URL + "/notifications";
+    public static final String GET_ALL_SUBSCRIPTIONS_OF_VOLUNTEER = NOTIFICATIONS + "/my_subscriptions";
+    public static final String SUBSCRIBE_TO_NOTIFICATIONS_BY_ID_OF_ORGANISATION = NOTIFICATIONS + "/subscribe";
+    public static final String UNSUBSCRIBE_FROM_NOTIFICATIONS_BY_ID_OF_ORGANISATION = NOTIFICATIONS + "/unsubscribe";
 
 }

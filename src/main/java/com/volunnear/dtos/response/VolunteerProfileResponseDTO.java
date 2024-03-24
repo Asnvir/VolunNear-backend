@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VolunteerProfileResponseDTO {
+    private String email;
     private String username;
     private String realName;
     private List<String> preferences;

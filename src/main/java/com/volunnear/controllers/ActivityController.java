@@ -18,7 +18,7 @@ public class ActivityController {
 
     @PostMapping(value = Routes.ADD_ACTIVITY, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addActivityToOrganisation(@RequestBody AddActivityRequestDTO activityRequest, Principal principal) {
-        return activityService.addActivityOfOrganisation(activityRequest, principal);
+        return activityService.addActivityToOrganisation(activityRequest, principal);
     }
 
     @PostMapping(value = Routes.ADD_VOLUNTEER_TO_ACTIVITY)

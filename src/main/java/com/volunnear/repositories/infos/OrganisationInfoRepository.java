@@ -10,4 +10,6 @@ public interface OrganisationInfoRepository extends JpaRepository<OrganisationIn
     OrganisationInfo findOrganisationInfoByAppUser(AppUser appUser);
 
     Optional<OrganisationInfo> findOrganisationInfoByNameOfOrganisation(String nameOfOrganisation);
+
+    boolean existsByAppUser(AppUser appUser);
 }

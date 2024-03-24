@@ -1,6 +1,6 @@
 package com.volunnear.services.activities;
 
-import com.volunnear.Routes;
+import com.volunnear.dtos.ActivityNotificationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
@@ -10,6 +10,7 @@ import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
+import com.volunnear.eventListeners.ActivityCreationEvent;
 import com.volunnear.exceptions.AuthErrorException;
 import com.volunnear.repositories.infos.ActivitiesRepository;
 import com.volunnear.repositories.infos.VolunteersInActivityRepository;
@@ -18,12 +19,11 @@ import com.volunnear.services.users.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpHeaders;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,18 +33,20 @@ import java.util.stream.Collectors;
 public class ActivityService {
     private final UserService userService;
     private final OrganisationService organisationService;
+    private final ApplicationEventPublisher eventPublisher;
     private final ActivitiesRepository activitiesRepository;
     private final VolunteersInActivityRepository volunteersInActivityRepository;
 
-    public ResponseEntity<?> addActivityOfOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
+    public ResponseEntity<?> addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
         Optional<AppUser> organisation = userService.findAppUserByUsername(principal.getName());
         if (organisation.isEmpty()) {
             return new ResponseEntity<>(new AuthErrorException(HttpStatus.UNAUTHORIZED.value(), "Incorrect token data about organisation"), HttpStatus.UNAUTHORIZED);
         }
-        if (!"ROLE_ORGANISATION".equals(organisation.get().getRoles().get(0).toString())) {
+        if (!organisationService.isUserAreOrganisation(organisation.get())) {
             return new ResponseEntity<>("Bad try, you are not organisation", HttpStatus.BAD_REQUEST);
         }
         Activity activity = new Activity();
+
         activity.setTitle(activityRequest.getTitle());
         activity.setDescription(activityRequest.getDescription());
         activity.setCountry(activityRequest.getCountry());
@@ -53,7 +55,26 @@ public class ActivityService {
         activity.setKindOfActivity(activityRequest.getKindOfActivity());
         activity.setAppUser(organisation.get());
         activitiesRepository.save(activity);
+
+        sendNotificationForSubscribers(activity);
+
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public void sendNotificationForSubscribers(Activity activity) {
+        ActivityNotificationDTO notificationDTO = new ActivityNotificationDTO();
+        ActivityDTO activityDTO = new ActivityDTO();
+
+        activityDTO.setCity(activity.getCity());
+        activityDTO.setCountry(activity.getCountry());
+        activityDTO.setKindOfActivity(activity.getKindOfActivity());
+        activityDTO.setTitle(activity.getTitle());
+        activityDTO.setDescription(activity.getDescription());
+        activityDTO.setDateOfPlace(activity.getDateOfPlace());
+
+        notificationDTO.setActivityDTO(activityDTO);
+        notificationDTO.setOrganisationResponseDTO(getOrganisationResponseDTO(organisationService.findAdditionalInfoAboutOrganisation(activity.getAppUser())));
+        eventPublisher.publishEvent(new ActivityCreationEvent(this, notificationDTO));
     }
 
     public ResponseEntity<?> getAllActivitiesOfAllOrganisations() {
@@ -114,10 +135,8 @@ public class ActivityService {
         }
 
         activitiesRepository.deleteById(id);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(new URI(Routes.GET_MY_ACTIVITIES));
 
-        return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);
+        return new ResponseEntity<>("Successfully deleted activity!", HttpStatus.FOUND);
     }
 
     public ResponseEntity<?> addVolunteerToActivity(Principal principal, Long idOfActivity) {

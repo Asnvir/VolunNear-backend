@@ -36,6 +36,7 @@ public class VolunteerService {
         Optional<VolunteerPreference> volunteerPreferenceByVolunteer = volunteerPreferenceRepository.findVolunteerPreferenceByVolunteer(appUser);
         VolunteerProfileResponseDTO profileResponse = new VolunteerProfileResponseDTO();
 
+        profileResponse.setEmail(appUser.getEmail());
         profileResponse.setUsername(principal.getName());
         profileResponse.setRealName(volunteerInfo.getRealNameOfUser());
         if (volunteerPreferenceByVolunteer.isEmpty()) {
@@ -77,6 +78,10 @@ public class VolunteerService {
         appUser.setRoles(roleService.getRoleByName("ROLE_VOLUNTEER"));
         userRepository.save(appUser);
         addAdditionalInfo(appUser, volunteerDTO.getNameOfUser());
+    }
+
+    public boolean isUserAreVolunteer(AppUser appUser) {
+        return volunteerInfoRepository.existsByAppUser(appUser);
     }
 
     private void addAdditionalInfo(AppUser appUser, String realName) {
