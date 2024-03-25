@@ -1,4 +1,4 @@
-package com.volunnear.services;
+package com.volunnear.services.notifications;
 
 import com.volunnear.dtos.ActivityNotificationDTO;
 import com.volunnear.dtos.response.ActivityDTO;

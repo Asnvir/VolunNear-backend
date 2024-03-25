@@ -1,7 +1,7 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-import com.volunnear.services.EmailNotificationService;
+import com.volunnear.services.notifications.EmailNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
