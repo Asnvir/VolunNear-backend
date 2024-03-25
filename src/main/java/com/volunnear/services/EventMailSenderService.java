@@ -37,7 +37,7 @@ public class EventMailSenderService {
         for (Map.Entry<String, String> usernameAndEmailMapEntry : usernameAndEmailMap.entrySet()) {
             String email = usernameAndEmailMapEntry.getValue();
             if (validateEmail(email)) {
-                SimpleMailMessage mailMessage = getSimpleMailMessage(notificationDTO, activityDTO);
+                SimpleMailMessage mailMessage = getSimpleMailMessage(activityCreationEvent.getStatus(), notificationDTO, activityDTO);
                 mailMessage.setTo(email);
                 javaMailSender.send(mailMessage);
             }
@@ -49,9 +49,9 @@ public class EventMailSenderService {
         return Pattern.compile(regexPattern).matcher(email).matches();
     }
 
-    private static SimpleMailMessage getSimpleMailMessage(ActivityNotificationDTO notificationDTO, ActivityDTO activityDTO) {
+    private static SimpleMailMessage getSimpleMailMessage(String status, ActivityNotificationDTO notificationDTO, ActivityDTO activityDTO) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setSubject("New activity from " + notificationDTO.getOrganisationResponseDTO().getNameOfOrganisation() + " !");
+        mailMessage.setSubject(status + " activity from " + notificationDTO.getOrganisationResponseDTO().getNameOfOrganisation() + " !");
         mailMessage.setText("There is info about activity: "
                 + "\nTitle: " + activityDTO.getTitle()
                 + "\nKind of activity: " + activityDTO.getKindOfActivity()

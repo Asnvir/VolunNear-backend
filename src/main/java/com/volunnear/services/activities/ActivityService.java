@@ -22,6 +22,7 @@ import lombok.SneakyThrows;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -56,12 +57,13 @@ public class ActivityService {
         activity.setAppUser(organisation.get());
         activitiesRepository.save(activity);
 
-        sendNotificationForSubscribers(activity);
+        sendNotificationForSubscribers(activity, "New");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public void sendNotificationForSubscribers(Activity activity) {
+    @Async
+    public void sendNotificationForSubscribers(Activity activity, String status) {
         ActivityNotificationDTO notificationDTO = new ActivityNotificationDTO();
         ActivityDTO activityDTO = new ActivityDTO();
 
@@ -74,7 +76,7 @@ public class ActivityService {
 
         notificationDTO.setActivityDTO(activityDTO);
         notificationDTO.setOrganisationResponseDTO(getOrganisationResponseDTO(organisationService.findAdditionalInfoAboutOrganisation(activity.getAppUser())));
-        eventPublisher.publishEvent(new ActivityCreationEvent(this, notificationDTO));
+        eventPublisher.publishEvent(new ActivityCreationEvent(this, notificationDTO, status));
     }
 
     public ResponseEntity<?> getAllActivitiesOfAllOrganisations() {
@@ -176,6 +178,8 @@ public class ActivityService {
         activity.setCity(activityRequestDTO.getCity());
         activity.setDateOfPlace(new Date());
         activity.setKindOfActivity(activityRequestDTO.getKindOfActivity());
+
+        sendNotificationForSubscribers(activity, "Updated");
 
         return new ResponseEntity<>("Successfully updated id", HttpStatus.OK);
     }
