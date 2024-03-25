@@ -21,7 +21,7 @@ public class ActivityController {
         return activityService.addActivityToOrganisation(activityRequest, principal);
     }
 
-    @PostMapping(value = Routes.ADD_VOLUNTEER_TO_ACTIVITY)
+    @PostMapping(value = Routes.JOIN_TO_ACTIVITY)
     public ResponseEntity<?> addVolunteerToActivity(@RequestParam Long id, Principal principal) {
         return activityService.addVolunteerToActivity(principal, id);
     }

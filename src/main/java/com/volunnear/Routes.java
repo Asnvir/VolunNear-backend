@@ -7,7 +7,7 @@ public class Routes {
      * Users management
      */
     public static final String LOGIN = API_URL + "/login";
-    public static final String REGISTER_ROUTE_SECURITY = API_URL + "/registration/*";
+    public static final String REGISTER_ROUTE_SECURITY = API_URL + "/registration";
     public static final String REGISTER_VOLUNTEER = API_URL + "/registration/volunteer";
     public static final String REGISTER_ORGANISATION = API_URL + "/registration/organisation";
     public static final String UPDATE_VOLUNTEER_PROFILE = API_URL + "/update/volunteer";
@@ -24,8 +24,8 @@ public class Routes {
      */
     public static final String VOLUNTEER = API_URL + "/volunteer";
     public static final String GET_VOLUNTEER_PROFILE = VOLUNTEER + "/my_profile";
+    public static final String JOIN_TO_ACTIVITY = VOLUNTEER + "/enter_to_activity";
     public static final String SET_VOLUNTEERS_PREFERENCES = VOLUNTEER + "/set_preferences";
-    public static final String ADD_VOLUNTEER_TO_ACTIVITY = VOLUNTEER + "/enter_to_activity";
     public static final String LEAVE_FROM_ACTIVITY_BY_VOLUNTEER = VOLUNTEER + "/leave_activity";
     public static final String GET_RECOMMENDATION_BY_PREFERENCES = VOLUNTEER + "/get_recommendations";
 

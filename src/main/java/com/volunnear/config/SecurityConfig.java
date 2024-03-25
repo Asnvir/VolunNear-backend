@@ -25,12 +25,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenFilter jwtTokenFilter) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(Routes.REGISTER_ROUTE_SECURITY, Routes.LOGIN).permitAll()
+                        .requestMatchers(Routes.REGISTER_ROUTE_SECURITY + "/**",
+                                Routes.LOGIN).permitAll()
 
-                        .requestMatchers(Routes.UPDATE_VOLUNTEER_PROFILE).hasRole("VOLUNTEER")
-                        .requestMatchers(Routes.UPDATE_ORGANISATION_PROFILE, Routes.ADD_ACTIVITY, Routes.GET_MY_ACTIVITIES).hasRole("ORGANISATION")
+                        .requestMatchers(Routes.VOLUNTEER + "/**",
+                                Routes.UPDATE_VOLUNTEER_PROFILE,
+                                Routes.POST_FEEDBACK_ABOUT_ORGANISATION,
+                                Routes.UPDATE_FEEDBACK_FOR_CURRENT_ORGANISATION,
+                                Routes.DELETE_FEEDBACK_ABOUT_ORGANISATION,
+                                Routes.LOCATION + "/**",
+                                Routes.NOTIFICATIONS + "/**").hasRole("VOLUNTEER")
 
-                        .requestMatchers("/api/hello", Routes.GET_ALL_ORGANISATIONS, Routes.ACTIVITY_CURRENT_ORGANISATION)
+                        .requestMatchers(Routes.UPDATE_ORGANISATION_PROFILE,
+                                Routes.ADD_ACTIVITY,
+                                Routes.GET_MY_ACTIVITIES,
+                                Routes.UPDATE_ACTIVITY_INFORMATION,
+                                Routes.DELETE_CURRENT_ACTIVITY_BY_ID,
+                                Routes.GET_ORGANISATION_PROFILE).hasRole("ORGANISATION")
+
+                        .requestMatchers("/api/hello",
+                                Routes.GET_ALL_ORGANISATIONS,
+                                Routes.ACTIVITY_CURRENT_ORGANISATION,
+                                Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS,
+                                Routes.GET_FEEDBACKS_OF_ALL_ORGANISATIONS,
+                                Routes.GET_FEEDBACKS_FROM_CURRENT_ORGANISATION)
                         .hasAnyRole("VOLUNTEER", "ORGANISATION")
 
                         .anyRequest().authenticated())
