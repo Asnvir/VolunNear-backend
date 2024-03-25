@@ -1,4 +1,4 @@
-package com.volunnear.eventListeners;
+package com.volunnear.events;
 
 import com.volunnear.dtos.ActivityNotificationDTO;
 import lombok.Getter;

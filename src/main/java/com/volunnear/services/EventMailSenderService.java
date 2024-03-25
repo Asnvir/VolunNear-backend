@@ -3,7 +3,7 @@ package com.volunnear.services;
 import com.volunnear.dtos.ActivityNotificationDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.entitiy.VolunteerNotificationSubscription;
-import com.volunnear.eventListeners.ActivityCreationEvent;
+import com.volunnear.events.ActivityCreationEvent;
 import com.volunnear.repositories.VolunteerNotificationSubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;

@@ -10,7 +10,7 @@ import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.eventListeners.ActivityCreationEvent;
+import com.volunnear.events.ActivityCreationEvent;
 import com.volunnear.exceptions.AuthErrorException;
 import com.volunnear.repositories.infos.ActivitiesRepository;
 import com.volunnear.repositories.infos.VolunteersInActivityRepository;
