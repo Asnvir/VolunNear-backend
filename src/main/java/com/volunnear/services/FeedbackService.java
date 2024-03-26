@@ -1,6 +1,6 @@
 package com.volunnear.services;
 
-import com.volunnear.controllers.FeedbackRequest;
+import com.volunnear.dtos.requests.FeedbackRequest;
 import com.volunnear.dtos.response.FeedbackResponseDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.entitiy.infos.FeedbackAboutOrganisation;

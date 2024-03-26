@@ -1,6 +1,7 @@
 package com.volunnear;
 
 public class Routes {
+
     private static final String API_URL = "/api/v1";
 
     /**
@@ -60,5 +61,12 @@ public class Routes {
     public static final String GET_ALL_SUBSCRIPTIONS_OF_VOLUNTEER = NOTIFICATIONS + "/my_subscriptions";
     public static final String SUBSCRIBE_TO_NOTIFICATIONS_BY_ID_OF_ORGANISATION = NOTIFICATIONS + "/subscribe";
     public static final String UNSUBSCRIBE_FROM_NOTIFICATIONS_BY_ID_OF_ORGANISATION = NOTIFICATIONS + "/unsubscribe";
-
+    /**
+     * Social networks integration routes
+     */
+    public static final String SOCIAL_NETWORKS = API_URL + "/social";
+    public static final String ADD_COMMUNITY_LINK = SOCIAL_NETWORKS + "/add_community_link";
+    public static final String GET_CHAT_LINK_BY_ACTIVITY = SOCIAL_NETWORKS + "/get_chat_link";
+    public static final String ADD_CHAT_LINK_FOR_ACTIVITY = SOCIAL_NETWORKS + "/add_chat_link";
+    public static final String GET_COMMUNITY_LINK_BY_ORGANISATION = SOCIAL_NETWORKS + "/get_community_link";
 }

@@ -1,4 +1,4 @@
-package com.volunnear.controllers;
+package com.volunnear.dtos.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

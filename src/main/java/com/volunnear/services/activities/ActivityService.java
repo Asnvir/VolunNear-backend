@@ -210,6 +210,27 @@ public class ActivityService {
         return new ResponseEntity<>(activitiesByPlace, HttpStatus.OK);
     }
 
+    public ActivityDTO getActivityDTOFromIdOfActivity(Long idOfActivity){
+        Optional<Activity> activityFromDb = activitiesRepository.findById(idOfActivity);
+        if (activityFromDb.isEmpty()){
+            return null;
+        }
+        Activity activityById = activityFromDb.get();
+        ActivityDTO activity = new ActivityDTO();
+
+        activity.setTitle(activityById.getTitle());
+        activity.setDescription(activityById.getDescription());
+        activity.setCountry(activityById.getCountry());
+        activity.setCity(activityById.getCity());
+        activity.setDateOfPlace(new Date());
+        activity.setKindOfActivity(activityById.getKindOfActivity());
+        return activity;
+    }
+
+    public Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, Long idOfActivity) {
+        return activitiesRepository.findActivityByAppUserAndId(appUser, idOfActivity);
+    }
+
     /**
      * Methods to convert entities from DB to DTO for response
      */
