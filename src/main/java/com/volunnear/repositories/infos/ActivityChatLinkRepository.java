@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface ActivityChatLinkRepository extends JpaRepository<ActivityChatLink, Long> {
     Optional<ActivityChatLink> findByActivity_Id(Long id);
+
     boolean existsByActivity_Id(Long id);
 }

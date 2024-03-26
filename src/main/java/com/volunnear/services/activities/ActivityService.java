@@ -210,9 +210,9 @@ public class ActivityService {
         return new ResponseEntity<>(activitiesByPlace, HttpStatus.OK);
     }
 
-    public ActivityDTO getActivityDTOFromIdOfActivity(Long idOfActivity){
+    public ActivityDTO getActivityDTOFromIdOfActivity(Long idOfActivity) {
         Optional<Activity> activityFromDb = activitiesRepository.findById(idOfActivity);
-        if (activityFromDb.isEmpty()){
+        if (activityFromDb.isEmpty()) {
             return null;
         }
         Activity activityById = activityFromDb.get();

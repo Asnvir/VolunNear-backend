@@ -13,5 +13,6 @@ public interface ActivitiesRepository extends JpaRepository<Activity, Long> {
     List<Activity> findActivityByKindOfActivityIgnoreCaseIn(List<String> preferences);
 
     List<Activity> findActivityByCountryAndCity(String country, String city);
+
     Optional<Activity> findActivityByAppUserAndId(AppUser appUser, Long idOfActivity);
 }

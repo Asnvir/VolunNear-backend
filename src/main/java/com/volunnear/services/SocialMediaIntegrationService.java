@@ -52,7 +52,7 @@ public class SocialMediaIntegrationService {
     public ResponseEntity<?> addCommunityLink(String link, Principal principal) {
         if (organisationGroupLinkRepository.existsByOrganisationInfo_AppUser_Username(principal.getName())) {
             return new ResponseEntity<>("Link already exists", HttpStatus.BAD_REQUEST);
-        } else if (!organisationService.isUserAreOrganisation(organisationService.findOrganisationByUsername(principal.getName()).get())){
+        } else if (!organisationService.isUserAreOrganisation(organisationService.findOrganisationByUsername(principal.getName()).get())) {
             return new ResponseEntity<>("Bad id of organisation!", HttpStatus.BAD_REQUEST);
         }
         OrganisationInfo infoAboutOrganisation = organisationService.findAdditionalInfoAboutOrganisation(
@@ -67,7 +67,7 @@ public class SocialMediaIntegrationService {
 
     public ResponseEntity<?> getCommunityLinkByOrganisationId(Long idOfOrganisation) {
         Optional<OrganisationGroupLink> organisationGroupLink = organisationGroupLinkRepository.findByOrganisationInfo_AppUser_Id(idOfOrganisation);
-        if (organisationGroupLink.isEmpty()){
+        if (organisationGroupLink.isEmpty()) {
             return new ResponseEntity<>("Bad id of organisation!", HttpStatus.BAD_REQUEST);
         }
         OrganisationGroupLink organisationGroupLinkResponse = organisationGroupLink.get();
