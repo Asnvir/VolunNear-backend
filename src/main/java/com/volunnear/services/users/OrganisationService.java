@@ -7,8 +7,6 @@ import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.repositories.infos.OrganisationInfoRepository;
 import com.volunnear.repositories.users.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +22,13 @@ public class OrganisationService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final OrganisationInfoRepository organisationInfoRepository;
 
-    public ResponseEntity<?> getAllOrganisationsWithInfo() {
+    public List<OrganisationResponseDTO> getAllOrganisationsWithInfo() {
         List<OrganisationInfo> organisationInfos = organisationInfoRepository.findAll();
         List<OrganisationResponseDTO> organisationResponseDTO = new ArrayList<>();
         for (OrganisationInfo organisationInfo : organisationInfos) {
             organisationResponseDTO.add(getOrganisationResponseDTO(organisationInfo));
         }
-        return new ResponseEntity<>(organisationResponseDTO, HttpStatus.OK);
+        return organisationResponseDTO;
     }
 
     public void registerOrganisation(OrganisationDTO organisationDTO) {

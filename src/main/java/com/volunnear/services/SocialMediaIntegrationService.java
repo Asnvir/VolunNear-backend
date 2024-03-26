@@ -40,10 +40,10 @@ public class SocialMediaIntegrationService {
         return new ResponseEntity<>("Successfully added link to activity with title " + activity.get().getTitle(), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getChatLinkByActivityId(Long idOfActivity) {
+    public ResponseEntity<String> getChatLinkByActivityId(Long idOfActivity) {
         Optional<ActivityChatLink> linkByActivityId = activityChatLinkRepository.findByActivity_Id(idOfActivity);
         if (linkByActivityId.isEmpty()) {
-            return new ResponseEntity<>("Activity with id " + idOfActivity + " not founded", HttpStatus.OK);
+            return new ResponseEntity<>("Activity with id " + idOfActivity + " not founded", HttpStatus.BAD_REQUEST);
         }
         ActivityChatLink activityChatLink = linkByActivityId.get();
         return new ResponseEntity<>("There`s link for chat of activity " + activityChatLink.getLink(), HttpStatus.OK);
@@ -65,7 +65,7 @@ public class SocialMediaIntegrationService {
         return new ResponseEntity<>("Successfully added community link to organisation " + infoAboutOrganisation.getNameOfOrganisation(), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getCommunityLinkByOrganisationId(Long idOfOrganisation) {
+    public ResponseEntity<String> getCommunityLinkByOrganisationId(Long idOfOrganisation) {
         Optional<OrganisationGroupLink> organisationGroupLink = organisationGroupLinkRepository.findByOrganisationInfo_AppUser_Id(idOfOrganisation);
         if (organisationGroupLink.isEmpty()) {
             return new ResponseEntity<>("Bad id of organisation!", HttpStatus.BAD_REQUEST);

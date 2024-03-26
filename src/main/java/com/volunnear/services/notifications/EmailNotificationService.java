@@ -28,7 +28,7 @@ public class EmailNotificationService {
 
 
     @Transactional
-    public ResponseEntity<?> subscribeToNotificationByIdOfOrganisation(Long idOfOrganisation, Principal principal) {
+    public ResponseEntity<String> subscribeToNotificationByIdOfOrganisation(Long idOfOrganisation, Principal principal) {
         Optional<AppUser> organisationById = organisationService.findOrganisationById(idOfOrganisation);
         if (organisationById.isEmpty() || !organisationService.isUserAreOrganisation(organisationById.get())) {
             return new ResponseEntity<>("Bad id of organisation", HttpStatus.BAD_REQUEST);
@@ -47,7 +47,7 @@ public class EmailNotificationService {
         return new ResponseEntity<>("Successfully subscribed to notifications", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> unsubscribeFromNotificationOfOrganisation(Long idOfOrganisation, Principal principal) {
+    public ResponseEntity<String> unsubscribeFromNotificationOfOrganisation(Long idOfOrganisation, Principal principal) {
         Optional<VolunteerNotificationSubscription> subscriptionById = subscriptionRepository.
                 findByUserVolunteerUsernameAndUserOrganisationId(principal.getName(), idOfOrganisation);
         if (subscriptionById.isEmpty() || !principal.getName().equals(subscriptionById.get().getUserVolunteer().getUsername())) {
@@ -60,7 +60,7 @@ public class EmailNotificationService {
     public ResponseEntity<?> getAllSubscriptionsOfVolunteer(Principal principal) {
         List<VolunteerNotificationSubscription> allByUserVolunteerUsername = subscriptionRepository.findAllByUserVolunteer_Username(principal.getName());
         if (allByUserVolunteerUsername.isEmpty()) {
-            return new ResponseEntity<>("List of subscriptions is empty!", HttpStatus.OK);
+            return new ResponseEntity<>("List of subscriptions is empty!", HttpStatus.BAD_REQUEST);
         }
         List<OrganisationResponseDTO> organisations = allByUserVolunteerUsername.stream().map(
                 subscription -> organisationService.getResponseDTOForSubscriptions(subscription.getUserOrganisation())).collect(Collectors.toList());

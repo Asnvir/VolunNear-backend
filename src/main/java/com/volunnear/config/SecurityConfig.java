@@ -28,6 +28,9 @@ public class SecurityConfig {
                         .requestMatchers(Routes.REGISTER_ROUTE_SECURITY + "/**",
                                 Routes.LOGIN).permitAll()
 
+                        .requestMatchers(Routes.SWAGGER_ENDPOINTS).permitAll()
+                        .requestMatchers("/v3/api-docs", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
+
                         .requestMatchers(Routes.VOLUNTEER + "/**",
                                 Routes.UPDATE_VOLUNTEER_PROFILE,
                                 Routes.POST_FEEDBACK_ABOUT_ORGANISATION,

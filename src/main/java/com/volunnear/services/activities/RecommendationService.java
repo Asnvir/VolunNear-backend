@@ -21,11 +21,11 @@ public class RecommendationService {
     public ResponseEntity<?> generateRecommendations(Principal principal) {
         List<String> preferences = learnPreferences(principal);
         if (preferences == null) {
-            return new ResponseEntity<>("In your profile no preferences set", HttpStatus.OK);
+            return new ResponseEntity<>("In your profile no preferences set", HttpStatus.BAD_REQUEST);
         }
         List<ActivitiesDTO> organisationsWithActivitiesByPreferences = activityService.getOrganisationsWithActivitiesByPreferences(preferences);
         if (organisationsWithActivitiesByPreferences.isEmpty()) {
-            return new ResponseEntity<>("Activities by your preferences not founded", HttpStatus.OK);
+            return new ResponseEntity<>("Activities by your preferences not founded", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(organisationsWithActivitiesByPreferences, HttpStatus.OK);
     }

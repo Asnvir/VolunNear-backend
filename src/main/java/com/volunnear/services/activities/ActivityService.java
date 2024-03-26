@@ -79,27 +79,22 @@ public class ActivityService {
         eventPublisher.publishEvent(new ActivityCreationEvent(this, notificationDTO, status));
     }
 
-    public ResponseEntity<?> getAllActivitiesOfAllOrganisations() {
+    public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations() {
         List<Activity> allActivities = activitiesRepository.findAll();
 
-        return new ResponseEntity<>(getListOfActivitiesDTOForResponse(allActivities), HttpStatus.OK);
+        return getListOfActivitiesDTOForResponse(allActivities);
     }
 
     /**
      * Activities by organisation username from token
      */
-    public ResponseEntity<?> getMyActivities(Principal principal) {
+    public ActivitiesDTO getMyActivities(Principal principal) {
         String username = principal.getName();
         Optional<AppUser> appUserByUsername = userService.findAppUserByUsername(username);
-        if (appUserByUsername.isEmpty()) {
-            return new ResponseEntity<>("Bad token, try again!", HttpStatus.BAD_REQUEST);
-        }
         OrganisationInfo additionalInfoAboutOrganisation = organisationService.findAdditionalInfoAboutOrganisation(appUserByUsername.get());
         List<Activity> activitiesByAppUser = activitiesRepository.findActivitiesByAppUser(appUserByUsername.get());
 
-        ActivitiesDTO activitiesDTO = activitiesFromEntityToDto(additionalInfoAboutOrganisation, activitiesByAppUser);
-
-        return new ResponseEntity<>(activitiesDTO, HttpStatus.OK);
+        return activitiesFromEntityToDto(additionalInfoAboutOrganisation, activitiesByAppUser);
     }
 
     /**
@@ -208,23 +203,6 @@ public class ActivityService {
             return new ResponseEntity<>("No such activities in current place", HttpStatus.OK);
         }
         return new ResponseEntity<>(activitiesByPlace, HttpStatus.OK);
-    }
-
-    public ActivityDTO getActivityDTOFromIdOfActivity(Long idOfActivity) {
-        Optional<Activity> activityFromDb = activitiesRepository.findById(idOfActivity);
-        if (activityFromDb.isEmpty()) {
-            return null;
-        }
-        Activity activityById = activityFromDb.get();
-        ActivityDTO activity = new ActivityDTO();
-
-        activity.setTitle(activityById.getTitle());
-        activity.setDescription(activityById.getDescription());
-        activity.setCountry(activityById.getCountry());
-        activity.setCity(activityById.getCity());
-        activity.setDateOfPlace(new Date());
-        activity.setKindOfActivity(activityById.getKindOfActivity());
-        return activity;
     }
 
     public Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, Long idOfActivity) {

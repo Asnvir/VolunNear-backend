@@ -31,7 +31,7 @@ public class FeedbackService {
     private final OrganisationService organisationService;
     private final FeedbackAboutOrganisationRepository feedbackAboutOrganisationRepository;
 
-    public ResponseEntity<?> postFeedbackAboutOrganisation(FeedbackRequest feedbackRequest, Principal principal) {
+    public ResponseEntity<String> postFeedbackAboutOrganisation(FeedbackRequest feedbackRequest, Principal principal) {
         if (feedbackRequest.getRate() < 0 || feedbackRequest.getRate() > 10) {
             return new ResponseEntity<>("Bad value of rate", HttpStatus.BAD_REQUEST);
         }
@@ -55,7 +55,7 @@ public class FeedbackService {
         return new ResponseEntity<>("Feedback successfully added", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> updateFeedbackInfoForCurrentOrganisation(Long idOfFeedback, FeedbackRequest feedbackRequest, Principal principal) {
+    public ResponseEntity<String> updateFeedbackInfoForCurrentOrganisation(Long idOfFeedback, FeedbackRequest feedbackRequest, Principal principal) {
         Optional<FeedbackAboutOrganisation> feedbackById = feedbackAboutOrganisationRepository.findById(idOfFeedback);
         if (feedbackById.isEmpty() || !principal.getName().equals(feedbackById.get().getUsernameOfVolunteer())) {
             return new ResponseEntity<>("Invalid id of feedback", HttpStatus.BAD_REQUEST);
@@ -67,7 +67,7 @@ public class FeedbackService {
         return new ResponseEntity<>("Successfully updated feedback", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> deleteFeedbackAboutOrganisation(Long idOfFeedback, Principal principal) {
+    public ResponseEntity<String> deleteFeedbackAboutOrganisation(Long idOfFeedback, Principal principal) {
         Optional<FeedbackAboutOrganisation> feedbackById = feedbackAboutOrganisationRepository.findById(idOfFeedback);
         if (feedbackById.isEmpty() || !principal.getName().equals(feedbackById.get().getUsernameOfVolunteer())) {
             return new ResponseEntity<>("Invalid id of feedback", HttpStatus.BAD_REQUEST);
@@ -76,10 +76,9 @@ public class FeedbackService {
         return new ResponseEntity<>("Successfully deleted your feedback", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getAllFeedbacksAboutAllOrganisations() {
+    public Map<OrganisationResponseDTO, List<FeedbackResponseDTO>> getAllFeedbacksAboutAllOrganisations() {
         List<FeedbackAboutOrganisation> allFeedback = feedbackAboutOrganisationRepository.findAll();
-        Map<OrganisationResponseDTO, List<FeedbackResponseDTO>> feedbackResult = getOrganisationResponseDTOMap(allFeedback);
-        return new ResponseEntity<>(feedbackResult, HttpStatus.OK);
+        return getOrganisationResponseDTOMap(allFeedback);
     }
 
     public ResponseEntity<?> getFeedbacksAboutCurrentOrganisation(Long id) {

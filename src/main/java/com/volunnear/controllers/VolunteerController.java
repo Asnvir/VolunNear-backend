@@ -2,8 +2,16 @@ package com.volunnear.controllers;
 
 import com.volunnear.Routes;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
+import com.volunnear.dtos.response.ActivitiesDTO;
+import com.volunnear.dtos.response.VolunteerProfileResponseDTO;
 import com.volunnear.services.activities.RecommendationService;
 import com.volunnear.services.users.VolunteerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,15 +28,22 @@ public class VolunteerController {
     private final RecommendationService recommendationService;
 
     @GetMapping(value = Routes.GET_VOLUNTEER_PROFILE)
-    public ResponseEntity<?> getVolunteerProfile(Principal principal) {
+    public VolunteerProfileResponseDTO getVolunteerProfile(Principal principal) {
         return volunteerService.getVolunteerProfile(principal);
     }
 
+    @Operation(summary = "Set preferences on user account", description = "Requires volunteer account (token) and preferencesRequestDTO")
     @PostMapping(value = Routes.SET_VOLUNTEERS_PREFERENCES)
-    public ResponseEntity<?> setVolunteersPreferences(@RequestBody PreferencesRequestDTO preferencesRequestDTO, Principal principal) {
+    public String setVolunteersPreferences(@RequestBody PreferencesRequestDTO preferencesRequestDTO, Principal principal) {
         return volunteerService.setPreferencesForVolunteer(preferencesRequestDTO, principal);
     }
 
+    @Operation(summary = "Get recommendations by preferences")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Preferences founded",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ActivitiesDTO.class)))),
+            @ApiResponse(responseCode = "400", description = "In your profile no preferences set or Activities by your preferences not founded")
+    })
     @GetMapping(value = Routes.GET_RECOMMENDATION_BY_PREFERENCES)
     public ResponseEntity<?> getRecommendationsByPreferencesOfUser(Principal principal) {
         return recommendationService.generateRecommendations(principal);

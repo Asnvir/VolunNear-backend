@@ -11,8 +11,6 @@ import com.volunnear.repositories.infos.VolunteerPreferenceRepository;
 import com.volunnear.repositories.users.UserRepository;
 import com.volunnear.services.activities.ActivityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +28,7 @@ public class VolunteerService {
     private final VolunteerInfoRepository volunteerInfoRepository;
     private final VolunteerPreferenceRepository volunteerPreferenceRepository;
 
-    public ResponseEntity<?> getVolunteerProfile(Principal principal) {
+    public VolunteerProfileResponseDTO getVolunteerProfile(Principal principal) {
         AppUser appUser = loadUserFromDbByUsername(principal);
         VolunteerInfo volunteerInfo = volunteerInfoRepository.getVolunteerInfoByAppUser(appUser);
         Optional<VolunteerPreference> volunteerPreferenceByVolunteer = volunteerPreferenceRepository.findVolunteerPreferenceByVolunteer(appUser);
@@ -44,16 +42,16 @@ public class VolunteerService {
         } else profileResponse.setPreferences(volunteerPreferenceByVolunteer.get().getPreferences());
         profileResponse.setActivitiesDTO(activityService.getActivitiesOfVolunteer(appUser));
 
-        return new ResponseEntity<>(profileResponse, HttpStatus.OK);
+        return profileResponse;
     }
 
-    public ResponseEntity<?> setPreferencesForVolunteer(PreferencesRequestDTO preferencesRequestDTO, Principal principal) {
+    public String setPreferencesForVolunteer(PreferencesRequestDTO preferencesRequestDTO, Principal principal) {
         AppUser appUser = loadUserFromDbByUsername(principal);
         VolunteerPreference preference = new VolunteerPreference();
         preference.addPreferences(preferencesRequestDTO.getPreferences());
         preference.setVolunteer(appUser);
         volunteerPreferenceRepository.save(preference);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return "Successfully set your preferences";
     }
 
     public Optional<VolunteerPreference> getPreferencesOfUser(Principal principal) {
