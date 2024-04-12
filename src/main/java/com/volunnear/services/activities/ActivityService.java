@@ -140,9 +140,9 @@ public class ActivityService {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
         List<VolunteerInActivity> allByUser = volunteersInActivityRepository.findAllByUser(appUser);
 
-        if (allByUser.size() > 5) {
-            return new ResponseEntity<>("To much activities in yours profile!", HttpStatus.OK);
-        }
+//        if (allByUser.size() > 5) {
+//            return new ResponseEntity<>("To much activities in yours profile!", HttpStatus.OK);
+//        }
 
         Optional<Activity> activityById = activitiesRepository.findById(idOfActivity);
 
