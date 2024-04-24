@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -57,8 +58,10 @@ public class SecurityConfig {
                                 Routes.GET_CHAT_LINK_BY_ACTIVITY,
                                 Routes.GET_COMMUNITY_LINK_BY_ORGANISATION)
                         .hasAnyRole("VOLUNTEER", "ORGANISATION")
-
+                        .requestMatchers("/ws/**", "stomp").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated())
+                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout(Customizer.withDefaults());
         http.sessionManagement(sessionManagement ->

@@ -17,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +52,7 @@ public class FeedbackService {
         return new ResponseEntity<>("Feedback successfully added", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateFeedbackInfoForCurrentOrganisation(Long idOfFeedback, FeedbackRequest feedbackRequest, Principal principal) {
+    public ResponseEntity<String> updateFeedbackInfoForCurrentOrganisation(UUID idOfFeedback, FeedbackRequest feedbackRequest, Principal principal) {
         Optional<FeedbackAboutOrganisation> feedbackById = feedbackAboutOrganisationRepository.findById(idOfFeedback);
         if (feedbackById.isEmpty() || !principal.getName().equals(feedbackById.get().getUsernameOfVolunteer())) {
             return new ResponseEntity<>("Invalid id of feedback", HttpStatus.BAD_REQUEST);
@@ -67,7 +64,7 @@ public class FeedbackService {
         return new ResponseEntity<>("Successfully updated feedback", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> deleteFeedbackAboutOrganisation(Long idOfFeedback, Principal principal) {
+    public ResponseEntity<String> deleteFeedbackAboutOrganisation(UUID idOfFeedback, Principal principal) {
         Optional<FeedbackAboutOrganisation> feedbackById = feedbackAboutOrganisationRepository.findById(idOfFeedback);
         if (feedbackById.isEmpty() || !principal.getName().equals(feedbackById.get().getUsernameOfVolunteer())) {
             return new ResponseEntity<>("Invalid id of feedback", HttpStatus.BAD_REQUEST);
@@ -81,7 +78,7 @@ public class FeedbackService {
         return getOrganisationResponseDTOMap(allFeedback);
     }
 
-    public ResponseEntity<?> getFeedbacksAboutCurrentOrganisation(Long id) {
+    public ResponseEntity<?> getFeedbacksAboutCurrentOrganisation(UUID id) {
         List<FeedbackAboutOrganisation> feedbackAboutOrganisationList =
                 feedbackAboutOrganisationRepository.findFeedbackAboutOrganisationByOrganisationInfo_AppUser_Id(id);
         if (feedbackAboutOrganisationList.isEmpty()) {

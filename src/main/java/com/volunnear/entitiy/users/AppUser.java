@@ -3,9 +3,11 @@ package com.volunnear.entitiy.users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,9 +15,10 @@ import java.util.Objects;
 @Table(name = "app_users")
 public class AppUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
-    private Long id;
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", nullable = false)
+    private UUID id;
 
     @Column(name = "username", nullable = false, length = 150)
     private String username;

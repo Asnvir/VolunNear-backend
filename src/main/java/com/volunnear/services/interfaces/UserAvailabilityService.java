@@ -17,5 +17,7 @@ public interface UserAvailabilityService {
 
     void removeUserSubscribed(Principal user, String subscribedChannel);
 
+    boolean isUserSubscribed(UUID userId, String subscribedChannel);
+
     Map<String, Set<String>> getUserSubscribed();
 }

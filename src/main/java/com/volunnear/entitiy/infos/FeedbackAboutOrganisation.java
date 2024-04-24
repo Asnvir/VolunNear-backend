@@ -3,6 +3,9 @@ package com.volunnear.entitiy.infos;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -10,9 +13,10 @@ import lombok.Setter;
 @Table(name = "feedback_about_organisation")
 public class FeedbackAboutOrganisation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @UuidGenerator
     @Column(name = "id", nullable = false)
-    private Long id;
+    private UUID id;
 
     @Column(name = "name_of_volunteer")
     private String nameOfVolunteer;

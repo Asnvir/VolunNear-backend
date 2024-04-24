@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class SocialMediaIntegrationController {
 
     @Operation(summary = "Add chat link to activity", description = "Requires organisation account (token), link and idOfActivity")
     @PostMapping(Routes.ADD_CHAT_LINK_FOR_ACTIVITY)
-    public ResponseEntity<?> addChatLinkToActivity(@RequestParam Long idOfActivity,
+    public ResponseEntity<?> addChatLinkToActivity(@RequestParam UUID idOfActivity,
                                                    @RequestBody String link,
                                                    Principal principal) {
         return socialMediaIntegrationService.addChatLinkToActivity(idOfActivity, link, principal);
@@ -37,7 +38,7 @@ public class SocialMediaIntegrationController {
             @ApiResponse(responseCode = "400", description = "Bad id of activity!")
     })
     @GetMapping(Routes.GET_CHAT_LINK_BY_ACTIVITY)
-    public ResponseEntity<String> getChatLinkByActivity(@RequestParam Long idOfActivity) {
+    public ResponseEntity<String> getChatLinkByActivity(@RequestParam UUID idOfActivity) {
         return socialMediaIntegrationService.getChatLinkByActivityId(idOfActivity);
     }
 
@@ -47,7 +48,7 @@ public class SocialMediaIntegrationController {
             @ApiResponse(responseCode = "400", description = "Bad id of organisation!")
     })
     @GetMapping(Routes.GET_COMMUNITY_LINK_BY_ORGANISATION)
-    public ResponseEntity<String> getCommunityLinkByOrganisation(@RequestParam Long idOfOrganisation) {
+    public ResponseEntity<String> getCommunityLinkByOrganisation(@RequestParam UUID idOfOrganisation) {
         return socialMediaIntegrationService.getCommunityLinkByOrganisationId(idOfOrganisation);
     }
 }

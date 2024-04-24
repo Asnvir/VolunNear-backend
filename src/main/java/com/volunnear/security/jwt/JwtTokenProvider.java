@@ -1,5 +1,6 @@
 package com.volunnear.security.jwt;
 
+import com.volunnear.dtos.CustomUserDetails;
 import com.volunnear.services.users.UserService;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -24,7 +24,7 @@ public class JwtTokenProvider {
     private Long jwtLifetime;
     private final UserService userService;
 
-    public String createToken(UserDetails userDetails) {
+    public String createToken(CustomUserDetails userDetails) {
         Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
         claims.put("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
 
@@ -56,7 +56,7 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userService.loadUserByUsername(getUsernameFromToken(token));
+        CustomUserDetails userDetails = userService.loadUserByUsername(getUsernameFromToken(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

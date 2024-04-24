@@ -1,7 +1,7 @@
 package com.volunnear.security.websocket;
 
 import com.volunnear.security.jwt.JwtTokenProvider;
-import com.volunnear.services.users.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class WebSocketTokenFilter implements ChannelInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -19,14 +20,20 @@ public class WebSocketTokenFilter implements ChannelInterceptor {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         final StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            String token = accessor.getFirstNativeHeader("Authorization");
-            if (jwtTokenProvider.validateToken(token)) {
-                Authentication usernamePasswordAuthenticationToken = jwtTokenProvider.getAuthentication(token);
-                accessor.setUser(usernamePasswordAuthenticationToken);
+            try {
+                String token = accessor.getFirstNativeHeader("Authorization");
+                if (token != null && jwtTokenProvider.validateToken(token)) {
+                    Authentication auth = jwtTokenProvider.getAuthentication(token);
+                    accessor.setUser(auth);
+                } else {
+                    throw new IllegalArgumentException("Invalid or missing token");
+                }
+            } catch (Exception e) {
+                log.error("Error during WebSocket authentication: ", e);
+                return null;
             }
         }
         return message;

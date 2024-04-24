@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,9 +16,10 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "activity_chat_link")
 public class ActivityChatLink {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @UuidGenerator
     @Column(name = "id", nullable = false)
-    private Long id;
+    private UUID id;
 
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "activity_id")

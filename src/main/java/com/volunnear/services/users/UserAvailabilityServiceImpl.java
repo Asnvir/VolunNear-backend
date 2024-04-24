@@ -37,6 +37,11 @@ public class UserAvailabilityServiceImpl implements UserAvailabilityService {
     }
 
     @Override
+    public boolean isUserSubscribed(UUID userId, String subscribedChannel) {
+        return false;
+    }
+
+    @Override
     public Map<String, Set<String>> getUserSubscribed() {
         return null;
     }

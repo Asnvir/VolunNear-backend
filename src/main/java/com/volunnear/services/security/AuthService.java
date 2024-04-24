@@ -12,6 +12,7 @@ import com.volunnear.dtos.requests.UpdateVolunteerInfoRequestDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.infos.VolunteerInfo;
 import com.volunnear.entitiy.users.AppUser;
+import com.volunnear.dtos.CustomUserDetails;
 import com.volunnear.exceptions.AuthErrorException;
 import com.volunnear.exceptions.RegistrationOfUserException;
 import com.volunnear.security.jwt.JwtTokenProvider;
@@ -24,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -45,7 +45,7 @@ public class AuthService {
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(new AuthErrorException(HttpStatus.UNAUTHORIZED.value(), "Incorrect login or password"), HttpStatus.UNAUTHORIZED);
         }
-        UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
+        CustomUserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenProvider.createToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
     }

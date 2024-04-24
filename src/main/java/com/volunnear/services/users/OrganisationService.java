@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class OrganisationService {
         return userRepository.findAppUserByUsername(username);
     }
 
-    public Optional<AppUser> findOrganisationById(Long id) {
+    public Optional<AppUser> findOrganisationById(UUID id) {
         return userRepository.findById(id);
     }
 
@@ -73,7 +74,7 @@ public class OrganisationService {
         return organisationInfoRepository.findOrganisationInfoByAppUser(user);
     }
 
-    public Optional<OrganisationInfo> findOrganisationAndAdditionalInfoById(Long idOfOrganisation) {
+    public Optional<OrganisationInfo> findOrganisationAndAdditionalInfoById(UUID idOfOrganisation) {
         Optional<AppUser> byId = userRepository.findById(idOfOrganisation);
         return byId.map(organisationInfoRepository::findOrganisationInfoByAppUser);
     }
