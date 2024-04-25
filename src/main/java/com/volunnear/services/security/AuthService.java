@@ -9,6 +9,7 @@ import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
 import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
 import com.volunnear.dtos.requests.UpdateVolunteerInfoRequestDTO;
+import com.volunnear.dtos.response.CurrentUserDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.infos.VolunteerInfo;
 import com.volunnear.entitiy.users.AppUser;
@@ -19,6 +20,7 @@ import com.volunnear.security.jwt.JwtTokenProvider;
 import com.volunnear.services.users.OrganisationService;
 import com.volunnear.services.users.UserService;
 import com.volunnear.services.users.VolunteerService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +64,16 @@ public class AuthService {
                 new RegistrationOfUserException(HttpStatus.BAD_REQUEST.value(), "User with username " + username + " already exist"),
                 HttpStatus.BAD_REQUEST);
     }
+
+    public CurrentUserDTO getCurrentUser(Principal principal) {
+        Optional<AppUser> appUserByUsername = userService.findAppUserByUsername(principal.getName());
+        if (appUserByUsername.isPresent()) {
+            AppUser user = appUserByUsername.get();
+            return new CurrentUserDTO(user.getId(), user.getUsername(), user.getEmail());
+        }
+        return null;
+    }
+
 
     public ResponseEntity<?> registrationOfOrganisation(RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO) {
         String username = registrationOrganisationRequestDTO.getUsername();

@@ -33,7 +33,7 @@ public class VolunteerService {
         VolunteerInfo volunteerInfo = volunteerInfoRepository.getVolunteerInfoByAppUser(appUser);
         Optional<VolunteerPreference> volunteerPreferenceByVolunteer = volunteerPreferenceRepository.findVolunteerPreferenceByVolunteer(appUser);
         VolunteerProfileResponseDTO profileResponse = new VolunteerProfileResponseDTO();
-
+        profileResponse.setId(appUser.getId());
         profileResponse.setEmail(appUser.getEmail());
         profileResponse.setUsername(principal.getName());
         profileResponse.setRealName(volunteerInfo.getRealNameOfUser());

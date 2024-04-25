@@ -15,11 +15,11 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @MessageMapping("/chat/sendMessage/{convId}")
-    public ChatMessageDTO sendMessageToConvId(ChatMessageDTO chatMessageDTO, SimpMessageHeaderAccessor headerAccessor, String conversationId) {
-        chatService.sendMessageToConvId(chatMessageDTO, headerAccessor, conversationId);
-        return chatMessageDTO;
-    }
+//    @MessageMapping("/chat/sendMessage/{convId}")
+//    public ChatMessageDTO sendMessageToConvId(ChatMessageDTO chatMessageDTO, SimpMessageHeaderAccessor headerAccessor, String conversationId) {
+//        chatService.sendMessageToConvId(chatMessageDTO, headerAccessor, conversationId);
+//        return chatMessageDTO;
+//    }
 
 //    @GetMapping("/messages")
 //    public Page<ChatMessage> getMessagesBetween(

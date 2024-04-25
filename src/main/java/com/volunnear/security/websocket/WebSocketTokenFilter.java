@@ -23,10 +23,11 @@ public class WebSocketTokenFilter implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         final StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         if (StompCommand.CONNECT == accessor.getCommand()) {
+            String token = jwtTokenProvider.resolveToken(accessor);
             try {
-                String token = accessor.getFirstNativeHeader("Authorization");
                 if (token != null && jwtTokenProvider.validateToken(token)) {
                     Authentication auth = jwtTokenProvider.getAuthentication(token);
+                    log.info("Auth: " + auth);
                     accessor.setUser(auth);
                 } else {
                     throw new IllegalArgumentException("Invalid or missing token");
