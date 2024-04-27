@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,12 +33,12 @@ public class NotificationsController {
     }
 
     @PostMapping(Routes.SUBSCRIBE_TO_NOTIFICATIONS_BY_ID_OF_ORGANISATION)
-    public ResponseEntity<String> subscribeToNotificationsByIdOfOrganisation(@RequestParam Long idOfOrganisation, Principal principal) {
+    public ResponseEntity<String> subscribeToNotificationsByIdOfOrganisation(@RequestParam UUID idOfOrganisation, Principal principal) {
         return emailNotificationService.subscribeToNotificationByIdOfOrganisation(idOfOrganisation, principal);
     }
 
     @DeleteMapping(Routes.UNSUBSCRIBE_FROM_NOTIFICATIONS_BY_ID_OF_ORGANISATION)
-    public ResponseEntity<String> unsubscribeFromNotificationsByIdOfOrganisations(@RequestParam Long idOfOrganisation, Principal principal) {
+    public ResponseEntity<String> unsubscribeFromNotificationsByIdOfOrganisations(@RequestParam UUID idOfOrganisation, Principal principal) {
         return emailNotificationService.unsubscribeFromNotificationOfOrganisation(idOfOrganisation, principal);
     }
 }

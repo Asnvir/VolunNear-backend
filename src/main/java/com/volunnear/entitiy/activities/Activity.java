@@ -6,8 +6,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,9 +19,10 @@ import java.util.Date;
 @Table(name = "activities")
 public class Activity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @UuidGenerator
     @Column(name = "id", nullable = false)
-    private Long id;
+    private UUID id;
 
     @Column(name = "title")
     private String title;

@@ -123,7 +123,7 @@ public class ActivityService {
      * Delete activity by id and from org principal (organisation data)
      */
     @SneakyThrows
-    public ResponseEntity<?> deleteActivityById(Long id, Principal principal) {
+    public ResponseEntity<?> deleteActivityById(UUID id, Principal principal) {
         AppUser appUser = organisationService.findOrganisationByUsername(principal.getName()).get();
         Optional<Activity> activityById = activitiesRepository.findById(id);
 
@@ -136,7 +136,7 @@ public class ActivityService {
         return new ResponseEntity<>("Successfully deleted activity!", HttpStatus.FOUND);
     }
 
-    public ResponseEntity<?> addVolunteerToActivity(Principal principal, Long idOfActivity) {
+    public ResponseEntity<?> addVolunteerToActivity(Principal principal, UUID idOfActivity) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
         List<VolunteerInActivity> allByUser = volunteersInActivityRepository.findAllByUser(appUser);
 
@@ -157,7 +157,7 @@ public class ActivityService {
         return new ResponseEntity<>("Successful! Welcome to activity: " + activityById.get().getTitle(), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> updateActivityInformation(Long idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
+    public ResponseEntity<?> updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
         Optional<Activity> activityById = activitiesRepository.findById(idOfActivity);
         if (activityById.isEmpty() || !appUser.equals(activityById.get().getAppUser())) {
@@ -180,7 +180,7 @@ public class ActivityService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteVolunteerFromActivity(Long id, Principal principal) {
+    public ResponseEntity<?> deleteVolunteerFromActivity(UUID id, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
         if (!volunteersInActivityRepository.existsByUserAndActivity_Id(appUser, id)) {
             return new ResponseEntity<>("Bad id of activity!", HttpStatus.BAD_REQUEST);
@@ -205,7 +205,7 @@ public class ActivityService {
         return new ResponseEntity<>(activitiesByPlace, HttpStatus.OK);
     }
 
-    public Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, Long idOfActivity) {
+    public Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, UUID idOfActivity) {
         return activitiesRepository.findActivityByAppUserAndId(appUser, idOfActivity);
     }
 

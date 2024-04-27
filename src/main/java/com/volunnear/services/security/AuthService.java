@@ -9,22 +9,24 @@ import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
 import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
 import com.volunnear.dtos.requests.UpdateVolunteerInfoRequestDTO;
+import com.volunnear.dtos.response.CurrentUserDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.infos.VolunteerInfo;
 import com.volunnear.entitiy.users.AppUser;
+import com.volunnear.dtos.CustomUserDetails;
 import com.volunnear.exceptions.AuthErrorException;
 import com.volunnear.exceptions.RegistrationOfUserException;
 import com.volunnear.security.jwt.JwtTokenProvider;
 import com.volunnear.services.users.OrganisationService;
 import com.volunnear.services.users.UserService;
 import com.volunnear.services.users.VolunteerService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -45,7 +47,7 @@ public class AuthService {
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(new AuthErrorException(HttpStatus.UNAUTHORIZED.value(), "Incorrect login or password"), HttpStatus.UNAUTHORIZED);
         }
-        UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
+        CustomUserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenProvider.createToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
     }
@@ -62,6 +64,16 @@ public class AuthService {
                 new RegistrationOfUserException(HttpStatus.BAD_REQUEST.value(), "User with username " + username + " already exist"),
                 HttpStatus.BAD_REQUEST);
     }
+
+    public CurrentUserDTO getCurrentUser(Principal principal) {
+        Optional<AppUser> appUserByUsername = userService.findAppUserByUsername(principal.getName());
+        if (appUserByUsername.isPresent()) {
+            AppUser user = appUserByUsername.get();
+            return new CurrentUserDTO(user.getId(), user.getUsername(), user.getEmail());
+        }
+        return null;
+    }
+
 
     public ResponseEntity<?> registrationOfOrganisation(RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO) {
         String username = registrationOrganisationRequestDTO.getUsername();

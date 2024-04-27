@@ -4,6 +4,9 @@ import com.volunnear.entitiy.users.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -11,9 +14,10 @@ import lombok.Setter;
 @Table(name = "organisation_info")
 public class OrganisationInfo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @UuidGenerator
     @Column(name = "id", nullable = false)
-    private Long id;
+    private UUID id;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "app_user_organisation_id", unique = true)

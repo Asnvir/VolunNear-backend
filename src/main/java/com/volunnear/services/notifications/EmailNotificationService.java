@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +29,7 @@ public class EmailNotificationService {
 
 
     @Transactional
-    public ResponseEntity<String> subscribeToNotificationByIdOfOrganisation(Long idOfOrganisation, Principal principal) {
+    public ResponseEntity<String> subscribeToNotificationByIdOfOrganisation(UUID idOfOrganisation, Principal principal) {
         Optional<AppUser> organisationById = organisationService.findOrganisationById(idOfOrganisation);
         if (organisationById.isEmpty() || !organisationService.isUserAreOrganisation(organisationById.get())) {
             return new ResponseEntity<>("Bad id of organisation", HttpStatus.BAD_REQUEST);
@@ -47,7 +48,7 @@ public class EmailNotificationService {
         return new ResponseEntity<>("Successfully subscribed to notifications", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> unsubscribeFromNotificationOfOrganisation(Long idOfOrganisation, Principal principal) {
+    public ResponseEntity<String> unsubscribeFromNotificationOfOrganisation(UUID idOfOrganisation, Principal principal) {
         Optional<VolunteerNotificationSubscription> subscriptionById = subscriptionRepository.
                 findByUserVolunteerUsernameAndUserOrganisationId(principal.getName(), idOfOrganisation);
         if (subscriptionById.isEmpty() || !principal.getName().equals(subscriptionById.get().getUserVolunteer().getUsername())) {

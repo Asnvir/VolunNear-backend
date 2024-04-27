@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface ActivitiesRepository extends JpaRepository<Activity, Long> {
+public interface ActivitiesRepository extends JpaRepository<Activity, UUID> {
     List<Activity> findActivitiesByAppUser(AppUser appUser);
 
     List<Activity> findActivityByKindOfActivityIgnoreCaseIn(List<String> preferences);
 
     List<Activity> findActivityByCountryAndCity(String country, String city);
 
-    Optional<Activity> findActivityByAppUserAndId(AppUser appUser, Long idOfActivity);
+    Optional<Activity> findActivityByAppUserAndId(AppUser appUser, UUID idOfActivity);
 }

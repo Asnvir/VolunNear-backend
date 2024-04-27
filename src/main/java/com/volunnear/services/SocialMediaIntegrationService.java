@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class SocialMediaIntegrationService {
     private final ActivityChatLinkRepository activityChatLinkRepository;
     private final OrganisationGroupLinkRepository organisationGroupLinkRepository;
 
-    public ResponseEntity<?> addChatLinkToActivity(Long idOfActivity, String link, Principal principal) {
+    public ResponseEntity<?> addChatLinkToActivity(UUID idOfActivity, String link, Principal principal) {
         Optional<AppUser> organisationByUsername = organisationService.findOrganisationByUsername(principal.getName());
         Optional<Activity> activity = activityService.findActivityByOrganisationAndIdOfActivity(organisationByUsername.get(), idOfActivity);
         if (activity.isEmpty()) {
@@ -40,7 +41,7 @@ public class SocialMediaIntegrationService {
         return new ResponseEntity<>("Successfully added link to activity with title " + activity.get().getTitle(), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> getChatLinkByActivityId(Long idOfActivity) {
+    public ResponseEntity<String> getChatLinkByActivityId(UUID idOfActivity) {
         Optional<ActivityChatLink> linkByActivityId = activityChatLinkRepository.findByActivity_Id(idOfActivity);
         if (linkByActivityId.isEmpty()) {
             return new ResponseEntity<>("Activity with id " + idOfActivity + " not founded", HttpStatus.BAD_REQUEST);
@@ -65,7 +66,7 @@ public class SocialMediaIntegrationService {
         return new ResponseEntity<>("Successfully added community link to organisation " + infoAboutOrganisation.getNameOfOrganisation(), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> getCommunityLinkByOrganisationId(Long idOfOrganisation) {
+    public ResponseEntity<String> getCommunityLinkByOrganisationId(UUID idOfOrganisation) {
         Optional<OrganisationGroupLink> organisationGroupLink = organisationGroupLinkRepository.findByOrganisationInfo_AppUser_Id(idOfOrganisation);
         if (organisationGroupLink.isEmpty()) {
             return new ResponseEntity<>("Bad id of organisation!", HttpStatus.BAD_REQUEST);
