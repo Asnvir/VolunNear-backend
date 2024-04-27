@@ -10,9 +10,12 @@ import com.volunnear.services.interfaces.UserAvailabilityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -33,13 +36,16 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatMessageDTO sendMessageToConvId(ChatMessageDTO chatMessageDTO, SimpMessageHeaderAccessor headerAccessor, String conversationId) {
-        CustomUserDetails userDetails = getUser();
+        CustomUserDetails userDetails = getUser(headerAccessor);
         setSenderDetails(chatMessageDTO, userDetails);
         boolean isTargetUserOnline = checkUserOnlineStatus(chatMessageDTO.getReceiverId());
         boolean isTargetUserSubscribed = checkUserSubscription(chatMessageDTO.getReceiverId(), conversationId);
-        chatMessageDTO.setId(UUID.randomUUID());
-
-        ConversationEntity conversationEntity = buildConversationEntity(chatMessageDTO, userDetails.getId(), conversationId, isTargetUserOnline, isTargetUserSubscribed);
+        ConversationEntity conversationEntity = buildConversationEntity(
+                chatMessageDTO,
+                userDetails.getId(),
+                conversationId,
+                isTargetUserOnline,
+                isTargetUserSubscribed);
         conversationRepository.save(conversationEntity);
         sendMessage(chatMessageDTO, conversationId, isTargetUserOnline, isTargetUserSubscribed);
         return chatMessageDTO;
@@ -56,15 +62,21 @@ public class ChatServiceImpl implements ChatService {
                 .fromUser(fromUserId)
                 .toUser(chatMessageDTO.getReceiverId())
                 .content(chatMessageDTO.getContent())
+                .lastModified(Timestamp.from(Instant.now()))
+                .time(Timestamp.from(Instant.now()))
                 .convId(conversationId)
                 .deliveryStatus(determineDeliveryStatus(isTargetOnline, isTargetSubscribed));
 
         return builder.build();
     }
 
-    private CustomUserDetails getUser() {
-        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return (CustomUserDetails) object;
+    private CustomUserDetails getUser(SimpMessageHeaderAccessor headerAccessor) {
+        Authentication authentication = (Authentication) headerAccessor.getUser();
+        log.info("Authentication: {}", authentication);
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            return (CustomUserDetails) authentication.getPrincipal();
+        }
+        return null;
     }
 
     private boolean checkUserOnlineStatus(UUID userId) {

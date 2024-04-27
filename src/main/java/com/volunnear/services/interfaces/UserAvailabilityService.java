@@ -19,5 +19,5 @@ public interface UserAvailabilityService {
 
     boolean isUserSubscribed(UUID userId, String subscribedChannel);
 
-    Map<String, Set<String>> getUserSubscribed();
+    Map<UUID, Set<String>> getUserSubscribed();
 }
