@@ -61,7 +61,7 @@ public class UserAvailabilityServiceImpl implements UserAvailabilityService {
     public void addUserSubscribed(Principal user, String subscribedChannel) {
         CustomUserDetails userDetails= getUserDetails(user);
         log.info("User {} subscribed to channel {}", userDetails.getUsername(), subscribedChannel);
-        Set<String> subscribedChannels = userSubscribed.get(userDetails.getId());
+        Set<String> subscribedChannels = userSubscribed.getOrDefault(userDetails.getId(), new HashSet<>());
         subscribedChannels.add(subscribedChannel);
         userSubscribed.put(userDetails.getId(), subscribedChannels);
     }
@@ -70,7 +70,7 @@ public class UserAvailabilityServiceImpl implements UserAvailabilityService {
     public void removeUserSubscribed(Principal user, String subscribedChannel) {
         CustomUserDetails userDetails= getUserDetails(user);
         log.info("User {} unsubscribed from channel {}", userDetails.getUsername(), subscribedChannel);
-        Set<String> subscribedChannels = userSubscribed.get(userDetails.getId());
+        Set<String> subscribedChannels = userSubscribed.getOrDefault(userDetails.getId(), new HashSet<>());
         subscribedChannels.remove(subscribedChannel);
         userSubscribed.put(userDetails.getId(), subscribedChannels);
     }
