@@ -1,26 +1,26 @@
 package com.volunnear.services.interfaces;
-
 import com.volunnear.dtos.jwt.JwtRequest;
+import com.volunnear.dtos.jwt.JwtResponse;
 import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
 import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
 import com.volunnear.dtos.requests.UpdateVolunteerInfoRequestDTO;
 import com.volunnear.dtos.response.CurrentUserDTO;
-import org.springframework.http.ResponseEntity;
-
+import com.volunnear.dtos.response.OrganisationInfoDTO;
+import com.volunnear.dtos.response.VolunteerInfoDTO;
 import java.security.Principal;
 
 public interface AuthService {
 
-    ResponseEntity<?> createAuthToken(JwtRequest authRequest);
+    JwtResponse createAuthToken(JwtRequest authRequest);
 
-    ResponseEntity<?> registrationOfVolunteer(RegistrationVolunteerRequestDTO registrationVolunteerRequestDto);
+    void registrationOfVolunteer(RegistrationVolunteerRequestDTO registrationVolunteerRequestDto);
 
     CurrentUserDTO getCurrentUser(Principal principal);
 
-    ResponseEntity<?> registrationOfOrganisation(RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO);
+    void registrationOfOrganisation(RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO);
 
-    ResponseEntity<?> updateVolunteerInfo(UpdateVolunteerInfoRequestDTO request, Principal principal);
+    VolunteerInfoDTO updateVolunteerInfo(UpdateVolunteerInfoRequestDTO request, Principal principal);
 
-    ResponseEntity<?> updateOrganisationInfo(UpdateOrganisationInfoRequestDTO request, Principal principal);
+    OrganisationInfoDTO updateOrganisationInfo(UpdateOrganisationInfoRequestDTO request, Principal principal);
 }

@@ -1,6 +1,7 @@
 package com.volunnear.services.interfaces;
 
 import com.volunnear.dtos.OrganisationDTO;
+import com.volunnear.dtos.response.OrganisationInfoDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
@@ -15,7 +16,7 @@ public interface OrganisationService {
 
     void registerOrganisation(OrganisationDTO organisationDTO);
 
-    void updateOrganisationInfo(AppUser appUser, OrganisationInfo organisationInfo);
+    OrganisationInfoDTO updateOrganisationInfo(AppUser appUser, OrganisationInfo organisationInfo);
 
     Optional<AppUser> findOrganisationByUsername(String username);
 

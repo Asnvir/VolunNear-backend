@@ -2,6 +2,7 @@ package com.volunnear.services.interfaces;
 
 import com.volunnear.dtos.VolunteerDTO;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
+import com.volunnear.dtos.response.VolunteerInfoDTO;
 import com.volunnear.dtos.response.VolunteerProfileResponseDTO;
 import com.volunnear.entitiy.infos.VolunteerInfo;
 import com.volunnear.entitiy.infos.VolunteerPreference;
@@ -20,7 +21,7 @@ public interface VolunteerService {
 
     VolunteerInfo getVolunteerInfo(AppUser appUser);
 
-    void updateVolunteerInfo(AppUser appUser, VolunteerInfo volunteerInfo);
+    VolunteerInfoDTO updateVolunteerInfo(AppUser appUser, VolunteerInfo volunteerInfo);
 
     void registerVolunteer(VolunteerDTO volunteerDTO);
 

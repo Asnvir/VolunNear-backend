@@ -2,10 +2,12 @@ package com.volunnear.services.users;
 
 import com.volunnear.dtos.VolunteerDTO;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
+import com.volunnear.dtos.response.VolunteerInfoDTO;
 import com.volunnear.dtos.response.VolunteerProfileResponseDTO;
 import com.volunnear.entitiy.infos.VolunteerInfo;
 import com.volunnear.entitiy.infos.VolunteerPreference;
 import com.volunnear.entitiy.users.AppUser;
+import com.volunnear.mappers.VolunteerInfoMapper;
 import com.volunnear.repositories.infos.VolunteerInfoRepository;
 import com.volunnear.repositories.infos.VolunteerPreferenceRepository;
 import com.volunnear.repositories.users.UserRepository;
@@ -28,6 +30,7 @@ public class VolunteerServiceImpl implements VolunteerService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final VolunteerInfoRepository volunteerInfoRepository;
     private final VolunteerPreferenceRepository volunteerPreferenceRepository;
+    private final VolunteerInfoMapper volunteerInfoMapper;
     @Override
     public VolunteerProfileResponseDTO getVolunteerProfile(Principal principal) {
         AppUser appUser = loadUserFromDbByUsername(principal);
@@ -64,9 +67,11 @@ public class VolunteerServiceImpl implements VolunteerService {
         return volunteerInfoRepository.getVolunteerInfoByAppUser(appUser);
     }
     @Override
-    public void updateVolunteerInfo(AppUser appUser, VolunteerInfo volunteerInfo) {
+    public VolunteerInfoDTO updateVolunteerInfo(AppUser appUser, VolunteerInfo volunteerInfo) {
         userRepository.save(appUser);
-        volunteerInfoRepository.save(volunteerInfo);
+        VolunteerInfo savedVolunteerInfo = volunteerInfoRepository.save(volunteerInfo);
+        return volunteerInfoMapper.volunteerInfoToVolunteerInfoDTO(savedVolunteerInfo);
+
     }
     @Override
     public void registerVolunteer(VolunteerDTO volunteerDTO) {

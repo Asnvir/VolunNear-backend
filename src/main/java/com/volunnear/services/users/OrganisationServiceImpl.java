@@ -1,9 +1,11 @@
 package com.volunnear.services.users;
 
 import com.volunnear.dtos.OrganisationDTO;
+import com.volunnear.dtos.response.OrganisationInfoDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
+import com.volunnear.mappers.OrganisationInfoMapper;
 import com.volunnear.repositories.infos.OrganisationInfoRepository;
 import com.volunnear.repositories.users.UserRepository;
 import com.volunnear.services.interfaces.OrganisationService;
@@ -23,6 +25,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final OrganisationInfoRepository organisationInfoRepository;
+    private final OrganisationInfoMapper organisationInfoMapper;
 
     @Override
      public List<OrganisationResponseDTO> getAllOrganisationsWithInfo() {
@@ -54,10 +57,11 @@ public class OrganisationServiceImpl implements OrganisationService {
         organisationInfoRepository.save(organisationInfo);
     }
     @Override
-    public void updateOrganisationInfo(AppUser appUser, OrganisationInfo organisationInfo) {
+    public OrganisationInfoDTO updateOrganisationInfo(AppUser appUser, OrganisationInfo organisationInfo) {
         userRepository.save(appUser);
         organisationInfo.setAppUser(appUser);
-        organisationInfoRepository.save(organisationInfo);
+        OrganisationInfo updatedOrganizationInfo = organisationInfoRepository.save(organisationInfo);
+        return organisationInfoMapper.organisationInfoToOrganisationInfoDTO(updatedOrganizationInfo);
     }
     @Override
     public Optional<AppUser> findOrganisationByUsername(String username) {
