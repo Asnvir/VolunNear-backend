@@ -7,7 +7,7 @@ import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
 import com.volunnear.dtos.requests.UpdateVolunteerInfoRequestDTO;
 import com.volunnear.dtos.response.CurrentUserDTO;
-import com.volunnear.services.security.AuthService;
+import com.volunnear.services.interfaces.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
