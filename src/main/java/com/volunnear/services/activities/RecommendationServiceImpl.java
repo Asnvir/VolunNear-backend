@@ -4,7 +4,7 @@ import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.entitiy.infos.VolunteerPreference;
 import com.volunnear.services.interfaces.ActivityService;
 import com.volunnear.services.interfaces.RecommendationService;
-import com.volunnear.services.users.VolunteerService;
+import com.volunnear.services.interfaces.VolunteerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

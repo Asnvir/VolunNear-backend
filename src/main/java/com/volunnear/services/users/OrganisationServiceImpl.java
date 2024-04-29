@@ -10,6 +10,7 @@ import com.volunnear.repositories.infos.OrganisationInfoRepository;
 import com.volunnear.repositories.users.UserRepository;
 import com.volunnear.services.interfaces.OrganisationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final OrganisationInfoRepository organisationInfoRepository;
+    @Autowired
     private final OrganisationInfoMapper organisationInfoMapper;
 
     @Override

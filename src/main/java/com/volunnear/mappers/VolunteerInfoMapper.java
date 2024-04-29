@@ -11,8 +11,6 @@ public interface VolunteerInfoMapper {
     VolunteerInfoMapper INSTANCE = Mappers.getMapper(VolunteerInfoMapper.class);
 
     @Mapping(source = "realNameOfUser", target = "realName")
+    @Mapping(source = "appUser.email", target = "email")
     VolunteerInfoDTO volunteerInfoToVolunteerInfoDTO(VolunteerInfo volunteerInfo);
-
-    @Mapping(source = "realName", target = "realNameOfUser")
-    VolunteerInfo volunteerInfoDTOToVolunteerInfo(VolunteerInfoDTO volunteerInfoDTO);
 }
