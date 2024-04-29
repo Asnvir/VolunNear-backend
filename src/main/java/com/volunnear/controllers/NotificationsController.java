@@ -2,7 +2,7 @@ package com.volunnear.controllers;
 
 import com.volunnear.Routes;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
-import com.volunnear.services.notifications.EmailNotificationService;
+import com.volunnear.services.interfaces.EmailNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

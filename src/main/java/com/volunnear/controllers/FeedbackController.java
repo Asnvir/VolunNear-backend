@@ -4,7 +4,7 @@ import com.volunnear.Routes;
 import com.volunnear.dtos.requests.FeedbackRequest;
 import com.volunnear.dtos.response.FeedbackResponseDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
-import com.volunnear.services.FeedbackService;
+import com.volunnear.services.interfaces.FeedbackService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
