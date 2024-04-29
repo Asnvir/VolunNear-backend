@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ActivityService {
-    ResponseEntity<?> addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal);
+    void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal);
 
     void sendNotificationForSubscribers(Activity activity, String status);
 
@@ -27,7 +27,7 @@ public interface ActivityService {
 
     ResponseEntity<?> deleteActivityById(UUID id, Principal principal);
 
-    ResponseEntity<?> addVolunteerToActivity(Principal principal, UUID idOfActivity);
+    String addVolunteerToActivity(Principal principal, UUID idOfActivity);
 
     ResponseEntity<?> updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal);
 

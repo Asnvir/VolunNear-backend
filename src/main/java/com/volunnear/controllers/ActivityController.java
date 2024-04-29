@@ -26,13 +26,15 @@ public class ActivityController {
     private final ActivityService activityService;
 
     @PostMapping(value = Routes.ADD_ACTIVITY, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addActivityToOrganisation(@RequestBody AddActivityRequestDTO activityRequest, Principal principal) {
-        return activityService.addActivityToOrganisation(activityRequest, principal);
+    public ResponseEntity<Void> addActivityToOrganisation(@RequestBody AddActivityRequestDTO activityRequest, Principal principal) {
+        activityService.addActivityToOrganisation(activityRequest, principal);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = Routes.JOIN_TO_ACTIVITY)
-    public ResponseEntity<?> addVolunteerToActivity(@RequestParam UUID id, Principal principal) {
-        return activityService.addVolunteerToActivity(principal, id);
+    public ResponseEntity<String> addVolunteerToActivity(@RequestParam UUID id, Principal principal) {
+        String activityStatus = activityService.addVolunteerToActivity(principal, id);
+        return ResponseEntity.ok(activityStatus);
     }
 
     @PutMapping(value = Routes.UPDATE_ACTIVITY_INFORMATION, consumes = MediaType.APPLICATION_JSON_VALUE)
