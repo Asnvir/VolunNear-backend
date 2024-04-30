@@ -11,7 +11,8 @@ import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.events.ActivityCreationEvent;
-import com.volunnear.exceptions.auth.AuthErrorException;
+import com.volunnear.exceptions.activity.ActivityNotFoundException;
+import com.volunnear.exceptions.activity.AuthErrorException;
 import com.volunnear.repositories.infos.ActivitiesRepository;
 import com.volunnear.repositories.infos.VolunteersInActivityRepository;
 import com.volunnear.services.interfaces.ActivityService;
@@ -40,13 +41,11 @@ public class ActivityServiceImpl implements ActivityService {
     private final VolunteersInActivityRepository volunteersInActivityRepository;
 
     @Override
-    public ResponseEntity<?> addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
-        Optional<AppUser> organisation = userService.findAppUserByUsername(principal.getName());
-        if (organisation.isEmpty()) {
-            return new ResponseEntity<>(new AuthErrorException(HttpStatus.UNAUTHORIZED.value(), "Incorrect token data about organisation"), HttpStatus.UNAUTHORIZED);
-        }
-        if (!organisationService.isUserAreOrganisation(organisation.get())) {
-            return new ResponseEntity<>("Bad try, you are not organisation", HttpStatus.BAD_REQUEST);
+    public void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
+        AppUser organisation = userService.findAppUserByUsername(principal.getName())
+                .orElseThrow(() -> new AuthErrorException("Incorrect token data about organisation"));
+        if (!organisationService.isUserAreOrganisation(organisation)) {
+            throw new AuthErrorException("You are not organisation");
         }
         Activity activity = new Activity();
 
@@ -56,12 +55,10 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setCity(activityRequest.getCity());
         activity.setDateOfPlace(new Date());
         activity.setKindOfActivity(activityRequest.getKindOfActivity());
-        activity.setAppUser(organisation.get());
+        activity.setAppUser(organisation);
         activitiesRepository.save(activity);
 
         sendNotificationForSubscribers(activity, "New");
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
@@ -81,6 +78,7 @@ public class ActivityServiceImpl implements ActivityService {
         notificationDTO.setOrganisationResponseDTO(getOrganisationResponseDTO(organisationService.findAdditionalInfoAboutOrganisation(activity.getAppUser())));
         eventPublisher.publishEvent(new ActivityCreationEvent(this, notificationDTO, status));
     }
+
     @Override
     public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations() {
         List<Activity> allActivities = activitiesRepository.findAll();
@@ -117,6 +115,7 @@ public class ActivityServiceImpl implements ActivityService {
 
         return new ResponseEntity<>(activitiesDTO, HttpStatus.OK);
     }
+
     @Override
     public List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<String> preferences) {
         List<Activity> activityByKindOfActivity = activitiesRepository.findActivityByKindOfActivityIgnoreCaseIn(preferences);
@@ -141,27 +140,26 @@ public class ActivityServiceImpl implements ActivityService {
 
         return new ResponseEntity<>("Successfully deleted activity!", HttpStatus.FOUND);
     }
+
     @Override
-    public ResponseEntity<?> addVolunteerToActivity(Principal principal, UUID idOfActivity) {
-        AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
+    public String addVolunteerToActivity(Principal principal, UUID idOfActivity) {
+        AppUser appUser = userService.findAppUserByUsername(principal.getName())
+                .orElseThrow(() -> new AuthErrorException("Incorrect token data about volunteer"));
         List<VolunteerInActivity> allByUser = volunteersInActivityRepository.findAllByUser(appUser);
 
 //        if (allByUser.size() > 5) {
 //            return new ResponseEntity<>("To much activities in yours profile!", HttpStatus.OK);
 //        }
 
-        Optional<Activity> activityById = activitiesRepository.findById(idOfActivity);
-
-        if (activityById.isEmpty()) {
-            return new ResponseEntity<>("No such activity in our database", HttpStatus.BAD_REQUEST);
-        }
-
+        Activity activityById = activitiesRepository.findById(idOfActivity)
+                .orElseThrow(() -> new ActivityNotFoundException("Activity with id " + idOfActivity + " not found"));
         VolunteerInActivity volunteerInActivity = new VolunteerInActivity();
         volunteerInActivity.setUser(appUser);
-        volunteerInActivity.setActivity(activityById.get());
+        volunteerInActivity.setActivity(activityById);
         volunteersInActivityRepository.save(volunteerInActivity);
-        return new ResponseEntity<>("Successful! Welcome to activity: " + activityById.get().getTitle(), HttpStatus.OK);
+        return activityById.getTitle();
     }
+
     @Override
     public ResponseEntity<?> updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
@@ -195,6 +193,7 @@ public class ActivityServiceImpl implements ActivityService {
         volunteersInActivityRepository.deleteByActivity_IdAndUser_Id(id, appUser.getId());
         return new ResponseEntity<>("Successfully leaved from activity!", HttpStatus.OK);
     }
+
     @Override
     public List<ActivitiesDTO> getActivitiesOfVolunteer(AppUser appUser) {
         List<VolunteerInActivity> allByUser = volunteersInActivityRepository.findAllByUser(appUser);
@@ -202,6 +201,7 @@ public class ActivityServiceImpl implements ActivityService {
                 activitiesRepository.findById(volunteerInActivity.getActivity().getId()).get()).toList();
         return getListOfActivitiesDTOForResponse(infoAboutActivities);
     }
+
     @Override
     public ResponseEntity<?> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
         List<ActivitiesDTO> activitiesByPlace = getListOfActivitiesDTOForResponse(
@@ -211,6 +211,7 @@ public class ActivityServiceImpl implements ActivityService {
         }
         return new ResponseEntity<>(activitiesByPlace, HttpStatus.OK);
     }
+
     @Override
     public Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, UUID idOfActivity) {
         return activitiesRepository.findActivityByAppUserAndId(appUser, idOfActivity);
