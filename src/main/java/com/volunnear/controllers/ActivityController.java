@@ -4,6 +4,7 @@ import com.volunnear.Routes;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
+import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.services.interfaces.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -38,10 +39,10 @@ public class ActivityController {
     }
 
     @PutMapping(value = Routes.UPDATE_ACTIVITY_INFORMATION, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> updateActivityInformation(@RequestParam UUID idOfActivity,
-                                                       @RequestBody AddActivityRequestDTO activityRequestDTO, Principal principal) {
-        activityService.updateActivityInformation(idOfActivity, activityRequestDTO, principal);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ActivityDTO> updateActivityInformation(@RequestParam UUID idOfActivity,
+                                                                 @RequestBody AddActivityRequestDTO activityRequestDTO, Principal principal) {
+        ActivityDTO activityDTO = activityService.updateActivityInformation(idOfActivity, activityRequestDTO, principal);
+        return ResponseEntity.ok(activityDTO);
     }
 
     @GetMapping(value = Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS)

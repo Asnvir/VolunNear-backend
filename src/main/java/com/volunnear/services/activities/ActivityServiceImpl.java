@@ -13,6 +13,7 @@ import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.events.ActivityCreationEvent;
 import com.volunnear.exceptions.activity.ActivityNotFoundException;
 import com.volunnear.exceptions.activity.AuthErrorException;
+import com.volunnear.mappers.ActivityMapper;
 import com.volunnear.repositories.infos.ActivitiesRepository;
 import com.volunnear.repositories.infos.VolunteersInActivityRepository;
 import com.volunnear.services.interfaces.ActivityService;
@@ -39,6 +40,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final ApplicationEventPublisher eventPublisher;
     private final ActivitiesRepository activitiesRepository;
     private final VolunteersInActivityRepository volunteersInActivityRepository;
+    private final ActivityMapper activityMapper;
 
     @Override
     public void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
@@ -161,7 +163,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public void updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
+    public ActivityDTO updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName())
                 .orElseThrow(() -> new AuthErrorException("Incorrect token data about volunteer"));
         Activity activity = activitiesRepository.findById(idOfActivity)
@@ -176,8 +178,9 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setCity(activityRequestDTO.getCity());
         activity.setDateOfPlace(new Date());
         activity.setKindOfActivity(activityRequestDTO.getKindOfActivity());
-        activitiesRepository.save(activity);
+        Activity updatedActivity = activitiesRepository.save(activity);
         sendNotificationForSubscribers(activity, "Updated");
+        return activityMapper.activityToActivityDTO(updatedActivity);
     }
 
     @Transactional
