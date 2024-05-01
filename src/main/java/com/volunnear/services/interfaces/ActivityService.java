@@ -36,7 +36,7 @@ public interface ActivityService {
 
     List<ActivitiesDTO> getActivitiesOfVolunteer(AppUser appUser);
 
-    ResponseEntity<?> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO);
+    List<ActivitiesDTO> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO);
 
     Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, UUID idOfActivity);
 }
