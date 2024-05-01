@@ -13,6 +13,7 @@ import java.util.UUID;
 @Entity
 @ToString
 @Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Table(name = "activities")
 public class Activity {

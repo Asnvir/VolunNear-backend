@@ -11,8 +11,10 @@ import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.events.ActivityCreationEvent;
+import com.volunnear.exceptions.BadRequestException;
 import com.volunnear.exceptions.activity.ActivityNotFoundException;
 import com.volunnear.exceptions.activity.AuthErrorException;
+import com.volunnear.mappers.ActivityMapper;
 import com.volunnear.repositories.infos.ActivitiesRepository;
 import com.volunnear.repositories.infos.VolunteersInActivityRepository;
 import com.volunnear.services.interfaces.ActivityService;
@@ -39,6 +41,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final ApplicationEventPublisher eventPublisher;
     private final ActivitiesRepository activitiesRepository;
     private final VolunteersInActivityRepository volunteersInActivityRepository;
+    private final ActivityMapper activityMapper;
 
     @Override
     public void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
@@ -161,26 +164,25 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ResponseEntity<?> updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
+    public ActivityDTO updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
         Optional<Activity> activityById = activitiesRepository.findById(idOfActivity);
         if (activityById.isEmpty() || !appUser.equals(activityById.get().getAppUser())) {
-            return new ResponseEntity<>("Bad id of activity!", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Bad id of activity!");
         }
 
         Activity activity = activityById.get();
 
-        activity.setTitle(activityRequestDTO.getTitle());
         activity.setTitle(activityRequestDTO.getTitle());
         activity.setDescription(activityRequestDTO.getDescription());
         activity.setCountry(activityRequestDTO.getCountry());
         activity.setCity(activityRequestDTO.getCity());
         activity.setDateOfPlace(new Date());
         activity.setKindOfActivity(activityRequestDTO.getKindOfActivity());
-
+        Activity updatedActivity = activitiesRepository.save(activity);
         sendNotificationForSubscribers(activity, "Updated");
 
-        return new ResponseEntity<>("Successfully updated id", HttpStatus.OK);
+        return activityMapper.activityToActivityDTO(updatedActivity);
     }
 
     @Transactional
