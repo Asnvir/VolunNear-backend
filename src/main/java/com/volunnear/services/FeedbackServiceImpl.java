@@ -35,7 +35,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             return new ResponseEntity<>("Bad value of rate", HttpStatus.BAD_REQUEST);
         }
 
-        AppUser appUserByUsername = userService.findAppUserByUsername(principal.getName()).get();
+        AppUser appUserByUsername = userService.findAppUserByUsername(principal.getName());
 
         VolunteerInfo volunteerInfo = volunteerService.getVolunteerInfo(appUserByUsername);
         Optional<OrganisationInfo> organisationAndAdditionalInfoById = organisationService.findOrganisationAndAdditionalInfoById(feedbackRequest.getIdOfOrganisation());

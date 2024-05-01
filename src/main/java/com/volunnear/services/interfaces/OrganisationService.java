@@ -18,11 +18,11 @@ public interface OrganisationService {
 
     OrganisationInfoDTO updateOrganisationInfo(AppUser appUser, OrganisationInfo organisationInfo);
 
-    Optional<AppUser> findOrganisationByUsername(String username);
+    AppUser findOrganisationByUsername(String username);
 
     Optional<AppUser> findOrganisationById(UUID id);
 
-    Optional<OrganisationInfo> findOrganisationByNameOfOrganisation(String nameOfOrganisation);
+    OrganisationInfo findOrganisationByNameOfOrganisation(String nameOfOrganisation);
 
     OrganisationInfo findAdditionalInfoAboutOrganisation(AppUser user);
 

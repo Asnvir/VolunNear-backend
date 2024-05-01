@@ -22,7 +22,7 @@ public interface ActivityService {
 
     ActivitiesDTO getMyActivities(Principal principal);
 
-    ResponseEntity<?> getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation);
+    ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation);
 
     List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<String> preferences);
 
@@ -36,7 +36,7 @@ public interface ActivityService {
 
     List<ActivitiesDTO> getActivitiesOfVolunteer(AppUser appUser);
 
-    ResponseEntity<?> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO);
+    List<ActivitiesDTO> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO);
 
     Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, UUID idOfActivity);
 }

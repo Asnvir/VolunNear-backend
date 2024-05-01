@@ -39,7 +39,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
         if (subscriptionRepository.existsByUserVolunteer_UsernameAndUserOrganisation_Id(principal.getName(), idOfOrganisation)) {
             return new ResponseEntity<>("Fail, you are already subscribed", HttpStatus.BAD_REQUEST);
         }
-        AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
+        AppUser appUser = userService.findAppUserByUsername(principal.getName());
         if (!volunteerService.isUserAreVolunteer(appUser)) {
             return new ResponseEntity<>("You are not volunteer", HttpStatus.BAD_REQUEST);
         }

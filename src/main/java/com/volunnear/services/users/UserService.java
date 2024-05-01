@@ -2,6 +2,7 @@ package com.volunnear.services.users;
 
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.dtos.CustomUserDetails;
+import com.volunnear.exceptions.NotFoundException;
 import com.volunnear.repositories.users.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,9 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public Optional<AppUser> findAppUserByUsername(String username) {
-        return userRepository.findAppUserByUsername(username);
+    public AppUser findAppUserByUsername(String username) {
+        return userRepository.findAppUserByUsername(username).orElseThrow(
+                () -> new NotFoundException("User with username " + username + " not found")
+        );
     }
 }

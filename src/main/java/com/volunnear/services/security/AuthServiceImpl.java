@@ -16,8 +16,6 @@ import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.infos.VolunteerInfo;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.dtos.CustomUserDetails;
-import com.volunnear.exceptions.auth.UserAlreadyExistsException;
-import com.volunnear.exceptions.auth.UserNotFoundException;
 import com.volunnear.security.jwt.JwtTokenProvider;
 import com.volunnear.services.interfaces.AuthService;
 import com.volunnear.services.interfaces.OrganisationService;
@@ -27,9 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-
 import java.security.Principal;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +47,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void registrationOfVolunteer(RegistrationVolunteerRequestDTO registrationVolunteerRequestDto) {
         String username = registrationVolunteerRequestDto.getUsername();
-        userService.findAppUserByUsername(username).ifPresent(user -> {
-            throw new UserAlreadyExistsException("User with username " + username + " already exist");
-        });
+        userService.findAppUserByUsername(username);
         String password = registrationVolunteerRequestDto.getPassword();
         String realName = registrationVolunteerRequestDto.getRealName();
         String email = registrationVolunteerRequestDto.getEmail();
@@ -62,20 +56,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public CurrentUserDTO getCurrentUser(Principal principal) {
-        Optional<AppUser> appUserByUsername = userService.findAppUserByUsername(principal.getName());
-        if (appUserByUsername.isPresent()) {
-            AppUser user = appUserByUsername.get();
-            return new CurrentUserDTO(user.getId(), user.getUsername(), user.getEmail());
-        }
-        return null;
+        AppUser appUser =userService.findAppUserByUsername(principal.getName());
+            return new CurrentUserDTO(appUser.getId(), appUser.getUsername(), appUser.getEmail());
+
     }
 
     @Override
     public void registrationOfOrganisation(RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO) {
         String username = registrationOrganisationRequestDTO.getUsername();
-        organisationService.findOrganisationByUsername(username).ifPresent(o -> {
-            throw new UserAlreadyExistsException("Organisation with username " + username + " already exists");
-        });
+        organisationService.findOrganisationByUsername(username);
 
         String password = registrationOrganisationRequestDTO.getPassword();
         String email = registrationOrganisationRequestDTO.getEmail();
@@ -88,9 +77,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public VolunteerInfoDTO updateVolunteerInfo(UpdateVolunteerInfoRequestDTO request, Principal principal) {
-        AppUser user = userService.findAppUserByUsername(principal.getName())
-                .orElseThrow(() -> new UserNotFoundException("Volunteer not found"));
-
+        AppUser user = userService.findAppUserByUsername(principal.getName());
         VolunteerInfo volunteerInfo = volunteerService.getVolunteerInfo(user);
         volunteerInfo.setRealNameOfUser(request.getRealName());
         user.setEmail(request.getEmail());
@@ -99,9 +86,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public OrganisationInfoDTO updateOrganisationInfo(UpdateOrganisationInfoRequestDTO request, Principal principal) {
-        AppUser appUserByUsername = userService.findAppUserByUsername(principal.getName())
-                .orElseThrow(() -> new UserNotFoundException("Organisation not found"));
-
+        AppUser appUserByUsername = userService.findAppUserByUsername(principal.getName());
         OrganisationInfo infoAboutOrganisation = organisationService.findAdditionalInfoAboutOrganisation(appUserByUsername);
         infoAboutOrganisation.setNameOfOrganisation(request.getNameOfOrganisation());
         infoAboutOrganisation.setCountry(request.getCountry());

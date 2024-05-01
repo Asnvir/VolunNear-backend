@@ -5,6 +5,8 @@ import com.volunnear.dtos.response.OrganisationInfoDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
+import com.volunnear.exceptions.NotFoundException;
+import com.volunnear.exceptions.organisation.OrganisationNotFoundException;
 import com.volunnear.mappers.OrganisationInfoMapper;
 import com.volunnear.repositories.infos.OrganisationInfoRepository;
 import com.volunnear.repositories.users.UserRepository;
@@ -66,16 +68,20 @@ public class OrganisationServiceImpl implements OrganisationService {
         return organisationInfoMapper.organisationInfoToOrganisationInfoDTO(updatedOrganizationInfo);
     }
     @Override
-    public Optional<AppUser> findOrganisationByUsername(String username) {
-        return userRepository.findAppUserByUsername(username);
+    public AppUser findOrganisationByUsername(String username) {
+        return userRepository.findAppUserByUsername(username).orElseThrow(
+                () -> new NotFoundException("Organisation with username " + username + " not found")
+        );
     }
     @Override
     public Optional<AppUser> findOrganisationById(UUID id) {
         return userRepository.findById(id);
     }
     @Override
-    public Optional<OrganisationInfo> findOrganisationByNameOfOrganisation(String nameOfOrganisation) {
-        return organisationInfoRepository.findOrganisationInfoByNameOfOrganisation(nameOfOrganisation);
+    public OrganisationInfo findOrganisationByNameOfOrganisation(String nameOfOrganisation) {
+        return organisationInfoRepository.findOrganisationInfoByNameOfOrganisation(nameOfOrganisation).orElseThrow(
+                () -> new NotFoundException("Organisation with name " + nameOfOrganisation + " not found")
+        );
     }
     @Override
     public OrganisationInfo findAdditionalInfoAboutOrganisation(AppUser user) {

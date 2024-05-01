@@ -62,8 +62,9 @@ public class ActivityController {
             @ApiResponse(responseCode = "400", description = "Organisation with name not found")
     })
     @GetMapping(value = Routes.ACTIVITY_CURRENT_ORGANISATION)
-    public ResponseEntity<?> getAllActivitiesOfCurrentOrganisation(@RequestParam String nameOfOrganisation) {
-        return activityService.getAllActivitiesFromCurrentOrganisation(nameOfOrganisation);
+    public ResponseEntity<ActivitiesDTO> getAllActivitiesOfCurrentOrganisation(@RequestParam String nameOfOrganisation) {
+        ActivitiesDTO activitiesDTO = activityService.getAllActivitiesFromCurrentOrganisation(nameOfOrganisation);
+        return ResponseEntity.ok(activitiesDTO);
     }
 
     @Operation(summary = "Get activities nearby", description = "Returns List<ActivitiesDTO>")
@@ -73,8 +74,9 @@ public class ActivityController {
             @ApiResponse(responseCode = "400", description = "No such activities in current place")
     })
     @GetMapping(value = Routes.FIND_NEARBY_ACTIVITIES, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findNearbyActivities(@RequestBody NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
-        return activityService.findNearbyActivities(nearbyActivitiesRequestDTO);
+    public ResponseEntity<List<ActivitiesDTO>> findNearbyActivities(@RequestBody NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
+        List<ActivitiesDTO> activitiesDTO = activityService.findNearbyActivities(nearbyActivitiesRequestDTO);
+        return ResponseEntity.ok(activitiesDTO);
     }
 
     @DeleteMapping(value = Routes.DELETE_CURRENT_ACTIVITY_BY_ID)

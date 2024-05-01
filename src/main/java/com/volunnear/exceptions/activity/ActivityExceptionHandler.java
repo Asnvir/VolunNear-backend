@@ -15,10 +15,4 @@ public class ActivityExceptionHandler {
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
-
-    @ExceptionHandler(ActivityNotFoundException.class)
-    public ResponseEntity<ApiError> handleActivityNotFoundException(ActivityNotFoundException ex) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
-    }
 }

@@ -27,8 +27,8 @@ public class SocialMediaIntegrationService {
     private final OrganisationGroupLinkRepository organisationGroupLinkRepository;
 
     public ResponseEntity<?> addChatLinkToActivity(UUID idOfActivity, String link, Principal principal) {
-        Optional<AppUser> organisationByUsername = organisationService.findOrganisationByUsername(principal.getName());
-        Optional<Activity> activity = activityService.findActivityByOrganisationAndIdOfActivity(organisationByUsername.get(), idOfActivity);
+        AppUser organisationByUsername = organisationService.findOrganisationByUsername(principal.getName());
+        Optional<Activity> activity = activityService.findActivityByOrganisationAndIdOfActivity(organisationByUsername, idOfActivity);
         if (activity.isEmpty()) {
             return new ResponseEntity<>("Bad id of activity!", HttpStatus.BAD_REQUEST);
         } else if (activityChatLinkRepository.existsByActivity_Id(idOfActivity)) {
@@ -53,11 +53,11 @@ public class SocialMediaIntegrationService {
     public ResponseEntity<?> addCommunityLink(String link, Principal principal) {
         if (organisationGroupLinkRepository.existsByOrganisationInfo_AppUser_Username(principal.getName())) {
             return new ResponseEntity<>("Link already exists", HttpStatus.BAD_REQUEST);
-        } else if (!organisationService.isUserAreOrganisation(organisationService.findOrganisationByUsername(principal.getName()).get())) {
+        } else if (!organisationService.isUserAreOrganisation(organisationService.findOrganisationByUsername(principal.getName()))){
             return new ResponseEntity<>("Bad id of organisation!", HttpStatus.BAD_REQUEST);
         }
         OrganisationInfo infoAboutOrganisation = organisationService.findAdditionalInfoAboutOrganisation(
-                organisationService.findOrganisationByUsername(principal.getName()).get());
+                organisationService.findOrganisationByUsername(principal.getName()));
         OrganisationGroupLink organisationGroupLink = new OrganisationGroupLink();
 
         organisationGroupLink.setOrganisationInfo(infoAboutOrganisation);
