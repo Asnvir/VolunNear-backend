@@ -26,7 +26,7 @@ public interface ActivityService {
 
     List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<String> preferences);
 
-    ResponseEntity<?> deleteActivityById(UUID id, Principal principal);
+    void deleteActivityById(UUID id, Principal principal);
 
     String addVolunteerToActivity(Principal principal, UUID idOfActivity);
 

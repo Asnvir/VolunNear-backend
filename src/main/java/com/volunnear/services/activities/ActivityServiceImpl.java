@@ -131,17 +131,15 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     @SneakyThrows
-    public ResponseEntity<?> deleteActivityById(UUID id, Principal principal) {
+    public void deleteActivityById(UUID id, Principal principal) {
         AppUser appUser = organisationService.findOrganisationByUsername(principal.getName()).get();
         Optional<Activity> activityById = activitiesRepository.findById(id);
 
         if (activityById.isEmpty() || !appUser.equals(activityById.get().getAppUser())) {
-            return new ResponseEntity<>("Bad id", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Bad id of activity!");
         }
 
         activitiesRepository.deleteById(id);
-
-        return new ResponseEntity<>("Successfully deleted activity!", HttpStatus.FOUND);
     }
 
     @Override

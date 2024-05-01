@@ -78,8 +78,9 @@ public class ActivityController {
     }
 
     @DeleteMapping(value = Routes.DELETE_CURRENT_ACTIVITY_BY_ID)
-    public ResponseEntity<?> deleteActivityById(@RequestParam UUID id, Principal principal) {
-        return activityService.deleteActivityById(id, principal);
+    public ResponseEntity<Void> deleteActivityById(@RequestParam UUID id, Principal principal) {
+        activityService.deleteActivityById(id, principal);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = Routes.LEAVE_FROM_ACTIVITY_BY_VOLUNTEER)
