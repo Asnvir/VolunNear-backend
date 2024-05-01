@@ -12,6 +12,7 @@ import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.events.ActivityCreationEvent;
 import com.volunnear.exceptions.BadRequestException;
+import com.volunnear.exceptions.NotFoundException;
 import com.volunnear.exceptions.activity.ActivityNotFoundException;
 import com.volunnear.exceptions.activity.AuthErrorException;
 import com.volunnear.mappers.ActivityMapper;
@@ -106,17 +107,14 @@ public class ActivityServiceImpl implements ActivityService {
      * All activities of current organisation by organisation name
      */
     @Override
-    public ResponseEntity<?> getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation) {
+    public ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation) {
         Optional<OrganisationInfo> organisationByNameOfOrganisation = organisationService.findOrganisationByNameOfOrganisation(nameOfOrganisation);
-        if (organisationByNameOfOrganisation.isEmpty()) {
-            return new ResponseEntity<>("Organisation with name " + nameOfOrganisation + " not found", HttpStatus.BAD_REQUEST);
-        }
-        OrganisationInfo organisationInfo = organisationByNameOfOrganisation.get();
+        OrganisationInfo organisationInfo = organisationByNameOfOrganisation.orElseThrow(
+                () -> new NotFoundException("Organisation with name " + nameOfOrganisation + " not found")
+        );
 
         List<Activity> activitiesByAppUser = activitiesRepository.findActivitiesByAppUser(organisationInfo.getAppUser());
-        ActivitiesDTO activitiesDTO = activitiesFromEntityToDto(organisationInfo, activitiesByAppUser);
-
-        return new ResponseEntity<>(activitiesDTO, HttpStatus.OK);
+        return activitiesFromEntityToDto(organisationInfo, activitiesByAppUser);
     }
 
     @Override

@@ -62,8 +62,9 @@ public class ActivityController {
             @ApiResponse(responseCode = "400", description = "Organisation with name not found")
     })
     @GetMapping(value = Routes.ACTIVITY_CURRENT_ORGANISATION)
-    public ResponseEntity<?> getAllActivitiesOfCurrentOrganisation(@RequestParam String nameOfOrganisation) {
-        return activityService.getAllActivitiesFromCurrentOrganisation(nameOfOrganisation);
+    public ResponseEntity<ActivitiesDTO> getAllActivitiesOfCurrentOrganisation(@RequestParam String nameOfOrganisation) {
+        ActivitiesDTO activitiesDTO = activityService.getAllActivitiesFromCurrentOrganisation(nameOfOrganisation);
+        return ResponseEntity.ok(activitiesDTO);
     }
 
     @Operation(summary = "Get activities nearby", description = "Returns List<ActivitiesDTO>")
