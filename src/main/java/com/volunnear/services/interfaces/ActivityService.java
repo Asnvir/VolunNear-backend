@@ -3,6 +3,7 @@ package com.volunnear.services.interfaces;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
+import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.users.AppUser;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public interface ActivityService {
 
     String addVolunteerToActivity(Principal principal, UUID idOfActivity);
 
-    ResponseEntity<?> updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal);
+    ActivityDTO updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal);
 
     ResponseEntity<?> deleteVolunteerFromActivity(UUID id, Principal principal);
 
