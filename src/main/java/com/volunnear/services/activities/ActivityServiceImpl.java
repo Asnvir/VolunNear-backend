@@ -185,13 +185,12 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Transactional
     @Override
-    public ResponseEntity<?> deleteVolunteerFromActivity(UUID id, Principal principal) {
+    public void deleteVolunteerFromActivity(UUID id, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
         if (!volunteersInActivityRepository.existsByUserAndActivity_Id(appUser, id)) {
-            return new ResponseEntity<>("Bad id of activity!", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("You are not in this activity!");
         }
         volunteersInActivityRepository.deleteByActivity_IdAndUser_Id(id, appUser.getId());
-        return new ResponseEntity<>("Successfully leaved from activity!", HttpStatus.OK);
     }
 
     @Override

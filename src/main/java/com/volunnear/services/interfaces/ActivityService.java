@@ -32,7 +32,7 @@ public interface ActivityService {
 
     ActivityDTO updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal);
 
-    ResponseEntity<?> deleteVolunteerFromActivity(UUID id, Principal principal);
+    void deleteVolunteerFromActivity(UUID id, Principal principal);
 
     List<ActivitiesDTO> getActivitiesOfVolunteer(AppUser appUser);
 
