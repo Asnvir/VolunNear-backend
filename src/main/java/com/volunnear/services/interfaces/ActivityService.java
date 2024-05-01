@@ -22,7 +22,7 @@ public interface ActivityService {
 
     ActivitiesDTO getMyActivities(Principal principal);
 
-    ResponseEntity<?> getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation);
+    ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation);
 
     List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<String> preferences);
 
