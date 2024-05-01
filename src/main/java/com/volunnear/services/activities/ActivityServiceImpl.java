@@ -11,6 +11,7 @@ import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.events.ActivityCreationEvent;
+import com.volunnear.exceptions.AccessDeniedException;
 import com.volunnear.exceptions.NotFoundException;
 import com.volunnear.exceptions.activity.AuthErrorException;
 import com.volunnear.mappers.ActivityMapper;
@@ -23,8 +24,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -123,17 +122,17 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     @SneakyThrows
-    public ResponseEntity<?> deleteActivityById(UUID id, Principal principal) {
+    public void deleteActivityById(UUID id, Principal principal) {
         AppUser appUser = organisationService.findOrganisationByUsername(principal.getName());
-        Optional<Activity> activityById = activitiesRepository.findById(id);
+        Activity activityById = activitiesRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Activity with id " + id + " not found")
+        );
 
-        if (activityById.isEmpty() || !appUser.equals(activityById.get().getAppUser())) {
-            return new ResponseEntity<>("Bad id", HttpStatus.BAD_REQUEST);
+        if (!appUser.equals(activityById.getAppUser())) {
+            throw new AccessDeniedException("You dont have access to delete activity with id " + id + "!");
         }
 
         activitiesRepository.deleteById(id);
-
-        return new ResponseEntity<>("Successfully deleted activity!", HttpStatus.FOUND);
     }
 
     @Override
@@ -176,13 +175,12 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Transactional
     @Override
-    public ResponseEntity<?> deleteVolunteerFromActivity(UUID id, Principal principal) {
+    public void deleteVolunteerFromActivity(UUID id, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName());
         if (!volunteersInActivityRepository.existsByUserAndActivity_Id(appUser, id)) {
-            return new ResponseEntity<>("Bad id of activity!", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("You are not registered in this activity!");
         }
         volunteersInActivityRepository.deleteByActivity_IdAndUser_Id(id, appUser.getId());
-        return new ResponseEntity<>("Successfully leaved from activity!", HttpStatus.OK);
     }
 
     @Override

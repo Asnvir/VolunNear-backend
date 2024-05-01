@@ -6,7 +6,6 @@ import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.exceptions.NotFoundException;
-import com.volunnear.exceptions.organisation.OrganisationNotFoundException;
 import com.volunnear.mappers.OrganisationInfoMapper;
 import com.volunnear.repositories.infos.OrganisationInfoRepository;
 import com.volunnear.repositories.users.UserRepository;
