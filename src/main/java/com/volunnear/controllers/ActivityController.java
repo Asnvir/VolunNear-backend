@@ -38,9 +38,10 @@ public class ActivityController {
     }
 
     @PutMapping(value = Routes.UPDATE_ACTIVITY_INFORMATION, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateActivityInformation(@RequestParam UUID idOfActivity,
+    public ResponseEntity<Void> updateActivityInformation(@RequestParam UUID idOfActivity,
                                                        @RequestBody AddActivityRequestDTO activityRequestDTO, Principal principal) {
-        return activityService.updateActivityInformation(idOfActivity, activityRequestDTO, principal);
+        activityService.updateActivityInformation(idOfActivity, activityRequestDTO, principal);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS)

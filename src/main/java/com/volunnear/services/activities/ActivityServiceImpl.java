@@ -161,26 +161,23 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ResponseEntity<?> updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
-        AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
-        Optional<Activity> activityById = activitiesRepository.findById(idOfActivity);
-        if (activityById.isEmpty() || !appUser.equals(activityById.get().getAppUser())) {
-            return new ResponseEntity<>("Bad id of activity!", HttpStatus.BAD_REQUEST);
+    public void updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
+        AppUser appUser = userService.findAppUserByUsername(principal.getName())
+                .orElseThrow(() -> new AuthErrorException("Incorrect token data about volunteer"));
+        Activity activity = activitiesRepository.findById(idOfActivity)
+                .orElseThrow(() -> new ActivityNotFoundException("Activity with id " + idOfActivity + " not found"));
+        if (!appUser.equals(activity.getAppUser())) {
+            throw new AuthErrorException("You dont have access to update activity with id " + idOfActivity + "!");
         }
 
-        Activity activity = activityById.get();
-
-        activity.setTitle(activityRequestDTO.getTitle());
         activity.setTitle(activityRequestDTO.getTitle());
         activity.setDescription(activityRequestDTO.getDescription());
         activity.setCountry(activityRequestDTO.getCountry());
         activity.setCity(activityRequestDTO.getCity());
         activity.setDateOfPlace(new Date());
         activity.setKindOfActivity(activityRequestDTO.getKindOfActivity());
-
+        activitiesRepository.save(activity);
         sendNotificationForSubscribers(activity, "Updated");
-
-        return new ResponseEntity<>("Successfully updated id", HttpStatus.OK);
     }
 
     @Transactional

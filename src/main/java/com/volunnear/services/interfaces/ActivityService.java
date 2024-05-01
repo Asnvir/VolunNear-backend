@@ -29,7 +29,7 @@ public interface ActivityService {
 
     String addVolunteerToActivity(Principal principal, UUID idOfActivity);
 
-    ResponseEntity<?> updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal);
+    void updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal);
 
     ResponseEntity<?> deleteVolunteerFromActivity(UUID id, Principal principal);
 

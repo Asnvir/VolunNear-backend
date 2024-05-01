@@ -14,6 +14,7 @@ import java.util.UUID;
 @ToString
 @Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "activities")
 public class Activity {
     @Id
