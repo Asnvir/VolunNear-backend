@@ -109,10 +109,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation) {
         Optional<OrganisationInfo> organisationByNameOfOrganisation = organisationService.findOrganisationByNameOfOrganisation(nameOfOrganisation);
-        if (organisationByNameOfOrganisation.isEmpty()) {
-            throw new NotFoundException("Organisation with name " + nameOfOrganisation + " not found");
-        }
-        OrganisationInfo organisationInfo = organisationByNameOfOrganisation.get();
+        OrganisationInfo organisationInfo = organisationByNameOfOrganisation.orElseThrow(
+                () -> new NotFoundException("Organisation with name " + nameOfOrganisation + " not found")
+        );
 
         List<Activity> activitiesByAppUser = activitiesRepository.findActivitiesByAppUser(organisationInfo.getAppUser());
         return activitiesFromEntityToDto(organisationInfo, activitiesByAppUser);
