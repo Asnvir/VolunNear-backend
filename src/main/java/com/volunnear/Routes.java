@@ -4,6 +4,7 @@ public class Routes {
 
     private static final String API_URL = "/api/v1";
 
+
     /**
      * Users management
      */

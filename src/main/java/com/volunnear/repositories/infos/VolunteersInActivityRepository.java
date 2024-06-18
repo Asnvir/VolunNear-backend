@@ -3,10 +3,12 @@ package com.volunnear.repositories.infos;
 import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.users.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 public interface VolunteersInActivityRepository extends JpaRepository<VolunteerInActivity, UUID> {
     List<VolunteerInActivity> findAllByUser(AppUser appUser);
 

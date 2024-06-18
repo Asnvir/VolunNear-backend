@@ -1,6 +1,6 @@
 package com.volunnear.services.interfaces;
-import com.volunnear.dtos.jwt.JwtRequest;
-import com.volunnear.dtos.jwt.JwtResponse;
+//import com.volunnear.dtos.jwt.JwtRequest; TODO
+//import com.volunnear.dtos.jwt.JwtResponse; TODO
 import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
 import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
@@ -12,7 +12,7 @@ import java.security.Principal;
 
 public interface AuthService {
 
-    JwtResponse createAuthToken(JwtRequest authRequest);
+//    JwtResponse createAuthToken(JwtRequest authRequest);
 
     void registrationOfVolunteer(RegistrationVolunteerRequestDTO registrationVolunteerRequestDto);
 

@@ -1,8 +1,8 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-import com.volunnear.dtos.jwt.JwtRequest;
-import com.volunnear.dtos.jwt.JwtResponse;
+//import com.volunnear.dtos.jwt.JwtRequest;
+//import com.volunnear.dtos.jwt.JwtResponse;
 import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
 import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
@@ -24,11 +24,14 @@ import java.security.Principal;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping(value = Routes.LOGIN)
-    public ResponseEntity<JwtResponse> createAuthToken(@RequestBody JwtRequest authRequest) {
-        JwtResponse jwtResponse = authService.createAuthToken(authRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(jwtResponse);
-    }
+    //  write end point that will be only for test
+
+
+//    @PostMapping(value = Routes.LOGIN)
+//    public ResponseEntity<JwtResponse> createAuthToken(@RequestBody JwtRequest authRequest) {
+//        JwtResponse jwtResponse = authService.createAuthToken(authRequest);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(jwtResponse);
+//    }
 
     @GetMapping(value = Routes.GET_CURRENT_USER)
     public ResponseEntity<?> getCurrentUser(Principal principal) {

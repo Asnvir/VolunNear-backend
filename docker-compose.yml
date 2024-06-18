@@ -1,25 +1,83 @@
 services:
   mysql:
     image: mysql:latest
+    network_mode: host
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-    ports:
-      - "3306:3306"
+      MYSQL_TCP_PORT: ${EXTERNAL_DB_PORT}
 
 
   spring-boot-app:
+    image: volunnear-app:latest
+    network_mode: host
     restart: on-failure
-    build:
-      context: .
     depends_on:
       - mysql
-    ports:
-      - "8080:8080"
+      - keycloak
     environment:
-      - DB_URL=${DB_URL}
+      - EXTERNAL_SPRING_PORT=${EXTERNAL_SPRING_PORT}
+      - EXTERNAL_DB_PORT=${EXTERNAL_DB_PORT}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
-      - EMAIL_USERNAME=${EMAIL_USERNAME}
-      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - DB_HOSTNAME=${DB_HOSTNAME}
+      - DB_NAME=${DB_NAME}
+      - DB_OPTIONS=${DB_OPTIONS}
+      - SENDER_HOSTNAME=${SENDER_HOSTNAME}
+      - SENDER_MAIL_PORT=${SENDER_MAIL_PORT}
+      - SENDER_EMAIL_USERNAME=${SENDER_EMAIL_USERNAME}
+      - SENDER_EMAIL_PASSWORD=${SENDER_EMAIL_PASSWORD}
+      - EXTERNAL_KC_PORT=${EXTERNAL_KC_PORT}
+      - KC_HOSTNAME=${KC_HOSTNAME}
+      - KC_REALM_VOLUNNEAR=${KC_REALM_VOLUNNEAR}
+
+
+
+  keycloak_postgres_db:
+    image: postgres:latest
+    network_mode: host
+    command: postgres -p ${EXTERNAL_KC_POSTGRES_PORT}
+    volumes:
+      - postgres_data_keycloak:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PORT: ${EXTERNAL_KC_POSTGRES_PORT}
+      POSTGRES_DB: ${KC_POSTGRES_DB}
+      POSTGRES_USER: ${KC_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${KC_POSTGRES_PASSWORD}
+
+  keycloak_postgres_pgadmin:
+    image: dpage/pgadmin4:latest
+    network_mode: host
+    environment:
+      PGADMIN_LISTEN_PORT: ${EXTERNAL_KC_PGADMIN_PORT}
+      PGADMIN_DEFAULT_EMAIL: ${KC_PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${KC_PGADMIN_PASSWORD}
+    volumes:
+      - postgres_admin_data:/var/lib/pgadmin
+    depends_on:
+      - keycloak_postgres_db
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    network_mode: host
+    environment:
+      KC_HTTP_PORT: ${EXTERNAL_KC_PORT}
+      KC_HOSTNAME: ${KC_HOSTNAME}
+      KEYCLOAK_ADMIN: ${KC_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL_HOST: ${KC_POSTGRES_DB_HOSTNAME}
+      KC_DB_URL_PORT: ${EXTERNAL_KC_POSTGRES_PORT}
+      KC_DB_URL_DATABASE: ${KC_POSTGRES_DB}
+      KC_DB_SCHEMA: public
+      KC_DB_USERNAME: ${KC_POSTGRES_USER}
+      KC_DB_PASSWORD: ${KC_POSTGRES_PASSWORD}
+    command:
+      - start-dev
+    depends_on:
+      - keycloak_postgres_db
+
+volumes:
+  postgres_data_keycloak:
+  postgres_admin_data:

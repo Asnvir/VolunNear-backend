@@ -1,0 +1,48 @@
+spring:
+  data:
+    jdbc:
+      repositories:
+        enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${KC_HOSTNAME}:${EXTERNAL_KC_PORT}/realms/${KC_REALM_VOLUNNEAR}
+  datasource:
+    url: jdbc:mysql://${DB_HOSTNAME}:${EXTERNAL_DB_PORT}/${DB_NAME}?${DB_OPTIONS}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+  mail:
+    host: ${SENDER_HOSTNAME}
+    port: ${SENDER_MAIL_PORT}
+    username: ${SENDER_EMAIL_USERNAME}
+    password: ${SENDER_EMAIL_PASSWORD}
+    properties.mail.smtp:
+      auth: true
+      starttls-enable: true
+    protocol: smtp
+  sql:
+    init:
+      data-locations: classpath:roles.sql
+      mode: always
+server:
+  forward-headers-strategy: framework
+  port: ${EXTERNAL_SPRING_PORT}
+  error:
+    include-exception: true
+    include-message: always
+    include-binding-errors: always
+
+# Logging configuration
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+#    com:
+#      volunnear:
+#        config: TRACE

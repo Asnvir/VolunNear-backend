@@ -1,4 +1,5 @@
 .env
+realm-export.json
 
 HELP.md
 target/

@@ -3,8 +3,8 @@ package com.volunnear.services.security;
 import com.volunnear.dtos.Credentials;
 import com.volunnear.dtos.OrganisationDTO;
 import com.volunnear.dtos.VolunteerDTO;
-import com.volunnear.dtos.jwt.JwtRequest;
-import com.volunnear.dtos.jwt.JwtResponse;
+//import com.volunnear.dtos.jwt.JwtRequest; TODO
+//import com.volunnear.dtos.jwt.JwtResponse; TODO
 import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
 import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
@@ -18,7 +18,7 @@ import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.dtos.CustomUserDetails;
 import com.volunnear.exceptions.auth.UserAlreadyExistsException;
 import com.volunnear.exceptions.auth.UserNotFoundException;
-import com.volunnear.security.jwt.JwtTokenProvider;
+//import com.volunnear.security.jwt.JwtTokenProvider;
 import com.volunnear.services.interfaces.AuthService;
 import com.volunnear.services.interfaces.OrganisationService;
 import com.volunnear.services.interfaces.VolunteerService;
@@ -36,17 +36,17 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
     private final UserService userService;
     private final VolunteerService volunteerService;
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtTokenProvider jwtTokenProvider;
     private final OrganisationService organisationService;
-    private final AuthenticationManager authenticationManager;
+//    private final AuthenticationManager authenticationManager;
 
-    @Override
-    public JwtResponse createAuthToken(JwtRequest authRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        CustomUserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
-        String token = jwtTokenProvider.createToken(userDetails);
-        return new JwtResponse(token);
-    }
+//    @Override
+//    public JwtResponse createAuthToken(JwtRequest authRequest) {
+//        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+//        CustomUserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
+//        String token = jwtTokenProvider.createToken(userDetails);
+//        return new JwtResponse(token);
+//    }
 
     @Override
     public void registrationOfVolunteer(RegistrationVolunteerRequestDTO registrationVolunteerRequestDto) {

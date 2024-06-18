@@ -13,3 +13,22 @@ VolunNear is an application that connects volunteers with organizations in need 
 
 -  Java, Spring Boot, Spring Security, Spring Data JPA, Hibernate, JavaMailSender, JWT, MySQL, Docker, Lombok
 
+## How to run the project
+### Keycloak:
+    - docker-compose up keycloak_postgres_db 
+     (OR rebuild and run the container: docker-compose up --force-recreate keycloak_postgres_db)
+    
+    - docker-compose up keycloak_postgres_pgadmin
+     (OR rebuild and run the container: docker-compose up --force-recreate keycloak_postgres_pgadmin)
+    
+    - docker-compose up keycloak*
+     (OR rebuild and run the container: docker-compose up --force-recreate keycloak)
+
+### BackendApp:
+    - docker-compose up mysql
+     (OR rebuild and run the container: docker-compose up --force-recreate mysql)
+    
+    - mvn clean install
+    - docker build -t volunnear-app:latest .
+    - docker-compose up spring-boot-app
+     (OR rebuild and run the container: docker-compose up --force-recreate spring-boot-app)
