@@ -96,9 +96,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    @SneakyThrows
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
 }

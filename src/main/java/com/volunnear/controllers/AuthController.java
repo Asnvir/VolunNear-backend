@@ -1,8 +1,6 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-//import com.volunnear.dtos.jwt.JwtRequest;
-//import com.volunnear.dtos.jwt.JwtResponse;
 import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
 import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
 import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
@@ -23,8 +21,6 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
-    //  write end point that will be only for test
 
 
 //    @PostMapping(value = Routes.LOGIN)
