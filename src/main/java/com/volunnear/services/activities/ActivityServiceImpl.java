@@ -200,13 +200,9 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public ResponseEntity<?> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
-        List<ActivitiesDTO> activitiesByPlace = getListOfActivitiesDTOForResponse(
+    public List<ActivitiesDTO> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
+        return getListOfActivitiesDTOForResponse(
                 activitiesRepository.findActivityByCountryAndCity(nearbyActivitiesRequestDTO.getCountry(), nearbyActivitiesRequestDTO.getCity()));
-        if (activitiesByPlace.isEmpty()) {
-            return new ResponseEntity<>("No such activities in current place", HttpStatus.OK);
-        }
-        return new ResponseEntity<>(activitiesByPlace, HttpStatus.OK);
     }
 
     @Override

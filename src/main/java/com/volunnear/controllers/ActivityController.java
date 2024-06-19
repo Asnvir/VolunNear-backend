@@ -74,8 +74,9 @@ public class ActivityController {
             @ApiResponse(responseCode = "400", description = "No such activities in current place")
     })
     @GetMapping(value = Routes.FIND_NEARBY_ACTIVITIES, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findNearbyActivities(@RequestBody NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
-        return activityService.findNearbyActivities(nearbyActivitiesRequestDTO);
+    public ResponseEntity<List<ActivitiesDTO>> findNearbyActivities(@RequestBody NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
+        List<ActivitiesDTO> activitiesDTOS = activityService.findNearbyActivities(nearbyActivitiesRequestDTO);
+        return ResponseEntity.ok(activitiesDTOS);
     }
 
     @DeleteMapping(value = Routes.DELETE_CURRENT_ACTIVITY_BY_ID)
