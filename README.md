@@ -21,7 +21,7 @@ VolunNear is an application that connects volunteers with organizations in need 
     - docker-compose up keycloak_postgres_pgadmin
      (OR rebuild and run the container: docker-compose up --force-recreate keycloak_postgres_pgadmin)
     
-    - docker-compose up keycloak*
+    - docker-compose up keycloak
      (OR rebuild and run the container: docker-compose up --force-recreate keycloak)
 
 ### BackendApp:
