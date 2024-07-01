@@ -73,6 +73,7 @@ services:
       KC_DB_SCHEMA: public
       KC_DB_USERNAME: ${KC_POSTGRES_USER}
       KC_DB_PASSWORD: ${KC_POSTGRES_PASSWORD}
+      KC_HOSTNAME_STRICT: FALSE
     command:
       - start-dev
     depends_on:

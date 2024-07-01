@@ -25,13 +25,21 @@ import java.util.stream.Stream;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final RequestLoggingFilter requestLoggingFilter;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(CsrfConfigurer::disable)
+                .addFilterBefore(requestLoggingFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .authorizeHttpRequests(configurer -> configurer
+
                         .requestMatchers(Routes.REGISTER_ROUTE_SECURITY + "/**",
                                 Routes.LOGIN).permitAll()
+
 
                         .requestMatchers(Routes.SWAGGER_ENDPOINTS).permitAll()
                         .requestMatchers("/test/check-status").hasRole("VOLUNTEER") //TODO: only for tests, delete in production
@@ -67,28 +75,24 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .anyRequest().authenticated())
-                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(CsrfConfigurer::disable)
                 .oauth2ResourceServer(configurer -> configurer.jwt(
                         jwt -> {
-                    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-                    jwtAuthenticationConverter.setPrincipalClaimName("preferred_username");
-                    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+                            JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+                            jwtAuthenticationConverter.setPrincipalClaimName("preferred_username");
+                            jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
 
-                    JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-                    KeycloakJwtGrantedAuthoritiesConvertor customJwtGrantedAuthoritiesConverter = new KeycloakJwtGrantedAuthoritiesConvertor();
+                            JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+                            KeycloakJwtGrantedAuthoritiesConvertor customJwtGrantedAuthoritiesConverter = new KeycloakJwtGrantedAuthoritiesConvertor();
 
-                    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(token ->
-                            Stream
-                                    .concat(
-                                            jwtGrantedAuthoritiesConverter.convert(token).stream(),
-                                            customJwtGrantedAuthoritiesConverter.convert(token).stream()
-                                    ).toList());
-                }))
+                            jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(token ->
+                                    Stream
+                                            .concat(
+                                                    jwtGrantedAuthoritiesConverter.convert(token).stream(),
+                                                    customJwtGrantedAuthoritiesConverter.convert(token).stream()
+                                            ).toList());
+                        }))
                 .build();
     }
-
-
 
 
     @Bean

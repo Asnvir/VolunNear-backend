@@ -9,6 +9,8 @@ import com.volunnear.dtos.response.CurrentUserDTO;
 import com.volunnear.dtos.response.OrganisationInfoDTO;
 import com.volunnear.dtos.response.VolunteerInfoDTO;
 import com.volunnear.services.interfaces.AuthService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Keycloak")
 public class AuthController {
     private final AuthService authService;
 
@@ -40,12 +43,14 @@ public class AuthController {
 
     @PostMapping(value = Routes.REGISTER_VOLUNTEER, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> registrationOfVolunteer(@RequestBody RegistrationVolunteerRequestDTO registrationVolunteerRequestDto) {
+
         authService.registrationOfVolunteer(registrationVolunteerRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping(value = Routes.REGISTER_ORGANISATION, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> registrationOfOrganisation(@RequestBody RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO) {
+    public ResponseEntity<Void> registrationOfOrganisation(@RequestBody @Valid RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO) {
+        System.out.println("Received request to register organisation");
         authService.registrationOfOrganisation(registrationOrganisationRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

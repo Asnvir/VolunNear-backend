@@ -9,7 +9,6 @@ public class Routes {
      * Users management
      */
     public static final String LOGIN = API_URL + "/login";
-
     public static final String GET_CURRENT_USER = API_URL + "/auth/userInfo";
     public static final String REGISTER_ROUTE_SECURITY = API_URL + "/registration";
     public static final String REGISTER_VOLUNTEER = API_URL + "/registration/volunteer";

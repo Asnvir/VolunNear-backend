@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Keycloak")
 public class ActivityController {
     private final ActivityService activityService;
 
@@ -40,7 +43,7 @@ public class ActivityController {
 
     @PutMapping(value = Routes.UPDATE_ACTIVITY_INFORMATION, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ActivityDTO> updateActivityInformation(@RequestParam UUID idOfActivity,
-                                                                 @RequestBody AddActivityRequestDTO activityRequestDTO, Principal principal) {
+                                                                 @Valid @RequestBody AddActivityRequestDTO activityRequestDTO, Principal principal) {
         ActivityDTO activityDTO = activityService.updateActivityInformation(idOfActivity, activityRequestDTO, principal);
         return ResponseEntity.ok(activityDTO);
     }

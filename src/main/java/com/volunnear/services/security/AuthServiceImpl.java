@@ -22,14 +22,20 @@ import com.volunnear.exceptions.auth.UserNotFoundException;
 import com.volunnear.services.interfaces.AuthService;
 import com.volunnear.services.interfaces.OrganisationService;
 import com.volunnear.services.interfaces.VolunteerService;
+import com.volunnear.services.keycloak.KeycloakAdminClientService;
 import com.volunnear.services.users.UserService;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +44,8 @@ public class AuthServiceImpl implements AuthService {
     private final VolunteerService volunteerService;
 //    private final JwtTokenProvider jwtTokenProvider;
     private final OrganisationService organisationService;
+    private final KeycloakAdminClientService keycloakAdminClientService;
+
 //    private final AuthenticationManager authenticationManager;
 
 //    @Override
@@ -70,20 +78,52 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
+//    @Override
+//    public void registrationOfOrganisation(RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO) {
+//        String username = registrationOrganisationRequestDTO.getUsername();
+//        organisationService.findOrganisationByUsername(username).ifPresent(o -> {
+//            throw new UserAlreadyExistsException("Organisation with username " + username + " already exists");
+//        });
+//
+//        String password = registrationOrganisationRequestDTO.getPassword();
+//        String email = registrationOrganisationRequestDTO.getEmail();
+//        String nameOfOrganisation = registrationOrganisationRequestDTO.getNameOfOrganisation();
+//        String country = registrationOrganisationRequestDTO.getCountry();
+//        String city = registrationOrganisationRequestDTO.getCity();
+//        String address = registrationOrganisationRequestDTO.getAddress();
+//        organisationService.registerOrganisation(new OrganisationDTO(new Credentials(username, password, email), nameOfOrganisation, country, city, address));
+//    }
+
     @Override
+    @Transactional
     public void registrationOfOrganisation(RegistrationOrganisationRequestDTO registrationOrganisationRequestDTO) {
         String username = registrationOrganisationRequestDTO.getUsername();
         organisationService.findOrganisationByUsername(username).ifPresent(o -> {
             throw new UserAlreadyExistsException("Organisation with username " + username + " already exists");
         });
 
-        String password = registrationOrganisationRequestDTO.getPassword();
-        String email = registrationOrganisationRequestDTO.getEmail();
-        String nameOfOrganisation = registrationOrganisationRequestDTO.getNameOfOrganisation();
-        String country = registrationOrganisationRequestDTO.getCountry();
-        String city = registrationOrganisationRequestDTO.getCity();
-        String address = registrationOrganisationRequestDTO.getAddress();
-        organisationService.registerOrganisation(new OrganisationDTO(new Credentials(username, password, email), nameOfOrganisation, country, city, address));
+        String userId = null;
+        try {
+            // Создание пользователя в Keycloak
+            userId = keycloakAdminClientService.createUser(registrationOrganisationRequestDTO);
+
+            // Создание записи в базе данных
+            OrganisationDTO organisationDTO = new OrganisationDTO(
+                    new Credentials(username, registrationOrganisationRequestDTO.getPassword(), registrationOrganisationRequestDTO.getEmail()),
+                    registrationOrganisationRequestDTO.getNameOfOrganisation(),
+                    registrationOrganisationRequestDTO.getCountry(),
+                    registrationOrganisationRequestDTO.getCity(),
+                    registrationOrganisationRequestDTO.getAddress()
+            );
+
+            organisationService.registerOrganisation(organisationDTO);
+        } catch (Exception e) {
+            // Откат транзакции вручную, если была создана запись в Keycloak, но возникла ошибка при сохранении в БД
+            if (userId != null) {
+                keycloakAdminClientService.deleteUser(userId);
+            }
+            throw new RuntimeException("Registration failed", e);
+        }
     }
 
     @Override

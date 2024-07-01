@@ -44,6 +44,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final VolunteersInActivityRepository volunteersInActivityRepository;
     private final ActivityMapper activityMapper;
 
+
     @Override
     public void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
         AppUser organisation = userService.findAppUserByUsername(principal.getName())

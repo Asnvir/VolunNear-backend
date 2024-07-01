@@ -26,6 +26,8 @@ public class OrganisationServiceImpl implements OrganisationService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final OrganisationInfoRepository organisationInfoRepository;
+
+
     @Autowired
     private final OrganisationInfoMapper organisationInfoMapper;
 
@@ -48,6 +50,8 @@ public class OrganisationServiceImpl implements OrganisationService {
         addAdditionalDataAboutOrganisation(organisation, organisationDTO);
         userRepository.save(organisation);
     }
+
+
 
     private void addAdditionalDataAboutOrganisation(AppUser organisation, OrganisationDTO organisationDTO) {
         OrganisationInfo organisationInfo = new OrganisationInfo();

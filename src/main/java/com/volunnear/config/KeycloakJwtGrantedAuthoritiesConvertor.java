@@ -1,6 +1,7 @@
 package com.volunnear.config;
 
 import com.nimbusds.jose.shaded.gson.internal.LinkedTreeMap;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
