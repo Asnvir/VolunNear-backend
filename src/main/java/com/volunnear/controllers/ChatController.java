@@ -2,6 +2,7 @@ package com.volunnear.controllers;
 
 import com.volunnear.dtos.ChatMessageDTO;
 import com.volunnear.services.interfaces.ChatService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -17,6 +18,7 @@ public class ChatController {
         this.chatService = chatService;
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @MessageMapping("/chat/sendMessage/{convId}")
     public ChatMessageDTO sendMessageToConvId(ChatMessageDTO chatMessageDTO, SimpMessageHeaderAccessor headerAccessor, String conversationId) {
         log.info("Received message: {}", chatMessageDTO);

@@ -1,4 +1,4 @@
-package com.volunnear.config;
+package com.volunnear.config.security;
 
 import com.volunnear.Routes;
 import com.volunnear.security.jwt.JwtTokenFilter;
@@ -24,7 +24,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenFilter jwtTokenFilter) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize
+        http
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .logout(Customizer.withDefaults())
+                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(Routes.REGISTER_ROUTE_SECURITY + "/**",
                                 Routes.LOGIN).permitAll()
 
@@ -59,13 +66,8 @@ public class SecurityConfig {
                         .hasAnyRole("VOLUNTEER", "ORGANISATION")
                         .requestMatchers("/ws/**", "stomp").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().authenticated())
-                .cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .logout(Customizer.withDefaults());
-        http.sessionManagement(sessionManagement ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().authenticated());
+
         return http.build();
     }
 

@@ -62,9 +62,9 @@ public class JwtTokenProvider {
         try {
             log.info("Into validateToken");
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            log.info("Claims: " + claims);
+            log.info("Claims: {}", claims);
             boolean isValid = !claims.getBody().getExpiration().before(new Date());
-            log.info("isValid: " + isValid);
+            log.info("isValid: {}", isValid);
             return isValid;
         } catch (JwtException | IllegalArgumentException e) {
             return false;

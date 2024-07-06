@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,17 +28,20 @@ public class VolunteerController {
     private final VolunteerService volunteerService;
     private final RecommendationService recommendationService;
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value = Routes.GET_VOLUNTEER_PROFILE)
     public VolunteerProfileResponseDTO getVolunteerProfile(Principal principal) {
         return volunteerService.getVolunteerProfile(principal);
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Set preferences on user account", description = "Requires volunteer account (token) and preferencesRequestDTO")
     @PostMapping(value = Routes.SET_VOLUNTEERS_PREFERENCES)
     public String setVolunteersPreferences(@RequestBody PreferencesRequestDTO preferencesRequestDTO, Principal principal) {
         return volunteerService.setPreferencesForVolunteer(preferencesRequestDTO, principal);
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get recommendations by preferences")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Preferences founded",

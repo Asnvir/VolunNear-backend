@@ -32,17 +32,8 @@ jwt:
     secret: ${APP_JWT_TOKEN_SECRET}
     lifetime: ${APP_JWT_TOKEN_LIFETIME}
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: env,health,info
-  endpoint:
-    env:
-      enabled: true
-
 logging:
   level:
     root: INFO
-    org.springframework.web: DEBUG
-    org.springframework.boot.actuate.env.EnvironmentEndpoint: DEBUG
+#    org.springframework.web: DEBUG
+#    org.springframework.boot.actuate.env.EnvironmentEndpoint: DEBUG
