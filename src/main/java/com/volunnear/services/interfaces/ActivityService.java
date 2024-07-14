@@ -9,6 +9,7 @@ import com.volunnear.entitiy.users.AppUser;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,6 +20,9 @@ public interface ActivityService {
     void sendNotificationForSubscribers(Activity activity, String status);
 
     List<ActivitiesDTO> getAllActivitiesOfAllOrganisations();
+
+    List<ActivitiesDTO> getActivities(String title, String description, String country, String city,
+                                      String kindOfActivity, Date dateOfPlace);
 
     ActivitiesDTO getMyActivities(Principal principal);
 

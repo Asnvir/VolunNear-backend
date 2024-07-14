@@ -21,12 +21,12 @@ import com.volunnear.repositories.infos.VolunteersInActivityRepository;
 import com.volunnear.services.interfaces.ActivityService;
 import com.volunnear.services.interfaces.OrganisationService;
 import com.volunnear.services.users.UserService;
+import com.volunnear.specification.ActivitySpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -86,6 +86,23 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations() {
         List<Activity> allActivities = activitiesRepository.findAll();
+
+        return getListOfActivitiesDTOForResponse(allActivities);
+    }
+
+    /**
+     * Get Activities by title, description, country, city, kindOfActivity, dateOfPlace
+     */
+    @Override
+    public List<ActivitiesDTO> getActivities(String title, String description, String country, String city,
+                                             String kindOfActivity, Date dateOfPlace) {
+        Specification<Activity> spec = Specification.where(ActivitySpecification.hasTitle(title))
+                .and(ActivitySpecification.hasDescription(description))
+                .and(ActivitySpecification.hasCountry(country))
+                .and(ActivitySpecification.hasCity(city))
+                .and(ActivitySpecification.hasKindOfActivity(kindOfActivity))
+                .and(ActivitySpecification.hasDateOfPlace(dateOfPlace));
+        List<Activity> allActivities =activitiesRepository.findAll(spec);
 
         return getListOfActivitiesDTOForResponse(allActivities);
     }
