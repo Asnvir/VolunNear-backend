@@ -1,5 +1,6 @@
 package com.volunnear.services.users;
 
+import com.volunnear.Constants;
 import com.volunnear.dtos.VolunteerDTO;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
 import com.volunnear.dtos.response.VolunteerInfoDTO;
@@ -31,6 +32,7 @@ public class VolunteerServiceImpl implements VolunteerService {
     private final VolunteerInfoRepository volunteerInfoRepository;
     private final VolunteerPreferenceRepository volunteerPreferenceRepository;
     private final VolunteerInfoMapper volunteerInfoMapper;
+
     @Override
     public VolunteerProfileResponseDTO getVolunteerProfile(Principal principal) {
         AppUser appUser = loadUserFromDbByUsername(principal);
@@ -48,6 +50,7 @@ public class VolunteerServiceImpl implements VolunteerService {
 
         return profileResponse;
     }
+
     @Override
     public String setPreferencesForVolunteer(PreferencesRequestDTO preferencesRequestDTO, Principal principal) {
         AppUser appUser = loadUserFromDbByUsername(principal);
@@ -57,32 +60,36 @@ public class VolunteerServiceImpl implements VolunteerService {
         volunteerPreferenceRepository.save(preference);
         return "Successfully set your preferences";
     }
+
     @Override
     public Optional<VolunteerPreference> getPreferencesOfUser(Principal principal) {
         AppUser appUser = loadUserFromDbByUsername(principal);
         return volunteerPreferenceRepository.findVolunteerPreferenceByVolunteer(appUser);
     }
+
     @Override
     public VolunteerInfo getVolunteerInfo(AppUser appUser) {
         return volunteerInfoRepository.getVolunteerInfoByAppUser(appUser);
     }
+
     @Override
     public VolunteerInfoDTO updateVolunteerInfo(AppUser appUser, VolunteerInfo volunteerInfo) {
         userRepository.save(appUser);
         VolunteerInfo savedVolunteerInfo = volunteerInfoRepository.save(volunteerInfo);
         return volunteerInfoMapper.volunteerInfoToVolunteerInfoDTO(savedVolunteerInfo);
-
     }
+
     @Override
     public void registerVolunteer(VolunteerDTO volunteerDTO) {
         AppUser appUser = new AppUser();
         appUser.setUsername(volunteerDTO.getCredentials().getUsername());
         appUser.setPassword(passwordEncoder.encode(volunteerDTO.getCredentials().getPassword()));
         appUser.setEmail(volunteerDTO.getCredentials().getEmail());
-        appUser.setRoles(roleService.getRoleByName("ROLE_VOLUNTEER"));
+        appUser.setRoles(roleService.getRoleByName(Constants.ROLE_VOLUNTEER));
         userRepository.save(appUser);
         addAdditionalInfo(appUser, volunteerDTO.getNameOfUser());
     }
+
     @Override
     public boolean isUserAreVolunteer(AppUser appUser) {
         return volunteerInfoRepository.existsByAppUser(appUser);
