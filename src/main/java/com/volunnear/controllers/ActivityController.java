@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,6 +54,17 @@ public class ActivityController {
     @GetMapping(value = Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS)
     public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations() {
         return activityService.getAllActivitiesOfAllOrganisations();
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping(value = Routes.GET_ACTIVITIES)
+    public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations(@RequestParam(required = false) String title,
+                                                                  @RequestParam(required = false) String description,
+                                                                  @RequestParam(required = false) String country,
+                                                                  @RequestParam(required = false) String city,
+                                                                  @RequestParam(required = false) String kindOfActivity,
+                                                                  @RequestParam(required = false) Date dateOfPlace) {
+        return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
