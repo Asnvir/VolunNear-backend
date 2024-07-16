@@ -77,6 +77,7 @@ public class SecurityConfig {
                                 Routes.UPDATE_ACTIVITY_INFORMATION,
                                 Routes.DELETE_CURRENT_ACTIVITY_BY_ID,
                                 Routes.GET_ORGANISATION_PROFILE,
+                                "/location",
                                 Routes.ADD_COMMUNITY_LINK,
                                 Routes.ADD_CHAT_LINK_FOR_ACTIVITY).hasRole("ORGANISATION")
 
