@@ -68,6 +68,7 @@ public class SecurityConfig {
                                 Routes.POST_FEEDBACK_ABOUT_ORGANISATION,
                                 Routes.UPDATE_FEEDBACK_FOR_CURRENT_ORGANISATION,
                                 Routes.DELETE_FEEDBACK_ABOUT_ORGANISATION,
+                                Routes.SET_VOLUNTEERS_PREFERENCES,
                                 Routes.LOCATION + "/**",
                                 Routes.NOTIFICATIONS + "/**").hasRole("VOLUNTEER")
 
