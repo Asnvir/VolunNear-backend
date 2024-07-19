@@ -1,9 +1,9 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
+import com.volunnear.dtos.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
-import com.volunnear.dtos.requests.GetActivitiesRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -69,12 +68,12 @@ public class ActivityController {
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String kindOfActivity,
             @RequestParam(required = false) Date dateOfPlace,
-            @RequestParam boolean ascending,
+            @RequestParam SortOrder sortOrder,
             @RequestParam double latitude,
             @RequestParam double longitude) {
         log.info("latitude: {} longitude: {}", latitude, longitude);
         LocationDTO locationDTO = new LocationDTO(latitude, longitude);
-        return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, ascending, locationDTO);
+        return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, sortOrder, locationDTO);
     }
 
 

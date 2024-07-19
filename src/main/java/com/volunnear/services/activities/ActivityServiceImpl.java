@@ -1,6 +1,7 @@
 package com.volunnear.services.activities;
 
 import com.volunnear.dtos.ActivityNotificationDTO;
+import com.volunnear.dtos.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.requests.GetActivitiesRequestDTO;
@@ -109,7 +110,7 @@ public class ActivityServiceImpl implements ActivityService {
                                                 String city,
                                                 String kindOfActivity,
                                                 Date dateOfPlace,
-                                                boolean ascending,
+                                                SortOrder sortOrder,
                                                 LocationDTO locationDTO)  {
         Specification<Activity> spec = Specification.where(ActivitySpecification.hasTitle(title))
                 .and(ActivitySpecification.hasDescription(description))
@@ -119,7 +120,7 @@ public class ActivityServiceImpl implements ActivityService {
                 .and(ActivitySpecification.hasDateOfPlace(dateOfPlace));
         List<Activity> allActivities = activitiesRepository.findAll(spec);
 
-        return getSortedListOfActivitiesDTOByDistance(allActivities, locationDTO, ascending);
+        return getSortedListOfActivitiesDTOByDistance(allActivities, locationDTO, sortOrder);
     }
 
     /**
@@ -290,7 +291,7 @@ public class ActivityServiceImpl implements ActivityService {
         return responseActivities;
     }
 
-    public List<ActivitiesDTO> getSortedListOfActivitiesDTOByDistance(List<Activity> activities, LocationDTO locationDTO, boolean sortAscending) {
+    public List<ActivitiesDTO> getSortedListOfActivitiesDTOByDistance(List<Activity> activities, LocationDTO locationDTO, SortOrder sortOrder) {
         List<ActivitiesDTO> responseActivities = new ArrayList<>();
 
         Map<AppUser, List<Activity>> activitiesByOrganisationMap = activities.stream()
@@ -299,21 +300,21 @@ public class ActivityServiceImpl implements ActivityService {
         for (Map.Entry<AppUser, List<Activity>> organisationWithActivity : activitiesByOrganisationMap.entrySet()) {
             ActivitiesDTO activitiesDTO = activitiesFromEntityToDto(organisationService.findAdditionalInfoAboutOrganisation(organisationWithActivity.getKey()),
                     organisationWithActivity.getValue());
-            List<ActivityDTO> sortedActivities = sortActivitiesByDistance(organisationWithActivity.getValue(), locationDTO, sortAscending);
+            List<ActivityDTO> sortedActivities = sortActivitiesByDistance(organisationWithActivity.getValue(), locationDTO, sortOrder);
             activitiesDTO.setActivities(sortedActivities);
             responseActivities.add(activitiesDTO);
         }
         return responseActivities;
     }
 
-    private List<ActivityDTO> sortActivitiesByDistance(List<Activity> activities, LocationDTO locationDTO, boolean sortAscending) {
+    private List<ActivityDTO> sortActivitiesByDistance(List<Activity> activities, LocationDTO locationDTO, SortOrder sortOrder) {
         return activities.stream()
                 .map(activity -> new ActivityDTO(activity.getId(), activity.getTitle(), activity.getDescription(),
                         activity.getCountry(), activity.getCity(), activity.getKindOfActivity(), activity.getDateOfPlace(),
                         new LocationDTO(activity.getLatitude(), activity.getLongitude()),
                         DistanceCalculator.calculateDistance(locationDTO.getLatitude(), locationDTO.getLongitude(),
                                 activity.getLatitude(), activity.getLongitude())))
-                .sorted((a1, a2) -> sortAscending
+                .sorted((a1, a2) -> sortOrder == SortOrder.ASC
                         ? Double.compare(a1.getDistance(), a2.getDistance())
                         : Double.compare(a2.getDistance(), a1.getDistance()))
                 .collect(Collectors.toList());

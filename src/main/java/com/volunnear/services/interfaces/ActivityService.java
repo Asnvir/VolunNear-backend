@@ -1,5 +1,6 @@
 package com.volunnear.services.interfaces;
 
+import com.volunnear.dtos.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
@@ -27,7 +28,7 @@ public interface ActivityService {
             String city,
             String kindOfActivity,
             Date dateOfPlace,
-            boolean ascending,
+            SortOrder sortOrder,
             LocationDTO locationDTO);
 
     ActivitiesDTO getMyActivities(Principal principal);
