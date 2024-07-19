@@ -101,16 +101,23 @@ public class ActivityServiceImpl implements ActivityService {
      * Get Activities by title, description, country, city, kindOfActivity, dateOfPlace
      */
     @Override
-    public List<ActivitiesDTO> getActivities(GetActivitiesRequestDTO getActivitiesRequestDTO, LocationDTO locationDTO) {
-        Specification<Activity> spec = Specification.where(ActivitySpecification.hasTitle(getActivitiesRequestDTO.getTitle()))
-                .and(ActivitySpecification.hasDescription(getActivitiesRequestDTO.getDescription()))
-                .and(ActivitySpecification.hasCountry(getActivitiesRequestDTO.getCountry()))
-                .and(ActivitySpecification.hasCity(getActivitiesRequestDTO.getCity()))
-                .and(ActivitySpecification.hasKindOfActivity(getActivitiesRequestDTO.getKindOfActivity()))
-                .and(ActivitySpecification.hasDateOfPlace(getActivitiesRequestDTO.getDateOfPlace()));
+    public List<ActivitiesDTO> getActivities(String title,
+                                                String description,
+                                                String country,
+                                                String city,
+                                                String kindOfActivity,
+                                                Date dateOfPlace,
+                                                boolean ascending,
+                                                LocationDTO locationDTO)  {
+        Specification<Activity> spec = Specification.where(ActivitySpecification.hasTitle(title))
+                .and(ActivitySpecification.hasDescription(description))
+                .and(ActivitySpecification.hasCountry(country))
+                .and(ActivitySpecification.hasCity(city))
+                .and(ActivitySpecification.hasKindOfActivity(kindOfActivity))
+                .and(ActivitySpecification.hasDateOfPlace(dateOfPlace));
         List<Activity> allActivities = activitiesRepository.findAll(spec);
 
-        return getSortedListOfActivitiesDTOByDistance(allActivities, locationDTO, getActivitiesRequestDTO.isAscending());
+        return getSortedListOfActivitiesDTOByDistance(allActivities, locationDTO, ascending);
     }
 
     /**
