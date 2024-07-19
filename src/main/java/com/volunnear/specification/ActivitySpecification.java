@@ -35,4 +35,15 @@ public class ActivitySpecification {
         return (root, query, criteriaBuilder) ->
                 dateOfPlace == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("dateOfPlace"), dateOfPlace);
     }
+
+    public static Specification<Activity> sortByLatitudeAndLongitude(boolean ascending) {
+        return (root, query, criteriaBuilder) -> {
+            if (ascending) {
+                query.orderBy(criteriaBuilder.asc(root.get("latitude")), criteriaBuilder.asc(root.get("longitude")));
+            } else {
+                query.orderBy(criteriaBuilder.desc(root.get("latitude")), criteriaBuilder.desc(root.get("longitude")));
+            }
+            return criteriaBuilder.conjunction();
+        };
+    }
 }

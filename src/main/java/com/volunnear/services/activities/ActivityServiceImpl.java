@@ -1,7 +1,10 @@
 package com.volunnear.services.activities;
 
 import com.volunnear.dtos.ActivityNotificationDTO;
+import com.volunnear.dtos.SortOrder;
+import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
+import com.volunnear.dtos.requests.GetActivitiesRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
@@ -19,9 +22,11 @@ import com.volunnear.mappers.ActivityMapper;
 import com.volunnear.repositories.infos.ActivitiesRepository;
 import com.volunnear.repositories.infos.VolunteersInActivityRepository;
 import com.volunnear.services.interfaces.ActivityService;
+import com.volunnear.services.interfaces.GeocodingService;
 import com.volunnear.services.interfaces.OrganisationService;
 import com.volunnear.services.users.UserService;
 import com.volunnear.specification.ActivitySpecification;
+import com.volunnear.utils.DistanceCalculator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -43,6 +48,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivitiesRepository activitiesRepository;
     private final VolunteersInActivityRepository volunteersInActivityRepository;
     private final ActivityMapper activityMapper;
+    private final GeocodingService geocodingService;
 
     @Override
     public void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
@@ -52,13 +58,17 @@ public class ActivityServiceImpl implements ActivityService {
             throw new AuthErrorException("You are not organisation");
         }
         Activity activity = new Activity();
-
+        LocationDTO locationDTO = geocodingService.getCoordinates(activityRequest.getCity(), activityRequest.getStreet(), activityRequest.getHouseNumber());
         activity.setTitle(activityRequest.getTitle());
         activity.setDescription(activityRequest.getDescription());
         activity.setCountry(activityRequest.getCountry());
         activity.setCity(activityRequest.getCity());
+        activity.setStreet(activityRequest.getStreet());
+        activity.setNumberOfHouse(activityRequest.getHouseNumber());
         activity.setDateOfPlace(new Date());
         activity.setKindOfActivity(activityRequest.getKindOfActivity());
+        activity.setLatitude(locationDTO.getLatitude());
+        activity.setLongitude(locationDTO.getLongitude());
         activity.setAppUser(organisation);
         activitiesRepository.save(activity);
 
@@ -94,17 +104,23 @@ public class ActivityServiceImpl implements ActivityService {
      * Get Activities by title, description, country, city, kindOfActivity, dateOfPlace
      */
     @Override
-    public List<ActivitiesDTO> getActivities(String title, String description, String country, String city,
-                                             String kindOfActivity, Date dateOfPlace) {
+    public List<ActivitiesDTO> getActivities(String title,
+                                                String description,
+                                                String country,
+                                                String city,
+                                                String kindOfActivity,
+                                                Date dateOfPlace,
+                                                SortOrder sortOrder,
+                                                LocationDTO locationDTO)  {
         Specification<Activity> spec = Specification.where(ActivitySpecification.hasTitle(title))
                 .and(ActivitySpecification.hasDescription(description))
                 .and(ActivitySpecification.hasCountry(country))
                 .and(ActivitySpecification.hasCity(city))
                 .and(ActivitySpecification.hasKindOfActivity(kindOfActivity))
                 .and(ActivitySpecification.hasDateOfPlace(dateOfPlace));
-        List<Activity> allActivities =activitiesRepository.findAll(spec);
+        List<Activity> allActivities = activitiesRepository.findAll(spec);
 
-        return getListOfActivitiesDTOForResponse(allActivities);
+        return getSortedListOfActivitiesDTOByDistance(allActivities, locationDTO, sortOrder);
     }
 
     /**
@@ -239,10 +255,13 @@ public class ActivityServiceImpl implements ActivityService {
             activitiesDTO.addActivity(new ActivityDTO(activity.getId(),
                     activity.getCity(),
                     activity.getCountry(),
-                    activity.getDateOfPlace(),
-                    activity.getDescription(),
                     activity.getTitle(),
-                    activity.getKindOfActivity()));
+                    activity.getDescription(),
+                    activity.getKindOfActivity(),
+                    activity.getDateOfPlace(),
+                    new LocationDTO(activity.getLatitude(), activity.getLongitude()),
+                    0.0
+            ));
         }
 
         activitiesDTO.setOrganisationResponseDTO(responseDTO);
@@ -271,4 +290,34 @@ public class ActivityServiceImpl implements ActivityService {
         }
         return responseActivities;
     }
+
+    public List<ActivitiesDTO> getSortedListOfActivitiesDTOByDistance(List<Activity> activities, LocationDTO locationDTO, SortOrder sortOrder) {
+        List<ActivitiesDTO> responseActivities = new ArrayList<>();
+
+        Map<AppUser, List<Activity>> activitiesByOrganisationMap = activities.stream()
+                .collect(Collectors.groupingBy(Activity::getAppUser));
+
+        for (Map.Entry<AppUser, List<Activity>> organisationWithActivity : activitiesByOrganisationMap.entrySet()) {
+            ActivitiesDTO activitiesDTO = activitiesFromEntityToDto(organisationService.findAdditionalInfoAboutOrganisation(organisationWithActivity.getKey()),
+                    organisationWithActivity.getValue());
+            List<ActivityDTO> sortedActivities = sortActivitiesByDistance(organisationWithActivity.getValue(), locationDTO, sortOrder);
+            activitiesDTO.setActivities(sortedActivities);
+            responseActivities.add(activitiesDTO);
+        }
+        return responseActivities;
+    }
+
+    private List<ActivityDTO> sortActivitiesByDistance(List<Activity> activities, LocationDTO locationDTO, SortOrder sortOrder) {
+        return activities.stream()
+                .map(activity -> new ActivityDTO(activity.getId(), activity.getTitle(), activity.getDescription(),
+                        activity.getCountry(), activity.getCity(), activity.getKindOfActivity(), activity.getDateOfPlace(),
+                        new LocationDTO(activity.getLatitude(), activity.getLongitude()),
+                        DistanceCalculator.calculateDistance(locationDTO.getLatitude(), locationDTO.getLongitude(),
+                                activity.getLatitude(), activity.getLongitude())))
+                .sorted((a1, a2) -> sortOrder == SortOrder.ASC
+                        ? Double.compare(a1.getDistance(), a2.getDistance())
+                        : Double.compare(a2.getDistance(), a1.getDistance()))
+                .collect(Collectors.toList());
+    }
+
 }
