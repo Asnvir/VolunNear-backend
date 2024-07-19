@@ -62,6 +62,8 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setDescription(activityRequest.getDescription());
         activity.setCountry(activityRequest.getCountry());
         activity.setCity(activityRequest.getCity());
+        activity.setStreet(activityRequest.getStreet());
+        activity.setNumberOfHouse(activityRequest.getHouseNumber());
         activity.setDateOfPlace(new Date());
         activity.setKindOfActivity(activityRequest.getKindOfActivity());
         activity.setLatitude(locationDTO.getLatitude());

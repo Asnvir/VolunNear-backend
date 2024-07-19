@@ -35,6 +35,12 @@ public class Activity {
     @Column(name = "city")
     private String city;
 
+    @Column(name = "street")
+    private String street;
+
+    @Column(name = "number_of_house")
+    private String numberOfHouse;
+
     @Column(name = "kind_of_activity")
     private String kindOfActivity;
 
