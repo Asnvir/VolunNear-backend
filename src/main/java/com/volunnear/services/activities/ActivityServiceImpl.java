@@ -64,8 +64,8 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setCity(activityRequest.getCity());
         activity.setDateOfPlace(new Date());
         activity.setKindOfActivity(activityRequest.getKindOfActivity());
-        activity.setLatitude(locationDTO.latitude());
-        activity.setLongitude(locationDTO.longitude());
+        activity.setLatitude(locationDTO.getLatitude());
+        activity.setLongitude(locationDTO.getLongitude());
         activity.setAppUser(organisation);
         activitiesRepository.save(activity);
 
@@ -309,7 +309,7 @@ public class ActivityServiceImpl implements ActivityService {
                 .map(activity -> new ActivityDTO(activity.getId(), activity.getTitle(), activity.getDescription(),
                         activity.getCountry(), activity.getCity(), activity.getKindOfActivity(), activity.getDateOfPlace(),
                         new LocationDTO(activity.getLatitude(), activity.getLongitude()),
-                        DistanceCalculator.calculateDistance(locationDTO.latitude(), locationDTO.longitude(),
+                        DistanceCalculator.calculateDistance(locationDTO.getLatitude(), locationDTO.getLongitude(),
                                 activity.getLatitude(), activity.getLongitude())))
                 .sorted((a1, a2) -> sortAscending
                         ? Double.compare(a1.getDistance(), a2.getDistance())
