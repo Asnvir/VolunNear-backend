@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ActivityController {
     private final ActivityService activityService;
 
@@ -68,11 +70,13 @@ public class ActivityController {
             @RequestParam(required = false) String kindOfActivity,
             @RequestParam(required = false) Date dateOfPlace,
             @RequestParam boolean ascending,
-            @RequestBody LocationDTO locationDTO) {
-        {
+            @RequestParam double latitude,
+            @RequestParam double longitude) {
+        log.info("latitude: {} longitude: {}", latitude, longitude);
+        LocationDTO locationDTO = new LocationDTO(latitude, longitude);
         return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, ascending, locationDTO);
-        }
     }
+
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value = Routes.GET_MY_ACTIVITIES)
