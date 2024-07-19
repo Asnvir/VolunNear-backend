@@ -12,5 +12,7 @@ public class AddActivityRequestDTO {
     private String description;
     private String country;
     private String city;
+    private String street;
+    private String houseNumber;
     private String kindOfActivity;
 }

@@ -45,4 +45,10 @@ public class Activity {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "app_user_id")
     private AppUser appUser;
+
+    @Column(name = "latitude")
+    private double latitude;
+
+    @Column(name = "longitude")
+    private double longitude;
 }

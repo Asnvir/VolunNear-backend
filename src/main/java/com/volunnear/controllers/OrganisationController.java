@@ -1,7 +1,7 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-import com.volunnear.dtos.geoLocation.Location;
+import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.services.interfaces.ActivityService;
@@ -47,11 +47,5 @@ public class OrganisationController {
     @GetMapping(value = Routes.GET_ORGANISATION_PROFILE)
     public ActivitiesDTO getOrganisationProfile(Principal principal) {
         return activityService.getMyActivities(principal);
-    }
-    @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping(value = "/location")
-    public Location getLocation(@RequestParam String address) {
-        log.info("Getting location for address: {}", address);
-        return geocodingService.getCoordinates(address);
     }
 }

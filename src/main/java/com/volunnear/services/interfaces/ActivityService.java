@@ -1,15 +1,15 @@
 package com.volunnear.services.interfaces;
 
+import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
+import com.volunnear.dtos.requests.GetActivitiesRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.users.AppUser;
-import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,8 +21,7 @@ public interface ActivityService {
 
     List<ActivitiesDTO> getAllActivitiesOfAllOrganisations();
 
-    List<ActivitiesDTO> getActivities(String title, String description, String country, String city,
-                                      String kindOfActivity, Date dateOfPlace);
+    List<ActivitiesDTO> getActivities(GetActivitiesRequestDTO getActivitiesRequestDTO, LocationDTO locationDTO);
 
     ActivitiesDTO getMyActivities(Principal principal);
 

@@ -1,7 +1,9 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
+import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
+import com.volunnear.dtos.requests.GetActivitiesRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
@@ -19,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,13 +59,10 @@ public class ActivityController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value = Routes.GET_ACTIVITIES)
-    public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations(@RequestParam(required = false) String title,
-                                                                  @RequestParam(required = false) String description,
-                                                                  @RequestParam(required = false) String country,
-                                                                  @RequestParam(required = false) String city,
-                                                                  @RequestParam(required = false) String kindOfActivity,
-                                                                  @RequestParam(required = false) Date dateOfPlace) {
-        return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace);
+    public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations(@RequestBody GetActivitiesRequestDTO getActivitiesRequestDTO, @RequestBody LocationDTO locationDTO) {
+        {
+        return activityService.getActivities(getActivitiesRequestDTO, locationDTO);
+        }
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -109,7 +107,7 @@ public class ActivityController {
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping(value = Routes.LEAVE_FROM_ACTIVITY_BY_VOLUNTEER)
     public ResponseEntity<Void> deleteVolunteerFromActivity(@RequestParam UUID id, Principal principal) {
-       activityService.deleteVolunteerFromActivity(id, principal);
+        activityService.deleteVolunteerFromActivity(id, principal);
         return ResponseEntity.ok().build();
     }
 }
