@@ -1,5 +1,6 @@
 package com.volunnear.dtos;
 
+import com.volunnear.dtos.enums.MessageDeliveryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.volunnear.services;
 
-import com.volunnear.dtos.MessageDeliveryStatus;
+import com.volunnear.dtos.enums.MessageDeliveryStatus;
 import com.volunnear.dtos.ChatMessageDTO;
 import com.volunnear.entitiy.chat.ConversationEntity;
 import com.volunnear.dtos.CustomUserDetails;
@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;

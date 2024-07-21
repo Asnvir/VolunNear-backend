@@ -1,6 +1,7 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
+import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.VolunteerProfileResponseDTO;
@@ -49,7 +50,7 @@ public class VolunteerController {
             @ApiResponse(responseCode = "400", description = "In your profile no preferences set or Activities by your preferences not founded")
     })
     @GetMapping(value = Routes.GET_RECOMMENDATION_BY_PREFERENCES)
-    public ResponseEntity<?> getRecommendationsByPreferencesOfUser(Principal principal) {
-        return recommendationService.generateRecommendations(principal);
+    public ResponseEntity<?> getRecommendationsByPreferencesOfUser(@RequestBody LocationDTO locationDTO, Principal principal) {
+        return recommendationService.generateRecommendations(locationDTO, principal);
     }
 }

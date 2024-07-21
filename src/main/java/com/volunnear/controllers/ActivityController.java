@@ -1,7 +1,8 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-import com.volunnear.dtos.SortOrder;
+import com.volunnear.dtos.enums.ActivityType;
+import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
@@ -54,19 +55,14 @@ public class ActivityController {
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping(value = Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS)
-    public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations() {
-        return activityService.getAllActivitiesOfAllOrganisations();
-    }
-
-    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Get activities of all organisations by different filters", description = "Returns ActivitiesDTO")
     @GetMapping(value = Routes.GET_ACTIVITIES)
     public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String country,
             @RequestParam(required = false) String city,
-            @RequestParam(required = false) String kindOfActivity,
+            @RequestParam(required = false) ActivityType kindOfActivity,
             @RequestParam(required = false) Date dateOfPlace,
             @RequestParam SortOrder sortOrder,
             @RequestParam double latitude,
@@ -78,6 +74,7 @@ public class ActivityController {
 
 
     @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Get my activities without different filters", description = "Returns ActivitiesDTO")
     @GetMapping(value = Routes.GET_MY_ACTIVITIES)
     public ActivitiesDTO getMyActivities(Principal principal) {
         return activityService.getMyActivities(principal);

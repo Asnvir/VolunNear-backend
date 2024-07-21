@@ -1,10 +1,10 @@
 package com.volunnear.services.activities;
 
 import com.volunnear.dtos.ActivityNotificationDTO;
-import com.volunnear.dtos.SortOrder;
+import com.volunnear.dtos.enums.ActivityType;
+import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
-import com.volunnear.dtos.requests.GetActivitiesRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
@@ -108,7 +108,7 @@ public class ActivityServiceImpl implements ActivityService {
                                                 String description,
                                                 String country,
                                                 String city,
-                                                String kindOfActivity,
+                                             ActivityType kindOfActivity,
                                                 Date dateOfPlace,
                                                 SortOrder sortOrder,
                                                 LocationDTO locationDTO)  {
@@ -151,9 +151,9 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<String> preferences) {
-        List<Activity> activityByKindOfActivity = activitiesRepository.findActivityByKindOfActivityIgnoreCaseIn(preferences);
-        return getListOfActivitiesDTOForResponse(activityByKindOfActivity);
+    public List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<ActivityType> preferences, LocationDTO locationDTO) {
+        List<Activity> activityByKindOfActivity = activitiesRepository.findByKindOfActivityIn(preferences);
+        return getSortedListOfActivitiesDTOByDistance(activityByKindOfActivity, locationDTO, SortOrder.ASC);
     }
 
 

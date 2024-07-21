@@ -1,5 +1,6 @@
 package com.volunnear.dtos.requests;
 
+import com.volunnear.dtos.enums.ActivityType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class GetActivitiesRequestDTO{
     private String description;
     private String country;
     private String city;
-    private String kindOfActivity;
+    private ActivityType kindOfActivity;
     private Date dateOfPlace;
     private boolean ascending;
 }

@@ -1,6 +1,7 @@
 package com.volunnear.services.interfaces;
 
-import com.volunnear.dtos.SortOrder;
+import com.volunnear.dtos.enums.ActivityType;
+import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
@@ -26,7 +27,7 @@ public interface ActivityService {
             String description,
             String country,
             String city,
-            String kindOfActivity,
+            ActivityType kindOfActivity,
             Date dateOfPlace,
             SortOrder sortOrder,
             LocationDTO locationDTO);
@@ -35,7 +36,7 @@ public interface ActivityService {
 
     ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation);
 
-    List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<String> preferences);
+    List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<ActivityType> preferences, LocationDTO locationDTO);
 
     void deleteActivityById(UUID id, Principal principal);
 

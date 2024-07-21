@@ -1,5 +1,6 @@
 package com.volunnear.specification;
 
+import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.entitiy.activities.Activity;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -26,7 +27,7 @@ public class ActivitySpecification {
                 city == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("city"), city);
     }
 
-    public static Specification<Activity> hasKindOfActivity(String kindOfActivity) {
+    public static Specification<Activity> hasKindOfActivity(ActivityType kindOfActivity) {
         return (root, query, criteriaBuilder) ->
                 kindOfActivity == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("kindOfActivity"), kindOfActivity);
     }
