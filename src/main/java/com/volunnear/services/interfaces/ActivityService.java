@@ -20,7 +20,6 @@ public interface ActivityService {
 
     void sendNotificationForSubscribers(Activity activity, String status);
 
-    List<ActivitiesDTO> getAllActivitiesOfAllOrganisations();
 
     List<ActivitiesDTO> getActivities(
             String title,
@@ -30,9 +29,11 @@ public interface ActivityService {
             ActivityType kindOfActivity,
             Date dateOfPlace,
             SortOrder sortOrder,
-            LocationDTO locationDTO);
+            LocationDTO locationDTO,
+            boolean isMyActivities,
+            Principal principal
+    );
 
-    ActivitiesDTO getMyActivities(Principal principal);
 
     ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation);
 
@@ -48,7 +49,6 @@ public interface ActivityService {
 
     List<ActivitiesDTO> getActivitiesOfVolunteer(AppUser appUser);
 
-    List<ActivitiesDTO> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO);
 
     Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, UUID idOfActivity);
 }

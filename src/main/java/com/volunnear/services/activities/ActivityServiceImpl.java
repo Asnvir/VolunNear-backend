@@ -5,7 +5,6 @@ import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
-import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
@@ -93,47 +92,35 @@ public class ActivityServiceImpl implements ActivityService {
         eventPublisher.publishEvent(new ActivityCreationEvent(this, notificationDTO, status));
     }
 
-    @Override
-    public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations() {
-        List<Activity> allActivities = activitiesRepository.findAll();
-
-        return getListOfActivitiesDTOForResponse(allActivities);
-    }
 
     /**
      * Get Activities by title, description, country, city, kindOfActivity, dateOfPlace
      */
     @Override
     public List<ActivitiesDTO> getActivities(String title,
-                                                String description,
-                                                String country,
-                                                String city,
+                                             String description,
+                                             String country,
+                                             String city,
                                              ActivityType kindOfActivity,
-                                                Date dateOfPlace,
-                                                SortOrder sortOrder,
-                                                LocationDTO locationDTO)  {
+                                             Date dateOfPlace,
+                                             SortOrder sortOrder,
+                                             LocationDTO locationDTO,
+                                             boolean isMyActivities,
+                                             Principal principal
+    ) {
         Specification<Activity> spec = Specification.where(ActivitySpecification.hasTitle(title))
                 .and(ActivitySpecification.hasDescription(description))
                 .and(ActivitySpecification.hasCountry(country))
                 .and(ActivitySpecification.hasCity(city))
                 .and(ActivitySpecification.hasKindOfActivity(kindOfActivity))
                 .and(ActivitySpecification.hasDateOfPlace(dateOfPlace));
+        if (isMyActivities && principal != null) {
+            Optional<AppUser> appUserByUsername = userService.findAppUserByUsername(principal.getName());
+            spec = spec.and(ActivitySpecification.hasAppUser(appUserByUsername.get()));
+        }
         List<Activity> allActivities = activitiesRepository.findAll(spec);
 
         return getSortedListOfActivitiesDTOByDistance(allActivities, locationDTO, sortOrder);
-    }
-
-    /**
-     * Activities by organisation username from token
-     */
-    @Override
-    public ActivitiesDTO getMyActivities(Principal principal) {
-        String username = principal.getName();
-        Optional<AppUser> appUserByUsername = userService.findAppUserByUsername(username);
-        OrganisationInfo additionalInfoAboutOrganisation = organisationService.findAdditionalInfoAboutOrganisation(appUserByUsername.get());
-        List<Activity> activitiesByAppUser = activitiesRepository.findActivitiesByAppUser(appUserByUsername.get());
-
-        return activitiesFromEntityToDto(additionalInfoAboutOrganisation, activitiesByAppUser);
     }
 
     /**
@@ -230,12 +217,6 @@ public class ActivityServiceImpl implements ActivityService {
         List<Activity> infoAboutActivities = allByUser.stream().map(volunteerInActivity ->
                 activitiesRepository.findById(volunteerInActivity.getActivity().getId()).get()).toList();
         return getListOfActivitiesDTOForResponse(infoAboutActivities);
-    }
-
-    @Override
-    public List<ActivitiesDTO> findNearbyActivities(NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
-        return getListOfActivitiesDTOForResponse(
-                activitiesRepository.findActivityByCountryAndCity(nearbyActivitiesRequestDTO.getCountry(), nearbyActivitiesRequestDTO.getCity()));
     }
 
     @Override
