@@ -1,4 +1,4 @@
-package com.volunnear.dtos;
+package com.volunnear.dtos.enums;
 
 public enum SortOrder {
     ASC,

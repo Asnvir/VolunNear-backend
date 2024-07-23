@@ -2,6 +2,7 @@ package com.volunnear.services.users;
 
 import com.volunnear.Constants;
 import com.volunnear.dtos.VolunteerDTO;
+import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
 import com.volunnear.dtos.response.VolunteerInfoDTO;
 import com.volunnear.dtos.response.VolunteerProfileResponseDTO;
@@ -44,7 +45,7 @@ public class VolunteerServiceImpl implements VolunteerService {
         profileResponse.setUsername(principal.getName());
         profileResponse.setRealName(volunteerInfo.getRealNameOfUser());
         if (volunteerPreferenceByVolunteer.isEmpty()) {
-            profileResponse.setPreferences(List.of("Preferences is empty"));
+            profileResponse.setPreferences(List.of(ActivityType.UNKNOWN));
         } else profileResponse.setPreferences(volunteerPreferenceByVolunteer.get().getPreferences());
         profileResponse.setActivitiesDTO(activityService.getActivitiesOfVolunteer(appUser));
 

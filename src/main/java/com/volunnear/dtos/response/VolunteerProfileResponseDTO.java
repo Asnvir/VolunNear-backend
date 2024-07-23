@@ -1,5 +1,6 @@
 package com.volunnear.dtos.response;
 
+import com.volunnear.dtos.enums.ActivityType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,6 @@ public class VolunteerProfileResponseDTO {
     private String email;
     private String username;
     private String realName;
-    private List<String> preferences;
+    private List<ActivityType> preferences;
     private List<ActivitiesDTO> activitiesDTO;
 }

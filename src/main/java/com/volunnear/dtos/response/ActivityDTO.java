@@ -1,5 +1,6 @@
 package com.volunnear.dtos.response;
 
+import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.entitiy.activities.Activity;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ public class ActivityDTO {
     private String description;
     private String country;
     private String city;
-    private String kindOfActivity;
+    private ActivityType kindOfActivity;
     private Date dateOfPlace;
     private LocationDTO locationDTO;
     private Double distance;

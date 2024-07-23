@@ -1,6 +1,8 @@
 package com.volunnear.specification;
 
+import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.entitiy.activities.Activity;
+import com.volunnear.entitiy.users.AppUser;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Date;
@@ -26,7 +28,7 @@ public class ActivitySpecification {
                 city == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("city"), city);
     }
 
-    public static Specification<Activity> hasKindOfActivity(String kindOfActivity) {
+    public static Specification<Activity> hasKindOfActivity(ActivityType kindOfActivity) {
         return (root, query, criteriaBuilder) ->
                 kindOfActivity == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("kindOfActivity"), kindOfActivity);
     }
@@ -36,14 +38,8 @@ public class ActivitySpecification {
                 dateOfPlace == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("dateOfPlace"), dateOfPlace);
     }
 
-    public static Specification<Activity> sortByLatitudeAndLongitude(boolean ascending) {
-        return (root, query, criteriaBuilder) -> {
-            if (ascending) {
-                query.orderBy(criteriaBuilder.asc(root.get("latitude")), criteriaBuilder.asc(root.get("longitude")));
-            } else {
-                query.orderBy(criteriaBuilder.desc(root.get("latitude")), criteriaBuilder.desc(root.get("longitude")));
-            }
-            return criteriaBuilder.conjunction();
-        };
-    }
+   public static Specification<Activity> hasAppUser(AppUser appUser) {
+        return (root, query, criteriaBuilder) ->
+                appUser == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("appUser"), appUser);
+   }
 }

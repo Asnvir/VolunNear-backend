@@ -1,5 +1,6 @@
 package com.volunnear.entitiy.activities;
 
+import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.entitiy.users.AppUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,7 +43,7 @@ public class Activity {
     private String numberOfHouse;
 
     @Column(name = "kind_of_activity")
-    private String kindOfActivity;
+    private ActivityType kindOfActivity;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_of_place")

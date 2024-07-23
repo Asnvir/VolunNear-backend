@@ -1,7 +1,8 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
-import com.volunnear.dtos.SortOrder;
+import com.volunnear.dtos.enums.ActivityType;
+import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
@@ -54,34 +55,26 @@ public class ActivityController {
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping(value = Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS)
-    public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations() {
-        return activityService.getAllActivitiesOfAllOrganisations();
-    }
-
-    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Get activities of all organisations by different filters", description = "Returns ActivitiesDTO")
     @GetMapping(value = Routes.GET_ACTIVITIES)
     public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String country,
             @RequestParam(required = false) String city,
-            @RequestParam(required = false) String kindOfActivity,
+            @RequestParam(required = false) ActivityType kindOfActivity,
             @RequestParam(required = false) Date dateOfPlace,
+            @RequestParam(required = false, defaultValue = "false") boolean myActivities,
             @RequestParam SortOrder sortOrder,
             @RequestParam double latitude,
-            @RequestParam double longitude) {
+            @RequestParam double longitude,
+            Principal principal
+    ) {
         log.info("latitude: {} longitude: {}", latitude, longitude);
         LocationDTO locationDTO = new LocationDTO(latitude, longitude);
-        return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, sortOrder, locationDTO);
+        return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, sortOrder, locationDTO, myActivities, principal);
     }
 
-
-    @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping(value = Routes.GET_MY_ACTIVITIES)
-    public ActivitiesDTO getMyActivities(Principal principal) {
-        return activityService.getMyActivities(principal);
-    }
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get activities of current organisation", description = "Returns ActivitiesDTO")
@@ -103,11 +96,7 @@ public class ActivityController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = ActivitiesDTO.class)))),
             @ApiResponse(responseCode = "400", description = "No such activities in current place")
     })
-    @GetMapping(value = Routes.FIND_NEARBY_ACTIVITIES, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ActivitiesDTO>> findNearbyActivities(@RequestBody NearbyActivitiesRequestDTO nearbyActivitiesRequestDTO) {
-        List<ActivitiesDTO> activitiesDTOS = activityService.findNearbyActivities(nearbyActivitiesRequestDTO);
-        return ResponseEntity.ok(activitiesDTOS);
-    }
+
 
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping(value = Routes.DELETE_CURRENT_ACTIVITY_BY_ID)

@@ -1,5 +1,6 @@
 package com.volunnear.dtos.requests;
 
+import com.volunnear.dtos.enums.ActivityType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,5 @@ public class AddActivityRequestDTO {
     private String city;
     private String street;
     private String houseNumber;
-    private String kindOfActivity;
+    private ActivityType kindOfActivity;
 }
