@@ -24,7 +24,7 @@ import com.volunnear.services.interfaces.ActivityService;
 import com.volunnear.services.interfaces.GeocodingService;
 import com.volunnear.services.interfaces.OrganisationService;
 import com.volunnear.services.users.UserService;
-import com.volunnear.specification.ActivitySpecification;
+import com.volunnear.specification.SpecificationEnricher;
 import com.volunnear.utils.DistanceCalculator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +48,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final VolunteersInActivityRepository volunteersInActivityRepository;
     private final ActivityMapper activityMapper;
     private final GeocodingService geocodingService;
+    private final SpecificationEnricher specificationEnricher;
 
     @Override
     public void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
@@ -97,30 +98,47 @@ public class ActivityServiceImpl implements ActivityService {
      * Get Activities by title, description, country, city, kindOfActivity, dateOfPlace
      */
     @Override
-    public List<ActivitiesDTO> getActivities(String title,
-                                             String description,
-                                             String country,
-                                             String city,
-                                             ActivityType kindOfActivity,
-                                             Date dateOfPlace,
-                                             SortOrder sortOrder,
-                                             LocationDTO locationDTO,
-                                             boolean isMyActivities,
-                                             Principal principal
-    ) {
-        Specification<Activity> spec = Specification.where(ActivitySpecification.hasTitle(title))
-                .and(ActivitySpecification.hasDescription(description))
-                .and(ActivitySpecification.hasCountry(country))
-                .and(ActivitySpecification.hasCity(city))
-                .and(ActivitySpecification.hasKindOfActivity(kindOfActivity))
-                .and(ActivitySpecification.hasDateOfPlace(dateOfPlace));
-        if (isMyActivities && principal != null) {
-            Optional<AppUser> appUserByUsername = userService.findAppUserByUsername(principal.getName());
-            spec = spec.and(ActivitySpecification.hasAppUser(appUserByUsername.get()));
-        }
-        List<Activity> allActivities = activitiesRepository.findAll(spec);
+    public List<ActivitiesDTO> getActivities(
+            String title,
+            String description,
+            String country,
+            String city,
+            ActivityType kindOfActivity,
+            Date dateOfPlace,
+            SortOrder sortOrder,
+            LocationDTO locationDTO,
+            boolean isMyActivities,
+            Principal principal) {
+        List<Activity> activities;
+        if (isMyActivities) {
+            AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
+            Specification<VolunteerInActivity> spec = specificationEnricher.createVolunteerInActivitySpecification(
+                    title, description, country, city, kindOfActivity, dateOfPlace, appUser
+            );
 
-        return getSortedListOfActivitiesDTOByDistance(allActivities, locationDTO, sortOrder);
+            activities = volunteersInActivityRepository.findAll(spec).stream().map(VolunteerInActivity::getActivity).toList();
+        } else {
+            Specification<Activity> spec = specificationEnricher.createSpecification(
+                    title, description, country, city, kindOfActivity, dateOfPlace
+            );
+            activities = activitiesRepository.findAll(spec);
+        }
+
+
+        return getSortedListOfActivitiesDTOByDistance(activities, locationDTO, sortOrder);
+    }
+
+    /**
+     * Activities by organisation username from token
+     */
+    @Override
+    public ActivitiesDTO getOrganisationActivities(Principal principal) {
+        String username = principal.getName();
+        Optional<AppUser> appUserByUsername = userService.findAppUserByUsername(username);
+        OrganisationInfo additionalInfoAboutOrganisation = organisationService.findAdditionalInfoAboutOrganisation(appUserByUsername.get());
+        List<Activity> activitiesByAppUser = activitiesRepository.findActivitiesByAppUser(appUserByUsername.get());
+
+        return activitiesFromEntityToDto(additionalInfoAboutOrganisation, activitiesByAppUser);
     }
 
     /**
@@ -137,6 +155,9 @@ public class ActivityServiceImpl implements ActivityService {
         return activitiesFromEntityToDto(organisationInfo, activitiesByAppUser);
     }
 
+    /**
+     * Get organisations with activities by preferences
+     */
     @Override
     public List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<ActivityType> preferences, LocationDTO locationDTO) {
         List<Activity> activityByKindOfActivity = activitiesRepository.findByKindOfActivityIn(preferences);
@@ -160,16 +181,14 @@ public class ActivityServiceImpl implements ActivityService {
         activitiesRepository.deleteById(id);
     }
 
+    /**
+     * Add volunteer to activity by id
+     */
     @Override
     public String addVolunteerToActivity(Principal principal, UUID idOfActivity) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName())
                 .orElseThrow(() -> new AuthErrorException("Incorrect token data about volunteer"));
         List<VolunteerInActivity> allByUser = volunteersInActivityRepository.findAllByUser(appUser);
-
-//        if (allByUser.size() > 5) {
-//            return new ResponseEntity<>("To much activities in yours profile!", HttpStatus.OK);
-//        }
-
         Activity activityById = activitiesRepository.findById(idOfActivity)
                 .orElseThrow(() -> new ActivityNotFoundException("Activity with id " + idOfActivity + " not found"));
         VolunteerInActivity volunteerInActivity = new VolunteerInActivity();
@@ -179,6 +198,9 @@ public class ActivityServiceImpl implements ActivityService {
         return activityById.getTitle();
     }
 
+    /**
+     * Update activity information by id
+     */
     @Override
     public ActivityDTO updateActivityInformation(UUID idOfActivity, AddActivityRequestDTO activityRequestDTO, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
@@ -201,6 +223,9 @@ public class ActivityServiceImpl implements ActivityService {
         return activityMapper.activityToActivityDTO(updatedActivity);
     }
 
+    /**
+     * Delete volunteer from activity by id
+     */
     @Transactional
     @Override
     public void deleteVolunteerFromActivity(UUID id, Principal principal) {
@@ -211,6 +236,9 @@ public class ActivityServiceImpl implements ActivityService {
         volunteersInActivityRepository.deleteByActivity_IdAndUser_Id(id, appUser.getId());
     }
 
+    /**
+     * Get activities of volunteer by user
+     */
     @Override
     public List<ActivitiesDTO> getActivitiesOfVolunteer(AppUser appUser) {
         List<VolunteerInActivity> allByUser = volunteersInActivityRepository.findAllByUser(appUser);
@@ -219,9 +247,30 @@ public class ActivityServiceImpl implements ActivityService {
         return getListOfActivitiesDTOForResponse(infoAboutActivities);
     }
 
+    /**
+     * Find activity by organisation and id of activity
+     */
     @Override
     public Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, UUID idOfActivity) {
         return activitiesRepository.findActivityByAppUserAndId(appUser, idOfActivity);
+    }
+
+    /**
+     * Get volunteer activity names by  principal
+     */
+    @Override
+    public List<String> getVolunteersActivityNames(Principal principal) {
+        List<VolunteerInActivity> volunteerInActivities = volunteersInActivityRepository.findAllByUser(userService.findAppUserByUsername(principal.getName()).get());
+        return volunteerInActivities.stream().map(volunteerInActivity -> volunteerInActivity.getActivity().getTitle()).collect(Collectors.toList());
+    }
+
+    /**
+     * Get all activity names
+     */
+    @Override
+    public List<String> getAllActivityNames() {
+        List<Activity> activities = activitiesRepository.findAll();
+        return activities.stream().map(Activity::getTitle).collect(Collectors.toList());
     }
 
     /**

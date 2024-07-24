@@ -1,16 +1,22 @@
 services:
   mysql:
     image: mysql:latest
-    network_mode: ${DOCKER_NETWORK_MODE}
+    ports:
+      - "${EXTERNAL_APP_DB_PORT}:${INTERNAl_APP_DB_PORT}"
     restart: always
     environment:
       MYSQL_DATABASE: ${APP_DB_NAME}
       MYSQL_ROOT_PASSWORD: ${APP_DB_PASSWORD}
-      MYSQL_TCP_PORT: ${EXTERNAL_APP_DB_PORT}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
 
   spring-boot-app:
     image: volunnearapp:latest
-    network_mode: ${DOCKER_NETWORK_MODE}
+    ports:
+      - "${EXTERNAL_APP_PORT}:${EXTERNAL_APP_PORT}"
+    build:
+      context: .
     restart: on-failure
     depends_on:
       - mysql
@@ -30,3 +36,10 @@ services:
       - FRONTEND_HOST=${FRONTEND_HOST}
       - FRONTEND_PORT=${FRONTEND_PORT}
       - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  mysql_data:

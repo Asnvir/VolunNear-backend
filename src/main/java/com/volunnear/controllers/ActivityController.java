@@ -5,7 +5,6 @@ import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
-import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.services.interfaces.ActivityService;
@@ -21,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -55,9 +55,9 @@ public class ActivityController {
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Get activities of all organisations by different filters", description = "Returns ActivitiesDTO")
+    @Operation(summary = "Get activities of all organisations by different filters also for getting volunteer activities", description = "Returns ActivitiesDTO")
     @GetMapping(value = Routes.GET_ACTIVITIES)
-    public List<ActivitiesDTO> getAllActivitiesOfAllOrganisations(
+    public List<ActivitiesDTO> getActivitiesOfOrganisations(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String country,
@@ -111,4 +111,12 @@ public class ActivityController {
         activityService.deleteVolunteerFromActivity(id, principal);
         return ResponseEntity.ok().build();
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping(value = Routes.GET_ALL_ACTIVITIES_NAMES)
+    public ResponseEntity<List<String>> getAllActivitiesNames() {
+        List<String> activityNames = activityService.getAllActivityNames();
+        return ResponseEntity.ok(activityNames);
+    }
+
 }

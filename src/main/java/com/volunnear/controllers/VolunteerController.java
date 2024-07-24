@@ -5,6 +5,7 @@ import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.VolunteerProfileResponseDTO;
+import com.volunnear.services.interfaces.ActivityService;
 import com.volunnear.services.interfaces.RecommendationService;
 import com.volunnear.services.interfaces.VolunteerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,17 +23,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class VolunteerController {
     private final VolunteerService volunteerService;
     private final RecommendationService recommendationService;
+    private final ActivityService activityService;
 
+    /**
+     * Get volunteer profile with all information
+     */
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value = Routes.GET_VOLUNTEER_PROFILE)
     public VolunteerProfileResponseDTO getVolunteerProfile(Principal principal) {
         return volunteerService.getVolunteerProfile(principal);
+    }
+    /*
+     * @param principal
+     * @return List of activities names of current volunteer
+     */
+    @GetMapping(value = Routes.GET_ALL_ACTIVITIES_OF_CURRENT_VOLUNTEER)
+    public ResponseEntity<List<String>> getVolunteerActivitiesNames(Principal principal) {
+        List<String> activityNames = activityService.getVolunteersActivityNames(principal);
+        return ResponseEntity.ok(activityNames);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
