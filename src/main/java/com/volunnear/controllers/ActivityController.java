@@ -89,14 +89,6 @@ public class ActivityController {
         return ResponseEntity.ok(activitiesDTO);
     }
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Get activities nearby", description = "Returns List<ActivitiesDTO>")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Activities dto",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ActivitiesDTO.class)))),
-            @ApiResponse(responseCode = "400", description = "No such activities in current place")
-    })
-
 
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping(value = Routes.DELETE_CURRENT_ACTIVITY_BY_ID)
