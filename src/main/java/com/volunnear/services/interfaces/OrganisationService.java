@@ -1,6 +1,7 @@
 package com.volunnear.services.interfaces;
 
 import com.volunnear.dtos.OrganisationDTO;
+import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.response.OrganisationInfoDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 public interface OrganisationService {
 
-    List<OrganisationResponseDTO> getAllOrganisationsWithInfo();
+    List<OrganisationResponseDTO> getAllOrganisationsWithInfo(String nameOfOrganisation, String country, String city, SortOrder sortOrder);
 
     void registerOrganisation(OrganisationDTO organisationDTO);
 
