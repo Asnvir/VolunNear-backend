@@ -43,6 +43,7 @@ public class Activity {
     private String numberOfHouse;
 
     @Column(name = "kind_of_activity")
+    @Enumerated(EnumType.STRING)
     private ActivityType kindOfActivity;
 
     @Temporal(TemporalType.DATE)
