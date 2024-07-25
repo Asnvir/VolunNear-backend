@@ -1,6 +1,7 @@
 package com.volunnear.services.users;
 
 import com.volunnear.dtos.OrganisationDTO;
+import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.response.OrganisationInfoDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.entitiy.infos.OrganisationInfo;
@@ -9,8 +10,11 @@ import com.volunnear.mappers.OrganisationInfoMapper;
 import com.volunnear.repositories.infos.OrganisationInfoRepository;
 import com.volunnear.repositories.users.UserRepository;
 import com.volunnear.services.interfaces.OrganisationService;
+import com.volunnear.specification.OrganisationSpecification;
+import com.volunnear.specification.SpecificationEnricher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +32,12 @@ public class OrganisationServiceImpl implements OrganisationService {
     private final OrganisationInfoRepository organisationInfoRepository;
     @Autowired
     private final OrganisationInfoMapper organisationInfoMapper;
+    private final SpecificationEnricher specificationEnricher;
 
     @Override
-     public List<OrganisationResponseDTO> getAllOrganisationsWithInfo() {
-        List<OrganisationInfo> organisationInfos = organisationInfoRepository.findAll();
+     public List<OrganisationResponseDTO> getAllOrganisationsWithInfo(String nameOfOrganisation, String country, String city, SortOrder sortOrder) {
+        Specification<OrganisationInfo> specification = specificationEnricher.createOrganisationInfoSpecification(nameOfOrganisation, country, city, sortOrder);
+        List<OrganisationInfo> organisationInfos = organisationInfoRepository.findAll(specification);
         List<OrganisationResponseDTO> organisationResponseDTO = new ArrayList<>();
         for (OrganisationInfo organisationInfo : organisationInfos) {
             organisationResponseDTO.add(getOrganisationResponseDTO(organisationInfo));

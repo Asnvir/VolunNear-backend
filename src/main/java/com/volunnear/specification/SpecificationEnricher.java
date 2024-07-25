@@ -1,8 +1,10 @@
 package com.volunnear.specification;
 
 import com.volunnear.dtos.enums.ActivityType;
+import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.activities.VolunteerInActivity;
+import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.services.users.UserService;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,15 +12,11 @@ import org.springframework.stereotype.Component;
 
 import java.security.Principal;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public class SpecificationEnricher {
-    private final UserService userService;
-
-    public SpecificationEnricher(UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * Creates the specification for filtering activities based on given parameters.
@@ -63,9 +61,8 @@ public class SpecificationEnricher {
             String city,
             ActivityType kindOfActivity,
             Date dateOfPlace,
-            AppUser appUser)
-     {
-       return Specification.where(VolunteerInActivitySpecification.hasActivityTitle(title))
+            AppUser appUser) {
+        return Specification.where(VolunteerInActivitySpecification.hasActivityTitle(title))
                 .and(VolunteerInActivitySpecification.hasActivityDescription(description))
                 .and(VolunteerInActivitySpecification.hasActivityCountry(country))
                 .and(VolunteerInActivitySpecification.hasActivityCity(city))
@@ -73,6 +70,18 @@ public class SpecificationEnricher {
                 .and(VolunteerInActivitySpecification.hasActivityDateOfPlace(dateOfPlace))
                 .and(VolunteerInActivitySpecification.hasAppUser(appUser));
 
+    }
+
+    public Specification<OrganisationInfo> createOrganisationInfoSpecification(
+            String nameOfOrganisation,
+            String country,
+            String city,
+            SortOrder sortOrder) {
+        List<String> fields = List.of("nameOfOrganisation", "country", "city");
+        return Specification.where(OrganisationSpecification.hasName(nameOfOrganisation))
+                .and(OrganisationSpecification.hasCountry(country))
+                .and(OrganisationSpecification.hasCity(city)
+                        .and(OrganisationSpecification.sortBy(fields, sortOrder)));
     }
 
 }

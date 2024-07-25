@@ -1,6 +1,7 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
+import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
 import com.volunnear.services.interfaces.ActivityService;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -29,8 +31,13 @@ public class OrganisationController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get all organisations", description = "Returns List<OrganisationResponseDTO>")
     @GetMapping(value = Routes.GET_ALL_ORGANISATIONS)
-    public List<OrganisationResponseDTO> getAllOrganisations() {
-        return organisationService.getAllOrganisationsWithInfo();
+    public List<OrganisationResponseDTO> getAllOrganisations(
+            @RequestParam(required = false) String nameOfOrganisation,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = true) SortOrder sortOrder
+    ) {
+        return organisationService.getAllOrganisationsWithInfo(nameOfOrganisation, country, city, sortOrder);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
