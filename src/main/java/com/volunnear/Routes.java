@@ -32,17 +32,21 @@ public class Routes {
     public static final String LEAVE_FROM_ACTIVITY_BY_VOLUNTEER = VOLUNTEER + "/leave_activity";
     public static final String GET_RECOMMENDATION_BY_PREFERENCES = VOLUNTEER + "/get_recommendations";
 
+    public static final String GET_ALL_ACTIVITIES_OF_CURRENT_VOLUNTEER = VOLUNTEER + "/activities_names";
+
     /**
      * Activity routes
      */
     public static final String ADD_ACTIVITY = ORGANISATION + "/add_activity";
-    public static final String GET_MY_ACTIVITIES = ORGANISATION + "/my_activities";
 
     public static final String GET_ACTIVITIES = ORGANISATION + "/activities";
     public static final String UPDATE_ACTIVITY_INFORMATION = ORGANISATION + "/update_activity";
     public static final String ACTIVITY_CURRENT_ORGANISATION = ORGANISATION + "/get_activities";
     public static final String DELETE_CURRENT_ACTIVITY_BY_ID = ORGANISATION + "/delete_activity";
     public static final String GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS = ORGANISATION + "/get_all_activities";
+
+    public static final String GET_ALL_ACTIVITIES_NAMES = ORGANISATION + "/all_activities_names";
+
 
     /**
      * Feedback routes

@@ -4,7 +4,6 @@ import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
-import com.volunnear.dtos.requests.NearbyActivitiesRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.entitiy.activities.Activity;
@@ -34,6 +33,7 @@ public interface ActivityService {
             Principal principal
     );
 
+    ActivitiesDTO getOrganisationActivities(Principal principal);
 
     ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation);
 
@@ -51,4 +51,8 @@ public interface ActivityService {
 
 
     Optional<Activity> findActivityByOrganisationAndIdOfActivity(AppUser appUser, UUID idOfActivity);
+
+    List<String> getAllActivityNames();
+
+    public List<String> getVolunteersActivityNames( Principal principal);
 }
