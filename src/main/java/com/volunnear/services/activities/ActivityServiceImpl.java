@@ -112,15 +112,21 @@ public class ActivityServiceImpl implements ActivityService {
         List<Activity> activities;
         if (isMyActivities) {
             AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
-            Specification<VolunteerInActivity> spec = specificationEnricher.createVolunteerInActivitySpecification(
-                    title, description, country, city, kindOfActivity, dateOfPlace, appUser
-            );
+            Specification<VolunteerInActivity> spec = specificationEnricher
+                    .createVolunteerInActivitySpecification(
+                            title, description, country, city, kindOfActivity, dateOfPlace, appUser
+                    );
 
-            activities = volunteersInActivityRepository.findAll(spec).stream().map(VolunteerInActivity::getActivity).toList();
+            activities = volunteersInActivityRepository
+                    .findAll(spec)
+                    .stream()
+                    .map(VolunteerInActivity::getActivity)
+                    .toList();
         } else {
-            Specification<Activity> spec = specificationEnricher.createSpecification(
-                    title, description, country, city, kindOfActivity, dateOfPlace
-            );
+            Specification<Activity> spec = specificationEnricher
+                    .createSpecification(
+                            title, description, country, city, kindOfActivity, dateOfPlace
+                    );
             activities = activitiesRepository.findAll(spec);
         }
 

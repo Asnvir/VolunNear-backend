@@ -69,6 +69,8 @@ public class SecurityConfig {
                                 Routes.UPDATE_FEEDBACK_FOR_CURRENT_ORGANISATION,
                                 Routes.DELETE_FEEDBACK_ABOUT_ORGANISATION,
                                 Routes.GET_ACTIVITIES,
+                                Routes.GET_ALL_ACTIVITIES_OF_CURRENT_VOLUNTEER,
+                                Routes.GET_RECOMMENDATION_BY_PREFERENCES,
                                 Routes.SET_VOLUNTEERS_PREFERENCES,
                                 Routes.LOCATION + "/**",
                                 Routes.NOTIFICATIONS + "/**").hasRole("VOLUNTEER")
@@ -85,7 +87,6 @@ public class SecurityConfig {
                                 Routes.GET_ALL_ORGANISATIONS,
                                 Routes.ACTIVITY_CURRENT_ORGANISATION,
                                 Routes.GET_ALL_ACTIVITIES_NAMES,
-                                Routes.GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS,
                                 Routes.GET_FEEDBACKS_OF_ALL_ORGANISATIONS,
                                 Routes.GET_FEEDBACKS_FROM_CURRENT_ORGANISATION,
                                 Routes.GET_CHAT_LINK_BY_ACTIVITY,

@@ -44,7 +44,6 @@ public class Routes {
     public static final String ACTIVITY_CURRENT_ORGANISATION = ORGANISATION + "/get_activities";
     public static final String DELETE_CURRENT_ACTIVITY_BY_ID = ORGANISATION + "/delete_activity";
     public static final String GET_ALL_ACTIVITIES_WITH_ALL_ORGANISATIONS = ORGANISATION + "/get_all_activities";
-
     public static final String GET_ALL_ACTIVITIES_NAMES = ORGANISATION + "/all_activities_names";
 
 
