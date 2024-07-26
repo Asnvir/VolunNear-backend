@@ -25,4 +25,7 @@ public class VolunteerInfo {
 
     @Column(name = "real_name_of_user")
     private String realNameOfUser;
+
+    @Column(name = "avatar_url", length = 1024)
+    private String avatarUrl;
 }

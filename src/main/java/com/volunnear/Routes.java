@@ -48,6 +48,21 @@ public class Routes {
 
 
     /**
+     * Files routes
+     */
+
+    public static final String FILES = API_URL + "/upload";
+    public static final String UPLOAD_VOLUNTEER_AVATAR = FILES + "/avatar/volunteer/{volunteerId}";
+
+    public static final String UPLOAD_ORGANISATION_AVATAR = FILES + "/avatar/organisation/{orgId}";
+
+    public static final String UPLOAD_ACTIVITY_COVER_IMAGE = FILES + "/activity/cover/{activityId}";
+
+    public static final String UPLOAD_ACTIVITY_GALLERY_IMAGE = FILES + "/activity/gallery_image/{activityId}";
+
+    public static final String UPLOAD_ACTIVITY_GALLERY_IMAGES = FILES + "/activity/gallery_images/{activityId}";
+
+    /**
      * Feedback routes
      */
     public static final String FEEDBACK = API_URL + "/feedback";

@@ -16,6 +16,7 @@ public class VolunteerProfileResponseDTO {
     private String email;
     private String username;
     private String realName;
+    private String avatarUrl;
     private List<ActivityType> preferences;
     private List<ActivitiesDTO> activitiesDTO;
 }

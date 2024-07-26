@@ -18,10 +18,10 @@ import com.volunnear.services.interfaces.VolunteerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +44,7 @@ public class VolunteerServiceImpl implements VolunteerService {
         profileResponse.setEmail(appUser.getEmail());
         profileResponse.setUsername(principal.getName());
         profileResponse.setRealName(volunteerInfo.getRealNameOfUser());
+        profileResponse.setAvatarUrl(volunteerInfo.getAvatarUrl());
         if (volunteerPreferenceByVolunteer.isEmpty()) {
             profileResponse.setPreferences(List.of(ActivityType.UNKNOWN));
         } else profileResponse.setPreferences(volunteerPreferenceByVolunteer.get().getPreferences());

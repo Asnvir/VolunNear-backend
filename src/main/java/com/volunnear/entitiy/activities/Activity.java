@@ -1,12 +1,15 @@
 package com.volunnear.entitiy.activities;
 
 import com.volunnear.dtos.enums.ActivityType;
+import com.volunnear.entitiy.GalleryImage;
 import com.volunnear.entitiy.users.AppUser;
+import com.volunnear.utils.GalleryImageUrlsConvertor;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -59,4 +62,11 @@ public class Activity {
 
     @Column(name = "longitude")
     private double longitude;
+
+    @Column(name = "cover_image_url", length = 1024)
+    private String coverImageUrl;
+
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<GalleryImage> galleryImages;
+
 }

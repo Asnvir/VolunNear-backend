@@ -29,11 +29,11 @@ import com.volunnear.utils.DistanceCalculator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,6 +79,15 @@ public class ActivityServiceImpl implements ActivityService {
     @Async
     public void sendNotificationForSubscribers(Activity activity, String status) {
         ActivityNotificationDTO notificationDTO = new ActivityNotificationDTO();
+        ActivityDTO activityDTO = getActivityDTO(activity);
+
+        notificationDTO.setActivityDTO(activityDTO);
+        notificationDTO.setOrganisationResponseDTO(getOrganisationResponseDTO(organisationService.findAdditionalInfoAboutOrganisation(activity.getAppUser())));
+        eventPublisher.publishEvent(new ActivityCreationEvent(this, notificationDTO, status));
+    }
+
+    @NotNull
+    private static ActivityDTO getActivityDTO(Activity activity) {
         ActivityDTO activityDTO = new ActivityDTO();
 
         activityDTO.setCity(activity.getCity());
@@ -87,10 +96,10 @@ public class ActivityServiceImpl implements ActivityService {
         activityDTO.setTitle(activity.getTitle());
         activityDTO.setDescription(activity.getDescription());
         activityDTO.setDateOfPlace(activity.getDateOfPlace());
-
-        notificationDTO.setActivityDTO(activityDTO);
-        notificationDTO.setOrganisationResponseDTO(getOrganisationResponseDTO(organisationService.findAdditionalInfoAboutOrganisation(activity.getAppUser())));
-        eventPublisher.publishEvent(new ActivityCreationEvent(this, notificationDTO, status));
+        activityDTO.setLocationDTO(new LocationDTO(activity.getLatitude(), activity.getLongitude()));
+        activityDTO.setCoverImage(activity.getCoverImageUrl());
+        activityDTO.setGalleryImages(activity.getGalleryImages());
+        return activityDTO;
     }
 
 
@@ -282,7 +291,7 @@ public class ActivityServiceImpl implements ActivityService {
     /**
      * Methods to convert entities from DB to DTO for response
      */
-    private static ActivitiesDTO activitiesFromEntityToDto(OrganisationInfo additionalInfoAboutOrganisation, List<Activity> activitiesByAppUser) {
+    private ActivitiesDTO activitiesFromEntityToDto(OrganisationInfo additionalInfoAboutOrganisation, List<Activity> activitiesByAppUser) {
         ActivitiesDTO activitiesDTO = new ActivitiesDTO();
 
         OrganisationResponseDTO responseDTO = getOrganisationResponseDTO(additionalInfoAboutOrganisation);
@@ -296,21 +305,25 @@ public class ActivityServiceImpl implements ActivityService {
                     activity.getKindOfActivity(),
                     activity.getDateOfPlace(),
                     new LocationDTO(activity.getLatitude(), activity.getLongitude()),
-                    0.0
-            ));
+                    0.0,
+                    activity.getCoverImageUrl(),
+                    activity.getGalleryImages())
+            );
         }
 
         activitiesDTO.setOrganisationResponseDTO(responseDTO);
         return activitiesDTO;
     }
 
-    private static OrganisationResponseDTO getOrganisationResponseDTO(OrganisationInfo additionalInfoAboutOrganisation) {
+    private OrganisationResponseDTO getOrganisationResponseDTO(OrganisationInfo additionalInfoAboutOrganisation) {
         return new OrganisationResponseDTO(
                 additionalInfoAboutOrganisation.getAppUser().getId(),
                 additionalInfoAboutOrganisation.getNameOfOrganisation(),
                 additionalInfoAboutOrganisation.getCountry(),
                 additionalInfoAboutOrganisation.getCity(),
-                additionalInfoAboutOrganisation.getAddress());
+                additionalInfoAboutOrganisation.getAddress(),
+                additionalInfoAboutOrganisation.getAvatarUrl()
+        );
     }
 
 
@@ -349,7 +362,11 @@ public class ActivityServiceImpl implements ActivityService {
                         activity.getCountry(), activity.getCity(), activity.getKindOfActivity(), activity.getDateOfPlace(),
                         new LocationDTO(activity.getLatitude(), activity.getLongitude()),
                         DistanceCalculator.calculateDistance(locationDTO.getLatitude(), locationDTO.getLongitude(),
-                                activity.getLatitude(), activity.getLongitude())))
+                                activity.getLatitude(), activity.getLongitude()),
+                      activity.getCoverImageUrl(),
+                        activity.getGalleryImages()
+                        )
+                )
                 .sorted((a1, a2) -> sortOrder == SortOrder.ASC
                         ? Double.compare(a1.getDistance(), a2.getDistance())
                         : Double.compare(a2.getDistance(), a1.getDistance()))
