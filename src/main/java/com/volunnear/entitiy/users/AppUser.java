@@ -29,7 +29,7 @@ public class AppUser {
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "appUser_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))

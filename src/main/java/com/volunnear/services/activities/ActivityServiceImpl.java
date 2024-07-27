@@ -51,7 +51,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final SpecificationEnricher specificationEnricher;
 
     @Override
-    public void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
+    public Activity addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal) {
         AppUser organisation = userService.findAppUserByUsername(principal.getName())
                 .orElseThrow(() -> new AuthErrorException("Incorrect token data about organisation"));
         if (!organisationService.isUserAreOrganisation(organisation)) {
@@ -70,9 +70,10 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setLatitude(locationDTO.getLatitude());
         activity.setLongitude(locationDTO.getLongitude());
         activity.setAppUser(organisation);
-        activitiesRepository.save(activity);
+        Activity createdActivity = activitiesRepository.save(activity);
 
         sendNotificationForSubscribers(activity, "New");
+        return createdActivity;
     }
 
     @Override

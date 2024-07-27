@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ActivityService {
-    void addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal);
+    Activity addActivityToOrganisation(AddActivityRequestDTO activityRequest, Principal principal);
 
     void sendNotificationForSubscribers(Activity activity, String status);
 
