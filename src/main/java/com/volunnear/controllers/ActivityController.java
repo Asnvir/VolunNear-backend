@@ -7,6 +7,7 @@ import com.volunnear.dtos.geoLocation.LocationDTO;
 import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
+import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.services.interfaces.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -34,9 +35,8 @@ public class ActivityController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(value = Routes.ADD_ACTIVITY, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addActivityToOrganisation(@RequestBody AddActivityRequestDTO activityRequest, Principal principal) {
-        activityService.addActivityToOrganisation(activityRequest, principal);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Activity> addActivityToOrganisation(@RequestBody AddActivityRequestDTO activityRequest, Principal principal) {
+        return ResponseEntity.ok(activityService.addActivityToOrganisation(activityRequest, principal));
     }
 
     @SecurityRequirement(name = "Bearer Authentication")

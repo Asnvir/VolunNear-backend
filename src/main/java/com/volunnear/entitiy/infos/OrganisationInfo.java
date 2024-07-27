@@ -34,4 +34,7 @@ public class OrganisationInfo {
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "avatar_url", length = 1024)
+    private String avatarUrl;
 }
