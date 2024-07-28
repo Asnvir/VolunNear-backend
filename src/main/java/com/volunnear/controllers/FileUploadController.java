@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/upload")
 public class FileUploadController {
     public final FileUploadService fileUploadService;
 

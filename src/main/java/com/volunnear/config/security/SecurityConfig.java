@@ -94,7 +94,9 @@ public class SecurityConfig {
                                 Routes.GET_FEEDBACKS_OF_ALL_ORGANISATIONS,
                                 Routes.GET_FEEDBACKS_FROM_CURRENT_ORGANISATION,
                                 Routes.GET_CHAT_LINK_BY_ACTIVITY,
-                                Routes.GET_COMMUNITY_LINK_BY_ORGANISATION)
+                                Routes.GET_COMMUNITY_LINK_BY_ORGANISATION,
+                                Routes.CHANGE_PASSWORD
+                                )
                         .hasAnyRole("VOLUNTEER", "ORGANISATION")
                         .requestMatchers("/ws/**", "stomp").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

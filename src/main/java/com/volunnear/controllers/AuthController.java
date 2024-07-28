@@ -3,10 +3,7 @@ package com.volunnear.controllers;
 import com.volunnear.Routes;
 import com.volunnear.dtos.jwt.JwtRequest;
 import com.volunnear.dtos.jwt.JwtResponse;
-import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
-import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
-import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
-import com.volunnear.dtos.requests.UpdateVolunteerInfoRequestDTO;
+import com.volunnear.dtos.requests.*;
 import com.volunnear.dtos.response.CurrentUserDTO;
 import com.volunnear.dtos.response.OrganisationInfoDTO;
 import com.volunnear.dtos.response.VolunteerInfoDTO;
@@ -65,5 +62,12 @@ public class AuthController {
     public ResponseEntity<OrganisationInfoDTO> updateOrganisationInfo(@RequestBody UpdateOrganisationInfoRequestDTO updateOrganisationInfoRequest, Principal principal) {
         OrganisationInfoDTO organisationInfoDTO = authService.updateOrganisationInfo(updateOrganisationInfoRequest, principal);
         return new ResponseEntity<>(organisationInfoDTO, HttpStatus.OK);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = Routes.CHANGE_PASSWORD)
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequestDTO changePasswordRequestDTO, Principal principal) {
+        authService.changePassword(changePasswordRequestDTO, principal);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class UpdateVolunteerInfoRequestDTO {
     private String email;
     private String realName;
+    private String userName;
 }

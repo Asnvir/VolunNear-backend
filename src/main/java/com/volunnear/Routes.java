@@ -15,6 +15,8 @@ public class Routes {
     public static final String REGISTER_ORGANISATION = API_URL + "/registration/organisation";
     public static final String UPDATE_VOLUNTEER_PROFILE = API_URL + "/update/volunteer";
     public static final String UPDATE_ORGANISATION_PROFILE = API_URL + "/update/organisation";
+
+    public static final String CHANGE_PASSWORD = API_URL + "/change_password";
     /**
      * Organisation routes
      */
