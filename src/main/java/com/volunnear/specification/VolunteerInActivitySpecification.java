@@ -10,7 +10,8 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public class VolunteerInActivitySpecification {
     public static Specification<VolunteerInActivity> hasActivityTitle(String title) {
@@ -63,13 +64,23 @@ public class VolunteerInActivitySpecification {
         };
     }
 
-    public static Specification<VolunteerInActivity> hasActivityDateOfPlace(Date dateOfPlace) {
+    public static Specification<VolunteerInActivity> hasActivityDateOfPlace(LocalDate dateOfPlace) {
         return (Root<VolunteerInActivity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             if (dateOfPlace == null) {
                 return cb.conjunction();
             }
+
+
+            int year = dateOfPlace.getYear();
+            int month = dateOfPlace.getMonthValue();
+            int day = dateOfPlace.getDayOfMonth();
+
             Join<VolunteerInActivity, Activity> activityJoin = root.join("activity");
-            return cb.equal(activityJoin.get("dateOfPlace"), dateOfPlace);
+            return cb.and(
+                    cb.equal(cb.function("year", Integer.class, activityJoin.get("dateOfPlace")), year),
+                    cb.equal(cb.function("month", Integer.class, activityJoin.get("dateOfPlace")), month),
+                    cb.equal(cb.function("day", Integer.class, activityJoin.get("dateOfPlace")), day)
+            );
         };
     }
 

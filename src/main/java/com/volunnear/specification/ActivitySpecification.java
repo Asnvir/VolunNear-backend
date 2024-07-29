@@ -5,7 +5,7 @@ import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.users.AppUser;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class ActivitySpecification {
     public static Specification<Activity> hasTitle(String title) {
@@ -33,13 +33,22 @@ public class ActivitySpecification {
                 kindOfActivity == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("kindOfActivity"), kindOfActivity);
     }
 
-    public static Specification<Activity> hasDateOfPlace(Date dateOfPlace) {
-        return (root, query, criteriaBuilder) ->
-                dateOfPlace == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("dateOfPlace"), dateOfPlace);
+    public static Specification<Activity> hasDateOfPlace(LocalDate dateOfPlace) {
+        return (root, query, criteriaBuilder) -> {
+            if (dateOfPlace == null) {
+                return criteriaBuilder.conjunction();
+            }
+
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(criteriaBuilder.function("year", Integer.class, root.get("dateOfPlace")), dateOfPlace.getYear()),
+                    criteriaBuilder.equal(criteriaBuilder.function("month", Integer.class, root.get("dateOfPlace")), dateOfPlace.getMonthValue()),
+                    criteriaBuilder.equal(criteriaBuilder.function("day", Integer.class, root.get("dateOfPlace")), dateOfPlace.getDayOfMonth())
+            );
+        };
     }
 
-   public static Specification<Activity> hasAppUser(AppUser appUser) {
+    public static Specification<Activity> hasAppUser(AppUser appUser) {
         return (root, query, criteriaBuilder) ->
                 appUser == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("appUser"), appUser);
-   }
+    }
 }
