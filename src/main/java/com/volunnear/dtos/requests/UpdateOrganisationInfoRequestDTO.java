@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateOrganisationInfoRequestDTO {
     private String email;
+    private String username;
     private String nameOfOrganisation;
     private String country;
     private String city;

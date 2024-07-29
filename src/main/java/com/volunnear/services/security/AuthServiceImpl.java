@@ -5,10 +5,7 @@ import com.volunnear.dtos.OrganisationDTO;
 import com.volunnear.dtos.VolunteerDTO;
 import com.volunnear.dtos.jwt.JwtRequest;
 import com.volunnear.dtos.jwt.JwtResponse;
-import com.volunnear.dtos.requests.RegistrationOrganisationRequestDTO;
-import com.volunnear.dtos.requests.RegistrationVolunteerRequestDTO;
-import com.volunnear.dtos.requests.UpdateOrganisationInfoRequestDTO;
-import com.volunnear.dtos.requests.UpdateVolunteerInfoRequestDTO;
+import com.volunnear.dtos.requests.*;
 import com.volunnear.dtos.response.CurrentUserDTO;
 import com.volunnear.dtos.response.OrganisationInfoDTO;
 import com.volunnear.dtos.response.VolunteerInfoDTO;
@@ -92,8 +89,16 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new UserNotFoundException("Volunteer not found"));
 
         VolunteerInfo volunteerInfo = volunteerService.getVolunteerInfo(user);
-        volunteerInfo.setRealNameOfUser(request.getRealName());
-        user.setEmail(request.getEmail());
+        // Update only the non-null fields
+        if (request.getRealName() != null) {
+            volunteerInfo.setRealNameOfUser(request.getRealName());
+        }
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+        if (request.getUserName() != null) {
+            user.setUsername(request.getUserName());
+        }
         return volunteerService.updateVolunteerInfo(user, volunteerInfo);
     }
 
@@ -108,6 +113,22 @@ public class AuthServiceImpl implements AuthService {
         infoAboutOrganisation.setCity(request.getCity());
         infoAboutOrganisation.setAddress(request.getAddress());
         appUserByUsername.setEmail(request.getEmail());
+        appUserByUsername.setUsername(request.getUsername());
         return organisationService.updateOrganisationInfo(appUserByUsername, infoAboutOrganisation);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO, Principal principal) {
+        AppUser appUserByUsername = userService.findAppUserByUsername(principal.getName())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (!userService.checkIfOldPasswordMatches(appUserByUsername, changePasswordRequestDTO.getOldPassword())) {
+            throw new IllegalArgumentException("Old password is incorrect");
+        }
+
+        // Validate the new password (implement your own validation logic if necessary)
+        if (changePasswordRequestDTO.getNewPassword().length() < 8) {
+            throw new IllegalArgumentException("New password must be at least 8 characters long");
+        }
     }
 }
