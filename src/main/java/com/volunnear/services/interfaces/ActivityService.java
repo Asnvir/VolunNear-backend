@@ -8,8 +8,9 @@ import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.users.AppUser;
+
 import java.security.Principal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public interface ActivityService {
             String country,
             String city,
             ActivityType kindOfActivity,
-            Date dateOfPlace,
+            LocalDate dateOfPlace,
             SortOrder sortOrder,
             LocationDTO locationDTO,
             boolean isMyActivities,
@@ -54,5 +55,5 @@ public interface ActivityService {
 
     List<String> getAllActivityNames();
 
-    public List<String> getVolunteersActivityNames( Principal principal);
+    public List<String> getVolunteersActivityNames(Principal principal);
 }

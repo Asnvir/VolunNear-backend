@@ -34,7 +34,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -114,7 +116,7 @@ public class ActivityServiceImpl implements ActivityService {
             String country,
             String city,
             ActivityType kindOfActivity,
-            Date dateOfPlace,
+            LocalDate dateOfPlace,
             SortOrder sortOrder,
             LocationDTO locationDTO,
             boolean isMyActivities,
@@ -360,12 +362,12 @@ public class ActivityServiceImpl implements ActivityService {
     private List<ActivityDTO> sortActivitiesByDistance(List<Activity> activities, LocationDTO locationDTO, SortOrder sortOrder) {
         return activities.stream()
                 .map(activity -> new ActivityDTO(activity.getId(), activity.getTitle(), activity.getDescription(),
-                        activity.getCountry(), activity.getCity(), activity.getKindOfActivity(), activity.getDateOfPlace(),
-                        new LocationDTO(activity.getLatitude(), activity.getLongitude()),
-                        DistanceCalculator.calculateDistance(locationDTO.getLatitude(), locationDTO.getLongitude(),
-                                activity.getLatitude(), activity.getLongitude()),
-                      activity.getCoverImageUrl(),
-                        activity.getGalleryImages()
+                                activity.getCountry(), activity.getCity(), activity.getKindOfActivity(), activity.getDateOfPlace(),
+                                new LocationDTO(activity.getLatitude(), activity.getLongitude()),
+                                DistanceCalculator.calculateDistance(locationDTO.getLatitude(), locationDTO.getLongitude(),
+                                        activity.getLatitude(), activity.getLongitude()),
+                                activity.getCoverImageUrl(),
+                                activity.getGalleryImages()
                         )
                 )
                 .sorted((a1, a2) -> sortOrder == SortOrder.ASC

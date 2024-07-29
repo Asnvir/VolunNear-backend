@@ -6,14 +6,11 @@ import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.infos.OrganisationInfo;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.services.users.UserService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import java.security.Principal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class SpecificationEnricher {
@@ -27,7 +24,7 @@ public class SpecificationEnricher {
             String country,
             String city,
             ActivityType kindOfActivity,
-            Date dateOfPlace) {
+            LocalDate dateOfPlace) {
 
 
         return createBaseSpecification(
@@ -44,7 +41,7 @@ public class SpecificationEnricher {
             String country,
             String city,
             ActivityType kindOfActivity,
-            Date dateOfPlace) {
+            LocalDate dateOfPlace) {
 
         return Specification.where(ActivitySpecification.hasTitle(title))
                 .and(ActivitySpecification.hasDescription(description))
@@ -60,7 +57,7 @@ public class SpecificationEnricher {
             String country,
             String city,
             ActivityType kindOfActivity,
-            Date dateOfPlace,
+            LocalDate dateOfPlace,
             AppUser appUser) {
         return Specification.where(VolunteerInActivitySpecification.hasActivityTitle(title))
                 .and(VolunteerInActivitySpecification.hasActivityDescription(description))

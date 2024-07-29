@@ -10,7 +10,6 @@ import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.services.interfaces.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,10 +19,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +63,7 @@ public class ActivityController {
             @RequestParam(required = false) String country,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) ActivityType kindOfActivity,
-            @RequestParam(required = false) Date dateOfPlace,
+            @RequestParam(required = false) @Nullable LocalDate dateOfPlace,
             @RequestParam(required = false, defaultValue = "false") boolean myActivities,
             @RequestParam SortOrder sortOrder,
             @RequestParam double latitude,
@@ -72,6 +72,7 @@ public class ActivityController {
     ) {
         log.info("latitude: {} longitude: {}", latitude, longitude);
         LocationDTO locationDTO = new LocationDTO(latitude, longitude);
+        log.info("date: {}", dateOfPlace);
         return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, sortOrder, locationDTO, myActivities, principal);
     }
 
