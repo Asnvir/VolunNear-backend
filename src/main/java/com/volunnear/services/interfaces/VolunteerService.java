@@ -10,6 +10,7 @@ import com.volunnear.entitiy.users.AppUser;
 
 import java.security.Principal;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface VolunteerService {
 
@@ -26,6 +27,8 @@ public interface VolunteerService {
     void registerVolunteer(VolunteerDTO volunteerDTO);
 
     boolean isUserAreVolunteer(AppUser appUser);
+
+    boolean isMyActivity(Principal principal, UUID idOfActivity);
 
 
 }

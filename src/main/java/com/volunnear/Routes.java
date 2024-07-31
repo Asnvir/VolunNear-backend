@@ -36,6 +36,8 @@ public class Routes {
 
     public static final String GET_ALL_ACTIVITIES_OF_CURRENT_VOLUNTEER = VOLUNTEER + "/activities_names";
 
+    public static final String IS_MY_ACTIVITY = VOLUNTEER + "/is_my_activity";
+
     /**
      * Activity routes
      */
