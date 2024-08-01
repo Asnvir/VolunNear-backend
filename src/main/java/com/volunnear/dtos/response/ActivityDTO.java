@@ -26,5 +26,5 @@ public class ActivityDTO {
     private LocationDTO locationDTO;
     private Double distance;
     private String coverImage;
-    private List<GalleryImage> galleryImages;
+    private List<String> galleryImages;
 }

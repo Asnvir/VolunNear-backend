@@ -8,6 +8,7 @@ import com.volunnear.dtos.requests.AddActivityRequestDTO;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
+import com.volunnear.entitiy.GalleryImage;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.infos.OrganisationInfo;
@@ -101,7 +102,7 @@ public class ActivityServiceImpl implements ActivityService {
         activityDTO.setDateOfPlace(activity.getDateOfPlace());
         activityDTO.setLocationDTO(new LocationDTO(activity.getLatitude(), activity.getLongitude()));
         activityDTO.setCoverImage(activity.getCoverImageUrl());
-        activityDTO.setGalleryImages(activity.getGalleryImages());
+        activityDTO.setGalleryImages(activity.getGalleryImages().stream().map(GalleryImage::getImageUrl).collect(Collectors.toList()));
         return activityDTO;
     }
 
@@ -310,8 +311,8 @@ public class ActivityServiceImpl implements ActivityService {
                     new LocationDTO(activity.getLatitude(), activity.getLongitude()),
                     0.0,
                     activity.getCoverImageUrl(),
-                    activity.getGalleryImages())
-            );
+                    activity.getGalleryImages().stream().map(GalleryImage::getImageUrl).collect(Collectors.toList())
+            ));
         }
 
         activitiesDTO.setOrganisationResponseDTO(responseDTO);
@@ -367,7 +368,7 @@ public class ActivityServiceImpl implements ActivityService {
                                 DistanceCalculator.calculateDistance(locationDTO.getLatitude(), locationDTO.getLongitude(),
                                         activity.getLatitude(), activity.getLongitude()),
                                 activity.getCoverImageUrl(),
-                                activity.getGalleryImages()
+                                activity.getGalleryImages().stream().map(GalleryImage::getImageUrl).collect(Collectors.toList())
                         )
                 )
                 .sorted((a1, a2) -> sortOrder == SortOrder.ASC

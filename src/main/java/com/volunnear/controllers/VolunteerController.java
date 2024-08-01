@@ -67,8 +67,9 @@ public class VolunteerController {
         return recommendationService.generateRecommendations(locationDTO, principal);
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value = Routes.IS_MY_ACTIVITY)
-    public ResponseEntity<Boolean> isMyActivity(Principal principal,@RequestParam UUID activityId) {
+    public ResponseEntity<Boolean> isMyActivity(@RequestParam UUID activityId, Principal principal) {
         return ResponseEntity.ok(volunteerService.isMyActivity(principal, activityId));
     }
 }
