@@ -17,13 +17,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -67,5 +65,11 @@ public class VolunteerController {
     @GetMapping(value = Routes.GET_RECOMMENDATION_BY_PREFERENCES)
     public ResponseEntity<?> getRecommendationsByPreferencesOfUser(@RequestBody LocationDTO locationDTO, Principal principal) {
         return recommendationService.generateRecommendations(locationDTO, principal);
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping(value = Routes.IS_MY_ACTIVITY)
+    public ResponseEntity<Boolean> isMyActivity(@RequestParam UUID activityId, Principal principal) {
+        return ResponseEntity.ok(volunteerService.isMyActivity(principal, activityId));
     }
 }

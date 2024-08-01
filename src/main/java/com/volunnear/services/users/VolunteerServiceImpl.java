@@ -6,12 +6,14 @@ import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.dtos.requests.PreferencesRequestDTO;
 import com.volunnear.dtos.response.VolunteerInfoDTO;
 import com.volunnear.dtos.response.VolunteerProfileResponseDTO;
+import com.volunnear.entitiy.activities.VolunteerInActivity;
 import com.volunnear.entitiy.infos.VolunteerInfo;
 import com.volunnear.entitiy.infos.VolunteerPreference;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.mappers.VolunteerInfoMapper;
 import com.volunnear.repositories.infos.VolunteerInfoRepository;
 import com.volunnear.repositories.infos.VolunteerPreferenceRepository;
+import com.volunnear.repositories.infos.VolunteersInActivityRepository;
 import com.volunnear.repositories.users.UserRepository;
 import com.volunnear.services.interfaces.ActivityService;
 import com.volunnear.services.interfaces.VolunteerService;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -32,6 +35,7 @@ public class VolunteerServiceImpl implements VolunteerService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final VolunteerInfoRepository volunteerInfoRepository;
     private final VolunteerPreferenceRepository volunteerPreferenceRepository;
+    private final VolunteersInActivityRepository volunteersInActivityRepository;
     private final VolunteerInfoMapper volunteerInfoMapper;
 
     @Override
@@ -95,6 +99,12 @@ public class VolunteerServiceImpl implements VolunteerService {
     @Override
     public boolean isUserAreVolunteer(AppUser appUser) {
         return volunteerInfoRepository.existsByAppUser(appUser);
+    }
+
+    @Override
+    public boolean isMyActivity(Principal principal, UUID idOfActivity) {
+        AppUser appUser = loadUserFromDbByUsername(principal);
+        return volunteersInActivityRepository.existsByUserAndActivity_Id(appUser, idOfActivity);
     }
 
     private void addAdditionalInfo(AppUser appUser, String realName) {

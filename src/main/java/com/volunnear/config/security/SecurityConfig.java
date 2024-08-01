@@ -73,6 +73,7 @@ public class SecurityConfig {
                                 Routes.GET_ALL_ACTIVITIES_OF_CURRENT_VOLUNTEER,
                                 Routes.GET_RECOMMENDATION_BY_PREFERENCES,
                                 Routes.SET_VOLUNTEERS_PREFERENCES,
+                                Routes.IS_MY_ACTIVITY,
                                 Routes.LOCATION + "/**",
                                 Routes.NOTIFICATIONS + "/**").hasRole("VOLUNTEER")
 

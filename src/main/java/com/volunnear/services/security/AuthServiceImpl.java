@@ -130,5 +130,7 @@ public class AuthServiceImpl implements AuthService {
         if (changePasswordRequestDTO.getNewPassword().length() < 8) {
             throw new IllegalArgumentException("New password must be at least 8 characters long");
         }
+
+        userService.updatePassword(appUserByUsername, changePasswordRequestDTO.getNewPassword());
     }
 }
