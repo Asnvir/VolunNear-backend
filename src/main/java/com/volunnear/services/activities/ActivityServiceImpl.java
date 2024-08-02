@@ -304,6 +304,8 @@ public class ActivityServiceImpl implements ActivityService {
             activitiesDTO.addActivity(new ActivityDTO(activity.getId(),
                     activity.getCity(),
                     activity.getCountry(),
+                    activity.getStreet(),
+                    activity.getNumberOfHouse(),
                     activity.getTitle(),
                     activity.getDescription(),
                     activity.getKindOfActivity(),
@@ -363,12 +365,13 @@ public class ActivityServiceImpl implements ActivityService {
     private List<ActivityDTO> sortActivitiesByDistance(List<Activity> activities, LocationDTO locationDTO, SortOrder sortOrder) {
         return activities.stream()
                 .map(activity -> new ActivityDTO(activity.getId(), activity.getTitle(), activity.getDescription(),
-                                activity.getCountry(), activity.getCity(), activity.getKindOfActivity(), activity.getDateOfPlace(),
+                                activity.getCountry(), activity.getCity(), activity.getStreet(), activity.getNumberOfHouse(), activity.getKindOfActivity(), activity.getDateOfPlace(),
                                 new LocationDTO(activity.getLatitude(), activity.getLongitude()),
                                 DistanceCalculator.calculateDistance(locationDTO.getLatitude(), locationDTO.getLongitude(),
                                         activity.getLatitude(), activity.getLongitude()),
                                 activity.getCoverImageUrl(),
-                                activity.getGalleryImages().stream().map(GalleryImage::getImageUrl).collect(Collectors.toList())
+                                activity.getGalleryImages().stream().map(GalleryImage::getImageUrl).collect(Collectors.toList()
+                                )
                         )
                 )
                 .sorted((a1, a2) -> sortOrder == SortOrder.ASC
