@@ -21,6 +21,8 @@ public class ActivityDTO {
     private String description;
     private String country;
     private String city;
+    private String street;
+    private String numberOfHouse;
     private ActivityType kindOfActivity;
     private Date dateOfPlace;
     private LocationDTO locationDTO;
