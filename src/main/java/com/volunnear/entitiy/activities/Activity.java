@@ -49,7 +49,7 @@ public class Activity {
     @Enumerated(EnumType.STRING)
     private ActivityType kindOfActivity;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_of_place")
     private Date dateOfPlace;
 

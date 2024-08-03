@@ -83,6 +83,7 @@ public class SecurityConfig {
                                 Routes.UPLOAD_ORGANISATION_AVATAR,
                                 Routes.UPLOAD_ACTIVITY_COVER_IMAGE,
                                 Routes.UPLOAD_ACTIVITY_GALLERY_IMAGE,
+                                Routes.UPLOAD_ACTIVITY_GALLERY_IMAGES,
                                 Routes.DELETE_CURRENT_ACTIVITY_BY_ID,
                                 Routes.GET_ORGANISATION_PROFILE,
                                 Routes.ADD_COMMUNITY_LINK,
