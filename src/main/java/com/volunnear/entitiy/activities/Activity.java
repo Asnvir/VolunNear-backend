@@ -3,7 +3,6 @@ package com.volunnear.entitiy.activities;
 import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.entitiy.GalleryImage;
 import com.volunnear.entitiy.users.AppUser;
-import com.volunnear.utils.GalleryImageUrlsConvertor;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -30,7 +29,8 @@ public class Activity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description", length = 1024)
+    @Lob
+    @Column(name = "description", columnDefinition = "LONGTEXT")
     private String description;
 
     @Column(name = "country")
