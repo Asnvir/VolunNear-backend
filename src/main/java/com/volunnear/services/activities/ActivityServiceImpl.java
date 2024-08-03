@@ -26,6 +26,7 @@ import com.volunnear.services.interfaces.GeocodingService;
 import com.volunnear.services.interfaces.OrganisationService;
 import com.volunnear.services.users.UserService;
 import com.volunnear.specification.SpecificationEnricher;
+import com.volunnear.utils.DateUtils;
 import com.volunnear.utils.DistanceCalculator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
@@ -60,6 +60,9 @@ public class ActivityServiceImpl implements ActivityService {
         if (!organisationService.isUserAreOrganisation(organisation)) {
             throw new AuthErrorException("You are not organisation");
         }
+
+        Date date = DateUtils.convertStringToDate(activityRequest.getDateOfPlace());
+
         Activity activity = new Activity();
         LocationDTO locationDTO = geocodingService.getCoordinates(activityRequest.getCity(), activityRequest.getStreet(), activityRequest.getHouseNumber());
         activity.setTitle(activityRequest.getTitle());
@@ -68,7 +71,7 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setCity(activityRequest.getCity());
         activity.setStreet(activityRequest.getStreet());
         activity.setNumberOfHouse(activityRequest.getHouseNumber());
-        activity.setDateOfPlace(new Date());
+        activity.setDateOfPlace(date);
         activity.setKindOfActivity(activityRequest.getKindOfActivity());
         activity.setLatitude(locationDTO.getLatitude());
         activity.setLongitude(locationDTO.getLongitude());
