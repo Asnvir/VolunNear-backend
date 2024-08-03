@@ -6,6 +6,8 @@ import com.volunnear.entitiy.users.AppUser;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ActivitySpecification {
     public static Specification<Activity> hasTitle(String title) {
@@ -36,7 +38,14 @@ public class ActivitySpecification {
     public static Specification<Activity> hasDateOfPlace(LocalDate dateOfPlace) {
         return (root, query, criteriaBuilder) -> {
             if (dateOfPlace == null) {
-                return criteriaBuilder.conjunction();
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                Date today = calendar.getTime();
+
+                return criteriaBuilder.greaterThan(root.get("dateOfPlace"), today);
             }
 
             return criteriaBuilder.and(
