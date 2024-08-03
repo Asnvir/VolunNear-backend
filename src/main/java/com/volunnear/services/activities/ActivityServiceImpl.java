@@ -105,7 +105,12 @@ public class ActivityServiceImpl implements ActivityService {
         activityDTO.setDateOfPlace(activity.getDateOfPlace());
         activityDTO.setLocationDTO(new LocationDTO(activity.getLatitude(), activity.getLongitude()));
         activityDTO.setCoverImage(activity.getCoverImageUrl());
-        activityDTO.setGalleryImages(activity.getGalleryImages().stream().map(GalleryImage::getImageUrl).collect(Collectors.toList()));
+        List<GalleryImage> galleryImages = activity.getGalleryImages();
+        if (galleryImages != null) {
+            activityDTO.setGalleryImages(galleryImages.stream().map(GalleryImage::getImageUrl).collect(Collectors.toList()));
+        } else {
+            activityDTO.setGalleryImages(Collections.emptyList());
+        }
         return activityDTO;
     }
 
