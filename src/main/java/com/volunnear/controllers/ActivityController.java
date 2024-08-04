@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +64,7 @@ public class ActivityController {
             @RequestParam(required = false) String country,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) ActivityType kindOfActivity,
-            @RequestParam(required = false) @Nullable LocalDate dateOfPlace,
+            @RequestParam(required = false) LocalDate dateOfPlace,
             @RequestParam(required = false, defaultValue = "false") boolean myActivities,
             @RequestParam SortOrder sortOrder,
             @RequestParam double latitude,
@@ -75,6 +76,7 @@ public class ActivityController {
         log.info("date: {}", dateOfPlace);
         return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, sortOrder, locationDTO, myActivities, principal);
     }
+
 
 
     @SecurityRequirement(name = "Bearer Authentication")
