@@ -336,7 +336,9 @@ public class ActivityServiceImpl implements ActivityService {
                 additionalInfoAboutOrganisation.getCountry(),
                 additionalInfoAboutOrganisation.getCity(),
                 additionalInfoAboutOrganisation.getAddress(),
-                additionalInfoAboutOrganisation.getAvatarUrl()
+                additionalInfoAboutOrganisation.getAvatarUrl(),
+                additionalInfoAboutOrganisation.getAppUser().getEmail(),
+                additionalInfoAboutOrganisation.getAppUser().getUsername()
         );
     }
 
