@@ -36,7 +36,16 @@ public interface ActivityService {
 
     ActivitiesDTO getOrganisationActivities(Principal principal);
 
-    ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation);
+    List<ActivityDTO> getAllActivitiesFromCurrentOrganisation(
+            String title,
+            String description,
+            String country,
+            String city,
+            ActivityType kindOfActivity,
+            LocalDate dateOfPlace,
+            SortOrder sortOrder,
+            Principal principal
+    );
 
     List<ActivitiesDTO> getOrganisationsWithActivitiesByPreferences(List<ActivityType> preferences, LocationDTO locationDTO);
 

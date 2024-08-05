@@ -1,30 +1,34 @@
 services:
   mysql:
     image: mysql:latest
-    network_mode: ${DOCKER_NETWORK_MODE}
+    ports:
+      - "${EXTERNAL_APP_DB_PORT}:${INTERNAl_APP_DB_PORT}"
     restart: always
     environment:
       MYSQL_DATABASE: ${APP_DB_NAME}
       MYSQL_ROOT_PASSWORD: ${APP_DB_PASSWORD}
-      MYSQL_TCP_PORT: ${EXTERNAL_APP_DB_PORT}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
 
   minio:
     image: minio/minio
-    network_mode: ${DOCKER_NETWORK_MODE}
+    ports:
+      - "${MINIO_EXTERNAL_PORT}:${MINIO_INTERNAL_PORT}"
+      - "${MINIO_EXTERNAL_PORT_HTTPS}:${MINIO_INTERNAL_PORT_HTTPS}"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
-      MINIO_EXTERNAL_PORT: ${MINIO_EXTERNAL_PORT}
-      MINIO_INTERNAL_PORT: ${MINIO_INTERNAL_PORT}
-      MINIO_EXTERNAL_PORT_HTTPS: ${MINIO_EXTERNAL_PORT_HTTPS}
-      MINIO_INTERNAL_PORT_HTTPS: ${MINIO_INTERNAL_PORT_HTTPS}
-    command: server /data --console-address ":${MINIO_EXTERNAL_PORT_HTTPS}" --address ":${MINIO_EXTERNAL_PORT}"
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":${MINIO_EXTERNAL_PORT_HTTPS}"
     volumes:
-      - minio_data:/dat
+      - minio_data:/data
 
   spring-boot-app:
     image: volunnearapp:latest
-    network_mode: ${DOCKER_NETWORK_MODE}
+    ports:
+      - "${EXTERNAL_APP_PORT}:${EXTERNAL_APP_PORT}"
+    build:
+      context: .
     restart: on-failure
     depends_on:
       - mysql
@@ -50,5 +54,12 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - MINIO_UPLOAD_URL=${MINIO_UPLOAD_URL}
 
+
+
+networks:
+  default:
+    driver: bridge
+
 volumes:
+  mysql_data:
   minio_data:

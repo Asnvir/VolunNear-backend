@@ -19,12 +19,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,8 +84,17 @@ public class ActivityController {
             @ApiResponse(responseCode = "400", description = "Organisation with name not found")
     })
     @GetMapping(value = Routes.ACTIVITY_CURRENT_ORGANISATION)
-    public ResponseEntity<ActivitiesDTO> getAllActivitiesOfCurrentOrganisation(@RequestParam String nameOfOrganisation) {
-        ActivitiesDTO activitiesDTO = activityService.getAllActivitiesFromCurrentOrganisation(nameOfOrganisation);
+    public ResponseEntity<List<ActivityDTO>> getAllActivitiesOfCurrentOrganisation(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) ActivityType kindOfActivity,
+            @RequestParam(required = false) LocalDate dateOfPlace,
+            @RequestParam SortOrder sortOrder,
+            Principal principal
+    ) {
+        List<ActivityDTO> activitiesDTO = activityService.getAllActivitiesFromCurrentOrganisation(title, description, country, city, kindOfActivity, dateOfPlace, sortOrder, principal);
         return ResponseEntity.ok(activitiesDTO);
     }
 

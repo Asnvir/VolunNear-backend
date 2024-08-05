@@ -1,6 +1,7 @@
 package com.volunnear.controllers;
 
 import com.volunnear.Routes;
+import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.dtos.enums.SortOrder;
 import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.OrganisationResponseDTO;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController

@@ -25,6 +25,7 @@ import com.volunnear.services.interfaces.ActivityService;
 import com.volunnear.services.interfaces.GeocodingService;
 import com.volunnear.services.interfaces.OrganisationService;
 import com.volunnear.services.users.UserService;
+import com.volunnear.specification.ActivitySpecification;
 import com.volunnear.specification.SpecificationEnricher;
 import com.volunnear.utils.DateUtils;
 import com.volunnear.utils.DistanceCalculator;
@@ -172,14 +173,21 @@ public class ActivityServiceImpl implements ActivityService {
      * All activities of current organisation by organisation name
      */
     @Override
-    public ActivitiesDTO getAllActivitiesFromCurrentOrganisation(String nameOfOrganisation) {
-        Optional<OrganisationInfo> organisationByNameOfOrganisation = organisationService.findOrganisationByNameOfOrganisation(nameOfOrganisation);
-        OrganisationInfo organisationInfo = organisationByNameOfOrganisation.orElseThrow(
-                () -> new NotFoundException("Organisation with name " + nameOfOrganisation + " not found")
-        );
+    public List<ActivityDTO> getAllActivitiesFromCurrentOrganisation(String title,
+                                                                     String description,
+                                                                     String country,
+                                                                     String city,
+                                                                     ActivityType kindOfActivity,
+                                                                     LocalDate dateOfPlace,
+                                                                     SortOrder sortOrder,
+                                                                     Principal principal)
+                                                                  {
+                                                                      AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
+        Specification<Activity> spec = specificationEnricher.createSpecification(title, description, country, city, kindOfActivity, dateOfPlace);
+        spec.and(Specification.where(ActivitySpecification.hasAppUser(appUser)));
 
-        List<Activity> activitiesByAppUser = activitiesRepository.findActivitiesByAppUser(organisationInfo.getAppUser());
-        return activitiesFromEntityToDto(organisationInfo, activitiesByAppUser);
+        List<Activity> activitiesByAppUser = activitiesRepository.findAll(spec);
+        return activitiesToActivitiesDTO(activitiesByAppUser);
     }
 
     /**
@@ -326,6 +334,27 @@ public class ActivityServiceImpl implements ActivityService {
         }
 
         activitiesDTO.setOrganisationResponseDTO(responseDTO);
+        return activitiesDTO;
+    }
+
+    private List<ActivityDTO> activitiesToActivitiesDTO(List<Activity> activities) {
+        List<ActivityDTO> activitiesDTO = new ArrayList<>();
+        for (Activity activity : activities) {
+            activitiesDTO.add(new ActivityDTO(activity.getId(),
+                    activity.getCity(),
+                    activity.getCountry(),
+                    activity.getStreet(),
+                    activity.getNumberOfHouse(),
+                    activity.getTitle(),
+                    activity.getDescription(),
+                    activity.getKindOfActivity(),
+                    activity.getDateOfPlace(),
+                    new LocationDTO(activity.getLatitude(), activity.getLongitude()),
+                    0.0,
+                    activity.getCoverImageUrl(),
+                    activity.getGalleryImages().stream().map(GalleryImage::getImageUrl).collect(Collectors.toList())
+            ));
+        }
         return activitiesDTO;
     }
 
