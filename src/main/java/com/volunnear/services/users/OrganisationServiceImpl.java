@@ -108,7 +108,9 @@ public class OrganisationServiceImpl implements OrganisationService {
                 additionalInfoAboutOrganisation.getCountry(),
                 additionalInfoAboutOrganisation.getCity(),
                 additionalInfoAboutOrganisation.getAddress(),
-                additionalInfoAboutOrganisation.getAvatarUrl()
+                additionalInfoAboutOrganisation.getAvatarUrl(),
+                additionalInfoAboutOrganisation.getAppUser().getEmail(),
+                additionalInfoAboutOrganisation.getAppUser().getUsername()
         );
     }
 

@@ -16,4 +16,6 @@ public class OrganisationResponseDTO {
     private String city;
     private String address;
     private String avatarUrl;
+    private String email;
+    private String username;
 }
