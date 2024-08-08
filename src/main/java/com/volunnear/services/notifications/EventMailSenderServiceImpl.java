@@ -6,13 +6,14 @@ import com.volunnear.entitiy.VolunteerNotificationSubscription;
 import com.volunnear.events.ActivityCreationEvent;
 import com.volunnear.repositories.VolunteerNotificationSubscriptionRepository;
 import com.volunnear.services.interfaces.EventMailSenderService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -38,9 +39,11 @@ public class EventMailSenderServiceImpl implements EventMailSenderService {
         for (Map.Entry<String, String> usernameAndEmailMapEntry : usernameAndEmailMap.entrySet()) {
             String email = usernameAndEmailMapEntry.getValue();
             if (validateEmail(email)) {
-                SimpleMailMessage mailMessage = getSimpleMailMessage(activityCreationEvent.getStatus(), notificationDTO, activityDTO);
-                mailMessage.setTo(email);
-                javaMailSender.send(mailMessage);
+                try {
+                    sendHtmlEmail(email, activityCreationEvent.getStatus(), notificationDTO, activityDTO);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -50,16 +53,28 @@ public class EventMailSenderServiceImpl implements EventMailSenderService {
         return Pattern.compile(regexPattern).matcher(email).matches();
     }
 
-    private static SimpleMailMessage getSimpleMailMessage(String status, ActivityNotificationDTO notificationDTO, ActivityDTO activityDTO) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setSubject(status + " activity from " + notificationDTO.getOrganisationResponseDTO().getNameOfOrganisation() + " !");
-        mailMessage.setText("There is info about activity: "
-                + "\nTitle: " + activityDTO.getTitle()
-                + "\nKind of activity: " + activityDTO.getKindOfActivity()
-                + "\nDescription: " + activityDTO.getDescription()
-                + "\nCountry and city: " + activityDTO.getCountry() + "/" + activityDTO.getCity()
-                + "\nDate of place: " + activityDTO.getDateOfPlace());
-        mailMessage.setFrom("volunNearAppTeam@gmail.com");
-        return mailMessage;
+    private void sendHtmlEmail(String toEmail, String status, ActivityNotificationDTO notificationDTO, ActivityDTO activityDTO) throws MessagingException {
+        String fromEmail = "volunNearAppTeam@gmail.com";
+        String subject = status + " activity from " + notificationDTO.getOrganisationResponseDTO().getNameOfOrganisation() + " !";
+
+        String body = "<html><body style='font-family: Arial, sans-serif;'>"
+                + "<div style='max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;'>"
+                + "<h2 style='color: #333;'>Activity Information</h2>"
+                + "<p><strong>Title:</strong> " + activityDTO.getTitle() + "</p>"
+                + "<p><strong>Kind of activity:</strong> " + activityDTO.getKindOfActivity() + "</p>"
+                + "<p><strong>Description:</strong> " + activityDTO.getDescription() + "</p>"
+                + "<p><strong>Country and city:</strong> " + activityDTO.getCountry() + "/" + activityDTO.getCity() + "</p>"
+                + "<p><strong>Date of place:</strong> " + activityDTO.getDateOfPlace() + "</p>"
+                + "</div>"
+                + "</body></html>";
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setFrom(fromEmail);
+        helper.setTo(toEmail);
+        helper.setSubject(subject);
+        helper.setText(body, true);
+
+        javaMailSender.send(message);
     }
 }
