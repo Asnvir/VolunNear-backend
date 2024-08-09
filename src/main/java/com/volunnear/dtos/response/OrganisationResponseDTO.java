@@ -18,4 +18,5 @@ public class OrganisationResponseDTO {
     private String avatarUrl;
     private String email;
     private String username;
+    private double rating;
 }
