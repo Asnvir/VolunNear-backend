@@ -53,4 +53,5 @@ public class OrganisationController {
     public ActivitiesDTO getOrganisationProfile(Principal principal) {
         return activityService.getOrganisationActivities(principal);
     }
+
 }

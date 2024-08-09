@@ -1,13 +1,14 @@
 package com.volunnear.entitiy.infos;
 
+import com.volunnear.entitiy.OrganisationRating;
 import com.volunnear.entitiy.users.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Set;
 import java.util.UUID;
-
 @Getter
 @Setter
 @Entity
@@ -37,4 +38,14 @@ public class OrganisationInfo {
 
     @Column(name = "avatar_url", length = 1024)
     private String avatarUrl;
+
+    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<OrganisationRating> ratings;
+
+    public double getAverageRating() {
+        return ratings.stream()
+                .mapToDouble(OrganisationRating::getRating)
+                .average()
+                .orElse(0.0);
+    }
 }
