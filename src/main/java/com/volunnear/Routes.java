@@ -96,6 +96,16 @@ public class Routes {
     public static final String ADD_CHAT_LINK_FOR_ACTIVITY = SOCIAL_NETWORKS + "/add_chat_link";
     public static final String GET_COMMUNITY_LINK_BY_ORGANISATION = SOCIAL_NETWORKS + "/get_community_link";
 
+
+    /**
+     * Organisation Rating Endpoints
+     *
+     */
+
+    public static final String RATE_ORGANISATION = API_URL + "/organisations/rate/{id}";
+
+    public static final String GET_AVERAGE_RATING = API_URL + "/organisations/average-rating/{id}";
+
     public static final String[] SWAGGER_ENDPOINTS = {
             "api/v1/auth/**",
             "/v3/api-docs/**",
