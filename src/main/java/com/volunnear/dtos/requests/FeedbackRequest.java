@@ -11,6 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class FeedbackRequest {
     private UUID idOfOrganisation;
-    private int rate;
+    private double rate;
     private String feedbackDescription;
 }
