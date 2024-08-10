@@ -78,11 +78,6 @@ public class ActivityController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get activities of current organisation", description = "Returns ActivitiesDTO")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Activities dto",
-                    content = @Content(schema = @Schema(implementation = ActivitiesDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Organisation with name not found")
-    })
     @GetMapping(value = Routes.ACTIVITY_CURRENT_ORGANISATION)
     public ResponseEntity<List<ActivityDTO>> getAllActivitiesOfCurrentOrganisation(
             @RequestParam(required = false) String title,
