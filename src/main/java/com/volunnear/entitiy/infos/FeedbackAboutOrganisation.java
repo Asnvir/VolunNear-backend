@@ -25,7 +25,7 @@ public class FeedbackAboutOrganisation {
     private String usernameOfVolunteer;
 
     @Column(name = "rate")
-    private Integer rate;
+    private Double rate;
 
     @Column(name = "description")
     private String description;

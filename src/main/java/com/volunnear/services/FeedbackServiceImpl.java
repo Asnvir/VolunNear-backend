@@ -31,7 +31,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public ResponseEntity<String> postFeedbackAboutOrganisation(FeedbackRequest feedbackRequest, Principal principal) {
-        if (feedbackRequest.getRate() < 0 || feedbackRequest.getRate() > 10) {
+        if (feedbackRequest.getRate() < 0 || feedbackRequest.getRate() > 5.0) {
             return new ResponseEntity<>("Bad value of rate", HttpStatus.BAD_REQUEST);
         }
 
