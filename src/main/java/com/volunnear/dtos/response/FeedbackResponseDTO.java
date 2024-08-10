@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class FeedbackResponseDTO {
     private UUID id;
-    private int rate;
+    private double rate;
     private String description;
     private String realNameOfUser;
     private String username;
