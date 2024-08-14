@@ -86,7 +86,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (feedbackAboutOrganisationList.isEmpty()) {
             return new ResponseEntity<>("There is no feedback about that organisation", HttpStatus.OK);
         }
-        Map<OrganisationResponseDTO, List<FeedbackResponseDTO>> feedbackResult = getOrganisationResponseDTOMap(feedbackAboutOrganisationList);
+        List<FeedbackResponseDTO> feedbackResult = getListOfFeedbacksDTO(feedbackAboutOrganisationList);
         return new ResponseEntity<>(feedbackResult, HttpStatus.OK);
     }
 

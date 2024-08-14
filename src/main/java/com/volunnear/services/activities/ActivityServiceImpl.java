@@ -341,12 +341,12 @@ public class ActivityServiceImpl implements ActivityService {
         List<ActivityDTO> activitiesDTO = new ArrayList<>();
         for (Activity activity : activities) {
             activitiesDTO.add(new ActivityDTO(activity.getId(),
-                    activity.getCity(),
-                    activity.getCountry(),
-                    activity.getStreet(),
-                    activity.getNumberOfHouse(),
                     activity.getTitle(),
                     activity.getDescription(),
+                    activity.getCountry(),
+                    activity.getCity(),
+                    activity.getStreet(),
+                    activity.getNumberOfHouse(),
                     activity.getKindOfActivity(),
                     activity.getDateOfPlace(),
                     new LocationDTO(activity.getLatitude(), activity.getLongitude()),
