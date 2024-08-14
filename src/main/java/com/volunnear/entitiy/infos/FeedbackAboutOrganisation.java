@@ -33,4 +33,8 @@ public class FeedbackAboutOrganisation {
     @ManyToOne
     @JoinColumn(name = "organisation_info_id")
     private OrganisationInfo organisationInfo;
+
+    @ManyToOne
+    @JoinColumn(name = "volunteer_info_id")
+    private VolunteerInfo volunteerInfo;
 }

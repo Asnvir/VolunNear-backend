@@ -15,4 +15,5 @@ public class FeedbackResponseDTO {
     private String description;
     private String realNameOfUser;
     private String username;
+    private String avatarUrl;
 }
