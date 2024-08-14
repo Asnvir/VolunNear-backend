@@ -28,6 +28,18 @@ public class OrganisationRating {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 
+    @Column(name = "total_rating", nullable = false)
+    private double totalRating;
+
+    @Column(name = "rating_count", nullable = false)
+    private int ratingCount;
+
     @Column(name = "rating", nullable = false)
     private double rating;
+
+    public void updateRating(int newRating) {
+        this.totalRating += newRating;
+        this.ratingCount++;
+        this.rating = this.totalRating / this.ratingCount;
+    }
 }

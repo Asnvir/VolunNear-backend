@@ -50,6 +50,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedback.setNameOfVolunteer(volunteerInfo.getRealNameOfUser());
         feedback.setDescription(feedbackRequest.getFeedbackDescription());
         feedback.setRate(feedbackRequest.getRate());
+        feedback.setVolunteerInfo(volunteerInfo);
         feedbackAboutOrganisationRepository.save(feedback);
         return new ResponseEntity<>("Feedback successfully added", HttpStatus.OK);
     }
@@ -83,10 +84,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     public ResponseEntity<?> getFeedbacksAboutCurrentOrganisation(UUID id) {
         List<FeedbackAboutOrganisation> feedbackAboutOrganisationList =
                 feedbackAboutOrganisationRepository.findFeedbackAboutOrganisationByOrganisationInfo_AppUser_Id(id);
-        if (feedbackAboutOrganisationList.isEmpty()) {
-            return new ResponseEntity<>("There is no feedback about that organisation", HttpStatus.OK);
-        }
-        Map<OrganisationResponseDTO, List<FeedbackResponseDTO>> feedbackResult = getOrganisationResponseDTOMap(feedbackAboutOrganisationList);
+        List<FeedbackResponseDTO> feedbackResult = getListOfFeedbacksDTO(feedbackAboutOrganisationList);
         return new ResponseEntity<>(feedbackResult, HttpStatus.OK);
     }
 
@@ -103,13 +101,20 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     private List<FeedbackResponseDTO> getListOfFeedbacksDTO(List<FeedbackAboutOrganisation> feedbackAboutOrganisationList) {
-        return feedbackAboutOrganisationList.stream().map(feedbackAboutOrganisation -> new FeedbackResponseDTO(
-                feedbackAboutOrganisation.getId(),
-                feedbackAboutOrganisation.getRate(),
-                feedbackAboutOrganisation.getDescription(),
-                feedbackAboutOrganisation.getNameOfVolunteer(),
-                feedbackAboutOrganisation.getUsernameOfVolunteer()
-        )).toList();
+        return feedbackAboutOrganisationList.stream().map(feedbackAboutOrganisation -> {
+            String avatarUrl = feedbackAboutOrganisation.getVolunteerInfo() != null
+                    ? feedbackAboutOrganisation.getVolunteerInfo().getAvatarUrl()
+                    : null;
+
+            return new FeedbackResponseDTO(
+                    feedbackAboutOrganisation.getId(),
+                    feedbackAboutOrganisation.getRate(),
+                    feedbackAboutOrganisation.getDescription(),
+                    feedbackAboutOrganisation.getNameOfVolunteer(),
+                    feedbackAboutOrganisation.getUsernameOfVolunteer(),
+                    avatarUrl
+            );
+        }).toList();
     }
 
 }

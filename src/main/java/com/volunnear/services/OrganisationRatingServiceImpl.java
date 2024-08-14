@@ -6,7 +6,6 @@ import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.exceptions.NotFoundException;
 import com.volunnear.repositories.OrganisationRatingRepository;
 import com.volunnear.repositories.infos.OrganisationInfoRepository;
-import com.volunnear.repositories.users.UserRepository;
 import com.volunnear.services.interfaces.OrganisationRatingService;
 import com.volunnear.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,7 @@ public class OrganisationRatingServiceImpl implements OrganisationRatingService 
     public void addOrUpdateRating(UUID organisationId, int rating, Principal principal) {
         AppUser appUser = userService.findAppUserByUsername(principal.getName())
                 .orElseThrow(() -> new NotFoundException("User not found"));
+
         OrganisationRating organisationRating = organisationRatingRepository
                 .findByOrganisationAppUserIdAndUserId(organisationId, appUser.getId())
                 .orElseGet(() -> {
@@ -42,7 +42,10 @@ public class OrganisationRatingServiceImpl implements OrganisationRatingService 
                     return newRating;
                 });
 
-        organisationRating.setRating(rating);
+        // Calculate the new rating as (previous rating + new rating) / 2
+        double updatedRating = (organisationRating.getRating() + rating) / 2.0;
+        organisationRating.setRating(updatedRating);
+
         organisationRatingRepository.save(organisationRating);
     }
 
