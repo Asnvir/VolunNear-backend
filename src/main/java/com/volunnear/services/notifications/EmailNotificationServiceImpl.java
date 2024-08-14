@@ -64,7 +64,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
     public ResponseEntity<?> getAllSubscriptionsOfVolunteer(Principal principal) {
         List<VolunteerNotificationSubscription> allByUserVolunteerUsername = subscriptionRepository.findAllByUserVolunteer_Username(principal.getName());
         if (allByUserVolunteerUsername.isEmpty()) {
-            return new ResponseEntity<>("List of subscriptions is empty!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("List of subscriptions is empty!", HttpStatus.OK);
         }
         List<OrganisationResponseDTO> organisations = allByUserVolunteerUsername.stream().map(
                 subscription -> organisationService.getResponseDTOForSubscriptions(subscription.getUserOrganisation())).collect(Collectors.toList());
