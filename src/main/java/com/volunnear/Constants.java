@@ -14,4 +14,6 @@ public class Constants {
 
     public static final String FILE_STORAGE_ACTIVITY_IMAGE = "activity-images";
 
+
+    public static final long EXPIRATION_TIME_5_MIN = 5 * 60 * 1000; // 5 minutes
 }

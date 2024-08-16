@@ -1,5 +1,6 @@
 package com.volunnear.entitiy.users;
 
+import com.volunnear.entitiy.ForgotPassword;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,10 @@ public class AppUser {
             joinColumns = @JoinColumn(name = "appUser_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private List<Role> roles;
+
+
+    @OneToOne(mappedBy = "appUser")
+    private ForgotPassword forgotPassword;
 
     @Override
     public boolean equals(Object o) {

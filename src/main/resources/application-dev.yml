@@ -10,8 +10,8 @@ spring:
   mail:
     host: ${APP_MAIL_HOST}
     port: ${APP_MAIL_PORT}
-    username: ${SENDER_EMAIL_USERNAME}
-    password: ${SENDER_EMAIL_PASSWORD}
+    username: ${APP_EMAIL_USERNAME}
+    password: ${APP_EMAIL_PASSWORD}
     properties.mail.smtp:
       auth: true
       starttls-enable: true
