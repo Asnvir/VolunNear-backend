@@ -60,9 +60,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 Routes.REGISTER_ROUTE_SECURITY + "/**",
                                 Routes.LOGIN,
-                                Routes.VERIFY_EMAIL+ "/**",
-                                Routes.VERIFY_OTP+ "/**",
-                                Routes.CHANGE_PASSWORD+ "/**")
+                                Routes.VERIFY_EMAIL + "/**",
+                                Routes.VERIFY_OTP + "/**",
+                                Routes.CHANGE_PASSWORD + "/**")
                         .permitAll()
 
                         .requestMatchers(Routes.SWAGGER_ENDPOINTS).permitAll()

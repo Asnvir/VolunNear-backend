@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface ForgotPasswordRepository extends JpaRepository<ForgotPassword, Integer> {
     Optional<ForgotPassword> findByOtpAndAppUser(Integer otp, AppUser appUser);
+
+    Optional<ForgotPassword> findByAppUser(AppUser appUser);
 }

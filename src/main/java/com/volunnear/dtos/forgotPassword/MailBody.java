@@ -1,4 +1,4 @@
-package com.volunnear.dtos;
+package com.volunnear.dtos.forgotPassword;
 
 import lombok.Builder;
 

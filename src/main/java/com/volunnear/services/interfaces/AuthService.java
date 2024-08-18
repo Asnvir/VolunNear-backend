@@ -22,4 +22,6 @@ public interface AuthService {
     OrganisationInfoDTO updateOrganisationInfo(UpdateOrganisationInfoRequestDTO request, Principal principal);
 
     void changePassword(ChangePasswordRequestDTO changePasswordRequestDTO, Principal principal);
+
+
 }

@@ -1,6 +1,6 @@
 package com.volunnear.services;
 
-import com.volunnear.dtos.MailBody;
+import com.volunnear.dtos.forgotPassword.MailBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
