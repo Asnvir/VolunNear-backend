@@ -16,7 +16,14 @@ public class Routes {
     public static final String UPDATE_VOLUNTEER_PROFILE = API_URL + "/update/volunteer";
     public static final String UPDATE_ORGANISATION_PROFILE = API_URL + "/update/organisation";
 
-    public static final String CHANGE_PASSWORD = API_URL + "/change_password";
+    /**
+     * Password recovery
+     */
+    public static final String FORGOT_PASSWORD = API_URL +"/forgot_password";
+    public static final String VERIFY_EMAIL = FORGOT_PASSWORD + "/verify_email";
+    public static final String VERIFY_OTP = FORGOT_PASSWORD + "/verify_otp";
+    public static final String CHANGE_PASSWORD = FORGOT_PASSWORD + "/change_password";
+
     /**
      * Organisation routes
      */

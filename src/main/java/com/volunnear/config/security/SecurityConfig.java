@@ -57,8 +57,13 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .logout(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(Routes.REGISTER_ROUTE_SECURITY + "/**",
-                                Routes.LOGIN).permitAll()
+                        .requestMatchers(
+                                Routes.REGISTER_ROUTE_SECURITY + "/**",
+                                Routes.LOGIN,
+                                Routes.VERIFY_EMAIL + "/**",
+                                Routes.VERIFY_OTP + "/**",
+                                Routes.CHANGE_PASSWORD + "/**")
+                        .permitAll()
 
                         .requestMatchers(Routes.SWAGGER_ENDPOINTS).permitAll()
                         .requestMatchers("/v3/api-docs", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
@@ -98,9 +103,7 @@ public class SecurityConfig {
                                 Routes.GET_ACTIVITIES,
                                 Routes.GET_FEEDBACKS_FROM_CURRENT_ORGANISATION,
                                 Routes.GET_CHAT_LINK_BY_ACTIVITY,
-                                Routes.GET_COMMUNITY_LINK_BY_ORGANISATION,
-                                Routes.CHANGE_PASSWORD
-                                )
+                                Routes.GET_COMMUNITY_LINK_BY_ORGANISATION)
                         .hasAnyRole("VOLUNTEER", "ORGANISATION")
                         .requestMatchers("/ws/**", "stomp").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

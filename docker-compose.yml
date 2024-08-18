@@ -1,35 +1,36 @@
 services:
   mysql:
     image: mysql:latest
-    ports:
-      - "${EXTERNAL_APP_DB_PORT}:${INTERNAl_APP_DB_PORT}"
+    network_mode: ${DOCKER_NETWORK_MODE}
     restart: always
     environment:
       MYSQL_DATABASE: ${APP_DB_NAME}
       MYSQL_ROOT_PASSWORD: ${APP_DB_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-
+      MYSQL_TCP_PORT: ${EXTERNAL_APP_DB_PORT}
 
   minio:
     image: minio/minio
-    ports:
-      - "${MINIO_EXTERNAL_PORT}:${MINIO_INTERNAL_PORT}"
-      - "${MINIO_EXTERNAL_PORT_HTTPS}:${MINIO_INTERNAL_PORT_HTTPS}"
+    network_mode: ${DOCKER_NETWORK_MODE}
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    command: server /data --console-address ":${MINIO_EXTERNAL_PORT_HTTPS}"
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+      MINIO_EXTERNAL_PORT: ${MINIO_EXTERNAL_PORT}
+      MINIO_INTERNAL_PORT: ${MINIO_INTERNAL_PORT}
+      MINIO_EXTERNAL_PORT_HTTPS: ${MINIO_EXTERNAL_PORT_HTTPS}
+      MINIO_INTERNAL_PORT_HTTPS: ${MINIO_INTERNAL_PORT_HTTPS}
+    command: server /data --console-address ":${MINIO_EXTERNAL_PORT_HTTPS}" --address ":${MINIO_EXTERNAL_PORT}"
     volumes:
-      - minio_data:/data
+      - minio_data:/dat
 
   spring-boot-app:
     image: volunnearapp:latest
-    ports:
-      - "${EXTERNAL_APP_PORT}:${EXTERNAL_APP_PORT}"
-    build:
-      context: .
+    network_mode: ${DOCKER_NETWORK_MODE}
     restart: on-failure
+    ports:
+      - "${EXTERNAL_APP_PORT}:${EXTERNAL_APP_PORT}"   # Порт приложения
+      - "5005:5005"  # Порт для удаленного дебага
+      - "9999:9999"  # Порт для JMX
+      - "9998:9998"  # Порт для RMI
     depends_on:
       - mysql
       - minio
@@ -44,8 +45,8 @@ services:
       - APP_DB_DRIVER_CLASS_NAME=${APP_DB_DRIVER_CLASS_NAME}
       - APP_MAIL_HOST=${APP_MAIL_HOST}
       - APP_MAIL_PORT=${APP_MAIL_PORT}
-      - SENDER_EMAIL_USERNAME=${SENDER_EMAIL_USERNAME}
-      - SENDER_EMAIL_PASSWORD=${SENDER_EMAIL_PASSWORD}
+      - APP_EMAIL_USERNAME=${APP_EMAIL_USERNAME}
+      - APP_EMAIL_PASSWORD=${APP_EMAIL_PASSWORD}
       - FRONTEND_HOST=${FRONTEND_HOST}
       - FRONTEND_PORT=${FRONTEND_PORT}
       - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
@@ -54,12 +55,5 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - MINIO_UPLOAD_URL=${MINIO_UPLOAD_URL}
 
-
-
-networks:
-  default:
-    driver: bridge
-
 volumes:
-  mysql_data:
   minio_data:
