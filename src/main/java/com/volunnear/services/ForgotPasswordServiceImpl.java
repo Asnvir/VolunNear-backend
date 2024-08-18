@@ -7,6 +7,7 @@ import com.volunnear.entitiy.ForgotPassword;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.repositories.ForgotPasswordRepository;
 import com.volunnear.repositories.users.UserRepository;
+import com.volunnear.services.interfaces.EventMailSenderService;
 import com.volunnear.services.interfaces.ForgotPasswordService;
 import com.volunnear.utils.ChangePassword;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,9 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
 
     private final UserRepository userRepository;
     private final ForgotPasswordRepository forgotPasswordRepository;
-    private final EmailService emailService;
+//    private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EventMailSenderService eventMailSenderService;
 
 
     @Override
@@ -49,13 +51,7 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
                 throw new RuntimeException("Failed to save OTP");
             }
 
-            MailBody mailBody = MailBody.builder()
-                    .to(email)
-                    .subject("OTP for forgot password request")
-                    .text("This is the OTP to reset your password: " + otp)
-                    .build();
-
-            emailService.sendSimpleMessage(mailBody);
+            eventMailSenderService.sendOtpEmail(email, otp);
             return new ResponseForgotPasswordDTO(true, "OTP sent to email");
         } catch (Exception e) {
             return new ResponseForgotPasswordDTO(false, e.getMessage());
@@ -88,51 +84,43 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     }
 
     @Override
-    public ResponseForgotPasswordDTO changePassword(String email, String newPassword, String repeatedNewPassword) {
+    public ResponseForgotPasswordDTO changePassword(String email, ChangePassword changePassword) {
         try {
-            // Create ChangePassword object to validate the passwords
-            ChangePassword changePassword = new ChangePassword(newPassword, repeatedNewPassword);
-
-            // Find the AppUser by email
             AppUser appUser = userRepository.findAppUserByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User with email " + email + " not found"));
 
-            // Find the ForgotPassword entry associated with the AppUser
-            ForgotPassword forgotPassword = forgotPasswordRepository.findByAppUser(appUser)
+            ForgotPassword forgotPassword = forgotPasswordRepository.findByAppUserId(appUser.getId())
                     .orElseThrow(() -> new RuntimeException("ForgotPassword entry not found for email " + email));
 
-            // Check if passwords match
             if (!changePassword.arePasswordsEqual()) {
-                // Delete the ForgotPassword entry even if passwords do not match
                 forgotPasswordRepository.delete(forgotPassword);
                 return new ResponseForgotPasswordDTO(false, "Passwords do not match");
             }
 
-            // Encode the new password
             String encodedPassword = passwordEncoder.encode(changePassword.getNewPassword());
 
-            // Update the password in the database
             userRepository.updatePasswordByEmail(encodedPassword, email);
 
-            // Fetch the user again to verify the password change
             AppUser updatedUser = userRepository.findAppUserByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User with email " + email + " not found after update"));
 
-            // Verify if the new password is correctly set
             if (passwordEncoder.matches(changePassword.getNewPassword(), updatedUser.getPassword())) {
-                // Delete the ForgotPassword entry if password change was successful
                 forgotPasswordRepository.delete(forgotPassword);
                 return new ResponseForgotPasswordDTO(true, "Password changed successfully");
             } else {
-                // Delete the ForgotPassword entry even if password update failed
                 forgotPasswordRepository.delete(forgotPassword);
                 return new ResponseForgotPasswordDTO(false, "Password update failed");
             }
         } catch (Exception e) {
-            // Ensure ForgotPassword entry is deleted in case of an exception
-            forgotPasswordRepository.findByAppUser(userRepository.findAppUserByEmail(email)
-                            .orElseThrow(() -> new RuntimeException("User with email " + email + " not found")))
-                    .ifPresent(forgotPasswordRepository::delete);
+
+            AppUser appUser = userRepository.findAppUserByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User with email " + email + " not found"));
+
+            ForgotPassword forgotPassword = forgotPasswordRepository.findByAppUserId(appUser.getId())
+                    .orElseThrow(() -> new RuntimeException("ForgotPassword entry not found for email " + email));
+
+            forgotPasswordRepository.delete(forgotPassword);
+
             return new ResponseForgotPasswordDTO(false, e.getMessage());
         }
     }
