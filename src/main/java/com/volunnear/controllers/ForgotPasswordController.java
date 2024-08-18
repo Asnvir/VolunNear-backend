@@ -44,10 +44,8 @@ public class ForgotPasswordController {
             @PathVariable String newPassword,
             @PathVariable String repeatedNewPassword) {
 
-        // Call the service to change the password
         ResponseForgotPasswordDTO response = forgotPasswordService.changePassword(email, newPassword, repeatedNewPassword);
 
-        // Return the appropriate response based on the service result
         if (response.isSuccess()) {
             return ResponseEntity.ok(response);
         } else {
