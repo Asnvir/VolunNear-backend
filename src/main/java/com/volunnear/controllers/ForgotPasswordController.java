@@ -39,21 +39,6 @@ public class ForgotPasswordController {
         }
     }
 
-//    @PostMapping(value = Routes.CHANGE_PASSWORD + "/{email}/{newPassword}/{repeatedNewPassword}")
-//    public ResponseEntity<ResponseForgotPasswordDTO> changePassword(
-//            @PathVariable String email,
-//            @PathVariable String newPassword,
-//            @PathVariable String repeatedNewPassword) {
-//
-//        ResponseForgotPasswordDTO response = forgotPasswordService.changePassword(email, newPassword, repeatedNewPassword);
-//
-//        if (response.isSuccess()) {
-//            return ResponseEntity.ok(response);
-//        } else {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-//        }
-//    }
-
     @PostMapping(value = Routes.CHANGE_PASSWORD + "/{email}")
     public ResponseEntity<ResponseForgotPasswordDTO> changePassword(
             @PathVariable String email,
