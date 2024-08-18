@@ -7,6 +7,7 @@ import com.volunnear.entitiy.ForgotPassword;
 import com.volunnear.entitiy.users.AppUser;
 import com.volunnear.repositories.ForgotPasswordRepository;
 import com.volunnear.repositories.users.UserRepository;
+import com.volunnear.services.interfaces.EventMailSenderService;
 import com.volunnear.services.interfaces.ForgotPasswordService;
 import com.volunnear.utils.ChangePassword;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,9 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
 
     private final UserRepository userRepository;
     private final ForgotPasswordRepository forgotPasswordRepository;
-    private final EmailService emailService;
+//    private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EventMailSenderService eventMailSenderService;
 
 
     @Override
@@ -49,13 +51,7 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
                 throw new RuntimeException("Failed to save OTP");
             }
 
-            MailBody mailBody = MailBody.builder()
-                    .to(email)
-                    .subject("OTP for forgot password request")
-                    .text("This is the OTP to reset your password: " + otp)
-                    .build();
-
-            emailService.sendSimpleMessage(mailBody);
+            eventMailSenderService.sendOtpEmail(email, otp);
             return new ResponseForgotPasswordDTO(true, "OTP sent to email");
         } catch (Exception e) {
             return new ResponseForgotPasswordDTO(false, e.getMessage());
@@ -88,10 +84,8 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     }
 
     @Override
-    public ResponseForgotPasswordDTO changePassword(String email, String newPassword, String repeatedNewPassword) {
+    public ResponseForgotPasswordDTO changePassword(String email, ChangePassword changePassword) {
         try {
-            ChangePassword changePassword = new ChangePassword(newPassword, repeatedNewPassword);
-
             AppUser appUser = userRepository.findAppUserByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User with email " + email + " not found"));
 
