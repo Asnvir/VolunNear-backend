@@ -26,7 +26,6 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
 
     private final UserRepository userRepository;
     private final ForgotPasswordRepository forgotPasswordRepository;
-//    private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EventMailSenderService eventMailSenderService;
 

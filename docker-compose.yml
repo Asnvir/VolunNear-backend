@@ -26,11 +26,6 @@ services:
     image: volunnearapp:latest
     network_mode: ${DOCKER_NETWORK_MODE}
     restart: on-failure
-    ports:
-      - "${EXTERNAL_APP_PORT}:${EXTERNAL_APP_PORT}"   # Порт приложения
-      - "5005:5005"  # Порт для удаленного дебага
-      - "9999:9999"  # Порт для JMX
-      - "9998:9998"  # Порт для RMI
     depends_on:
       - mysql
       - minio
