@@ -36,6 +36,8 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
             AppUser appUser = userRepository.findAppUserByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User with email " + email + " not found"));
 
+            forgotPasswordRepository.findByAppUserId(appUser.getId()).ifPresent(forgotPasswordRepository::delete);
+
             Integer otp = otpGenerator();
 
             ForgotPassword forgotPassword = ForgotPassword.builder()
