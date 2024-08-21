@@ -103,13 +103,7 @@ VolunNear is an application designed to bridge the gap between volunteers and or
     MINIO_UPLOAD_URL=http://your_minio_upload_url
     MINIO_ACCESS_KEY=your_minio_access_key
     MINIO_SECRET_KEY=your_minio_secret_key
-    EXTERNAL_APP_DB_PORT=your_external_db_port
-    APP_DB_NAME=your_db_name
-    APP_DB_OPTIONS=your_db_options
-    APP_DB_USERNAME=your_db_username
-    APP_DB_PASSWORD=your_db_password
-    APP_DB_URL=jdbc:mysql://${APP_DB_HOSTNAME}:${EXTERNAL_APP_DB_PORT}/${APP_DB_NAME}?${APP_DB_OPTIONS}
-    APP_DB_DRIVER_CLASS_NAME=your_db_driver_class_name
+
 
 4. **Build the project**:
 
