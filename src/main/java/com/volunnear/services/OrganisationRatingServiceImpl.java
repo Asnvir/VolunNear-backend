@@ -42,8 +42,15 @@ public class OrganisationRatingServiceImpl implements OrganisationRatingService 
                     return newRating;
                 });
 
-        // Calculate the new rating as (previous rating + new rating) / 2
-        double updatedRating = (organisationRating.getRating() + rating) / 2.0;
+        double updatedRating;
+        if (organisationRating.getId() == null) {
+            // If it's a new rating, use the provided rating directly
+            updatedRating = rating;
+        } else {
+            // Otherwise, calculate the average of the previous and new rating
+            updatedRating = (organisationRating.getRating() + rating) / 2.0;
+        }
+
         organisationRating.setRating(updatedRating);
 
         organisationRatingRepository.save(organisationRating);

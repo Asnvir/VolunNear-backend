@@ -64,10 +64,10 @@ public class AuthController {
         return new ResponseEntity<>(organisationInfoDTO, HttpStatus.OK);
     }
 
-//    @SecurityRequirement(name = "Bearer Authentication")
-//    @PostMapping(value = Routes.CHANGE_PASSWORD)
-//    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequestDTO changePasswordRequestDTO, Principal principal) {
-//        authService.changePassword(changePasswordRequestDTO, principal);
-//        return ResponseEntity.status(HttpStatus.OK).build();
-//    }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = Routes.CHANGE_PASSWORD)
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequestDTO changePasswordRequestDTO, Principal principal) {
+        authService.changePassword(changePasswordRequestDTO, principal);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
