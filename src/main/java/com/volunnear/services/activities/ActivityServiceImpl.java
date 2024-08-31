@@ -34,6 +34,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -120,7 +123,7 @@ public class ActivityServiceImpl implements ActivityService {
      * Get Activities by title, description, country, city, kindOfActivity, dateOfPlace
      */
     @Override
-    public List<ActivitiesDTO> getActivities(
+    public Page<ActivitiesDTO> getActivities(
             String title,
             String description,
             String country,
@@ -130,8 +133,9 @@ public class ActivityServiceImpl implements ActivityService {
             SortOrder sortOrder,
             LocationDTO locationDTO,
             boolean isMyActivities,
+            Pageable pageable,
             Principal principal) {
-        List<Activity> activities;
+        Page<Activity> activitiesPage;
         if (isMyActivities) {
             AppUser appUser = userService.findAppUserByUsername(principal.getName()).get();
             Specification<VolunteerInActivity> spec = specificationEnricher
@@ -139,21 +143,19 @@ public class ActivityServiceImpl implements ActivityService {
                             title, description, country, city, kindOfActivity, dateOfPlace, appUser
                     );
 
-            activities = volunteersInActivityRepository
-                    .findAll(spec)
-                    .stream()
-                    .map(VolunteerInActivity::getActivity)
-                    .toList();
+            activitiesPage = volunteersInActivityRepository
+                    .findAll(spec,pageable)
+                    .map(VolunteerInActivity::getActivity);
         } else {
             Specification<Activity> spec = specificationEnricher
                     .createSpecification(
                             title, description, country, city, kindOfActivity, dateOfPlace
                     );
-            activities = activitiesRepository.findAll(spec);
+            activitiesPage = activitiesRepository.findAll(spec, pageable);
         }
 
-
-        return getSortedListOfActivitiesDTOByDistance(activities, locationDTO, sortOrder);
+        List<ActivitiesDTO> activitiesDTOs = getSortedListOfActivitiesDTOByDistance(activitiesPage.getContent(), locationDTO, sortOrder);
+        return new PageImpl<>(activitiesDTOs, pageable, activitiesPage.getTotalElements());
     }
 
     /**

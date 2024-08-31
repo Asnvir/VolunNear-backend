@@ -10,20 +10,21 @@ import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.services.interfaces.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -55,7 +56,7 @@ public class ActivityController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get activities of all organisations by different filters also for getting volunteer activities", description = "Returns ActivitiesDTO")
     @GetMapping(value = Routes.GET_ACTIVITIES)
-    public List<ActivitiesDTO> getActivitiesOfOrganisations(
+    public Page<ActivitiesDTO> getActivitiesOfOrganisations(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String country,
@@ -66,12 +67,16 @@ public class ActivityController {
             @RequestParam SortOrder sortOrder,
             @RequestParam double latitude,
             @RequestParam double longitude,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             Principal principal
     ) {
         log.info("latitude: {} longitude: {}", latitude, longitude);
         LocationDTO locationDTO = new LocationDTO(latitude, longitude);
         log.info("date: {}", dateOfPlace);
-        return activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, sortOrder, locationDTO, myActivities, principal);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ActivitiesDTO>  result = activityService.getActivities(title, description, country, city, kindOfActivity, dateOfPlace, sortOrder, locationDTO, myActivities,pageable, principal);
+        return result;
     }
 
 

@@ -8,6 +8,8 @@ import com.volunnear.dtos.response.ActivitiesDTO;
 import com.volunnear.dtos.response.ActivityDTO;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.users.AppUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -21,7 +23,7 @@ public interface ActivityService {
     void sendNotificationForSubscribers(Activity activity, String status);
 
 
-    List<ActivitiesDTO> getActivities(
+    Page<ActivitiesDTO> getActivities(
             String title,
             String description,
             String country,
@@ -31,8 +33,8 @@ public interface ActivityService {
             SortOrder sortOrder,
             LocationDTO locationDTO,
             boolean isMyActivities,
-            Principal principal
-    );
+            Pageable pageable,
+            Principal principal);
 
     ActivitiesDTO getOrganisationActivities(Principal principal);
 

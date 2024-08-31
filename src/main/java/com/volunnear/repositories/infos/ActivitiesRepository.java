@@ -3,6 +3,8 @@ package com.volunnear.repositories.infos;
 import com.volunnear.dtos.enums.ActivityType;
 import com.volunnear.entitiy.activities.Activity;
 import com.volunnear.entitiy.users.AppUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
