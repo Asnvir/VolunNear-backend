@@ -8,7 +8,7 @@ VolunNear is an application designed to bridge the gap between volunteers and or
 
 ## Project Video
 
-[Watch the project video](https://github.com/user-attachments/assets/ec5f60a2-ce73-4d6a-be20-14ab3e8c6fa9)
+[![Watch the project video](https://img.youtube.com/vi/sWHwgk6Db3A/0.jpg)](https://www.youtube.com/watch?v=sWHwgk6Db3A)
 
 ## Technologies Used
 
